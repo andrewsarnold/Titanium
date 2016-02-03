@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
@@ -27,7 +26,7 @@ namespace Titanium.Core.Expressions
 			foreach (var currentToken in tokens)
 			{
 				// If the token is a number, then add it to the output queue.
-				if (currentToken.Type == TokenType.Number || currentToken.Type == TokenType.Letter)
+				if (currentToken.Type == TokenType.Integer || currentToken.Type == TokenType.Float || currentToken.Type == TokenType.Letter)
 				{
 					outputQueue.Add(currentToken);
 				}
@@ -229,8 +228,11 @@ namespace Titanium.Core.Expressions
 		{
 			switch (token.Type)
 			{
-				case TokenType.Number:
-					return Factor.GetNumericFactor(token);
+				case TokenType.Integer:
+					return Factor.GetIntegerFactor(token);
+
+				case TokenType.Float:
+					return Factor.GetFloatFactor(token);
 
 				case TokenType.Letter:
 					return new AlphabeticFactor(token.Value);

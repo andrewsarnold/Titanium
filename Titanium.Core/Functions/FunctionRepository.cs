@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Functions.Implementations;
 
@@ -23,6 +24,11 @@ namespace Titanium.Core.Functions
 			}
 
 			throw new NotImplementedException(name);
+		}
+
+		internal static bool Contains(string name)
+		{
+			return Funcs.Any(f => f.Key == name);
 		}
 	}
 }

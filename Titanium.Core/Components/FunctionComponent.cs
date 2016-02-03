@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using Titanium.Core.Exceptions;
-using Titanium.Core.Factors;
 using Titanium.Core.Functions;
-using Titanium.Core.Numbers;
 
 namespace Titanium.Core.Components
 {

@@ -3,7 +3,8 @@
 	public enum TokenType
 	{
 		None,
-		Number,
+		Integer,
+		Float,
 		Function,
 		Letter,
 		OpenParenthesis,
@@ -12,10 +13,10 @@
 		Comma,
 		Plus,
 		Minus,
-		Negative,
 		Multiply,
 		Divide,
 		Exponent,
-		Factorial
+		Factorial,
+		Space
 	}
 }

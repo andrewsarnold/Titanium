@@ -61,7 +61,8 @@ namespace Titanium.Core.Tokens
 		{
 			switch (type)
 			{
-				case TokenType.Number:
+				case TokenType.Integer:
+				case TokenType.Float:
 				case TokenType.Letter:
 					return true;
 			}

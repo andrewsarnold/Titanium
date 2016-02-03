@@ -7,7 +7,7 @@ namespace Titanium.Core.Functions
 	{
 		internal readonly string Name;
 
-		public Function(string name)
+		protected Function(string name)
 		{
 			Name = name;
 		}

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Titanium.Core.Exceptions;
+using Titanium.Core.Functions;
 
 namespace Titanium.Core.Tokens
 {
@@ -8,125 +11,80 @@ namespace Titanium.Core.Tokens
 	{
 		private static readonly Dictionary<TokenType, Regex> TokenDefinitions = new Dictionary<TokenType, Regex>
 		{
-			{ TokenType.Number, new Regex(@"\d") },
-			{ TokenType.Letter, new Regex(@"[a-zA-ZΑ-ω_]") },
-			{ TokenType.OpenParenthesis, new Regex(@"\(") },
-			{ TokenType.CloseParenthesis, new Regex(@"\)") },
-			{ TokenType.Period, new Regex(@"\.") },
-			{ TokenType.Comma, new Regex(@",") },
-			{ TokenType.Plus, new Regex(@"\+") },
-			{ TokenType.Minus, new Regex(@"-") },
-			{ TokenType.Negative, new Regex(@"⁻") },
-			{ TokenType.Multiply, new Regex(@"\*") },
-			{ TokenType.Divide, new Regex(@"\/") },
-			{ TokenType.Exponent, new Regex(@"\^") },
-			{ TokenType.Factorial, new Regex(@"!") },
-			{ TokenType.None, null }
-		};
-
-		private static readonly List<string> BuiltInFunctions = new List<string>
-		{
-			"sin",
-			"cos",
-			"tan"
-		};
-
-		private static readonly Dictionary<TokenType, bool> Combinables = new Dictionary<TokenType, bool>
-		{
-			{ TokenType.Number, true },
-			{ TokenType.Letter, true }
+			{ TokenType.Integer, new Regex(@"^⁻?\d+$") },
+			{ TokenType.Float, new Regex(@"^(⁻?\d*\.\d+|⁻?\d+\.\d*)$") },
+			{ TokenType.Letter, new Regex(@"^[a-zA-ZΑ-ώ_]+[a-zA-ZΑ-ώ_\d]*$") },
+			{ TokenType.OpenParenthesis, new Regex(@"^\($") },
+			{ TokenType.CloseParenthesis, new Regex(@"^\)$") },
+			{ TokenType.Period, new Regex(@"^\.$") },
+			{ TokenType.Comma, new Regex(@"^,$") },
+			{ TokenType.Plus, new Regex(@"^\+$") },
+			{ TokenType.Minus, new Regex(@"^-$") },
+			{ TokenType.Multiply, new Regex(@"^\*$") },
+			{ TokenType.Divide, new Regex(@"^\/$") },
+			{ TokenType.Exponent, new Regex(@"^\^$") },
+			{ TokenType.Factorial, new Regex(@"^!$") },
+			{ TokenType.Space, new Regex(@"^\s+$") },
+			{ TokenType.None, new Regex("^$") }
 		};
 
 		internal static List<Token> Tokenize(string input)
 		{
+			input = CleanNegatives(input);
 			var tokens = new List<Token>();
-			var currentTokenType = TokenType.None;
-			var currentToken = string.Empty;
+			var startIndex = 0;
 
-			while (input.Contains("⁻⁻"))
+			while (startIndex < input.Length)
 			{
-				input = input.Replace("⁻⁻", "");
-			}
-
-			for (var i = 0; i < input.Length; i++)
-			{
-				var testCharacter = input.Substring(i, 1);
-
-				if (string.IsNullOrWhiteSpace(testCharacter))
+				var token = FindNextToken(input.Substring(startIndex));
+				if (token.Type != TokenType.None)
 				{
-					continue;
-				}
-
-				var result = TokenDefinitions.FirstOrDefault(d => d.Value.IsMatch(testCharacter));
-				var type = result.Key;
-
-				if (Combinables.ContainsKey(type) && currentTokenType == type)
-				{
-					currentToken += testCharacter;
+					tokens.Add(token);
+					startIndex += token.Value.Length;
 				}
 				else
 				{
-					if (!string.IsNullOrEmpty(currentToken))
-					{
-						tokens.Add(new Token(currentTokenType, currentToken));
-					}
-					currentToken = testCharacter;
-					currentTokenType = type;
+					throw new Exception("Couldn't get a token");
 				}
 			}
 
-			if (!string.IsNullOrEmpty(currentToken))
-			{
-				tokens.Add(new Token(currentTokenType, currentToken));
-			}
-
-			return ConvertFunctions(ConsolidateNumerics(tokens)).ToList();
+			return ConvertFunctions(tokens).Where(t => t.Type != TokenType.Space).ToList();
 		}
 
-		internal static List<Token> ConsolidateNumerics(IEnumerable<Token> tokens)
+		private static string CleanNegatives(string input)
 		{
-			// Take loose tokens and glue numbers together.
-
-			var returnValue = new List<Token>();
-
-			var numericTokenValue = string.Empty;
-
-			foreach (var t in tokens)
+			while (input.Contains("⁻⁻"))
 			{
-				if (IsNumberComponent(t.Type))
-				{
-					numericTokenValue += t.Value;
-				}
-				else
-				{
-					if (!string.IsNullOrWhiteSpace(numericTokenValue))
-					{
-						returnValue.Add(new Token(TokenType.Number, numericTokenValue));
-					}
-
-					numericTokenValue = string.Empty;
-					returnValue.Add(t);
-				}
+				input = input.Replace("⁻⁻", "⁻");
 			}
 
-			if (!string.IsNullOrWhiteSpace(numericTokenValue))
+			return input;
+		}
+
+		private static Token FindNextToken(string input)
+		{
+			var length = input.Length;
+
+			while (length > 0)
 			{
-				returnValue.Add(new Token(TokenType.Number, numericTokenValue));
+				var testString = input.Substring(0, length);
+				var type = TokenDefinitions.FirstOrDefault(t => t.Value.IsMatch(testString)).Key;
+				if (type != TokenType.None)
+				{
+					return new Token(type, testString);
+				}
+
+				length--;
 			}
 
-			return returnValue;
+			throw new SyntaxErrorException("Couldn't parse a token from string {0}", input);
 		}
 
 		private static IEnumerable<Token> ConvertFunctions(IEnumerable<Token> tokens)
 		{
-			return tokens.Select(token => token.Type == TokenType.Letter && BuiltInFunctions.Contains(token.Value)
+			return tokens.Select(token => token.Type == TokenType.Letter && FunctionRepository.Contains(token.Value)
 				? new Token(TokenType.Function, token.Value)
 				: token);
-		}
-
-		private static bool IsNumberComponent(TokenType type)
-		{
-			return new[] { TokenType.Negative, TokenType.Number, TokenType.Period }.Contains(type);
 		}
 	}
 }
