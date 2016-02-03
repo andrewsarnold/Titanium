@@ -17,6 +17,7 @@
 		Divide,
 		Exponent,
 		Factorial,
+		Root,
 		Space
 	}
 }

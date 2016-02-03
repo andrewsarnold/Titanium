@@ -10,12 +10,12 @@ using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Functions
 {
-	internal class Trigonometric : Function
+	internal class SimpleFloatCalculation : Function
 	{
 		private readonly Func<double, double> _function;
 
-		public Trigonometric(string name, Func<double, double> function)
-			: base(name)
+		public SimpleFloatCalculation(string name, Func<double, double> function)
+			: base(name, 1)
 		{
 			_function = function;
 		}

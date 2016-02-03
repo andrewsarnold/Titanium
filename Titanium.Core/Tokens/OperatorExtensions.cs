@@ -14,10 +14,12 @@ namespace Titanium.Core.Tokens
 				case TokenType.Multiply:
 				case TokenType.Divide:
 					return 3;
-				case TokenType.Exponent:
+				case TokenType.Root:
 					return 4;
-				case TokenType.Factorial:
+				case TokenType.Exponent:
 					return 5;
+				case TokenType.Factorial:
+					return 6;
 			}
 
 			throw new UnexpectedTokenTypeException(type);
@@ -35,6 +37,7 @@ namespace Titanium.Core.Tokens
 				case TokenType.Exponent:
 					return OperatorAssociativity.Right;
 				case TokenType.Factorial:
+				case TokenType.Root:
 					return OperatorAssociativity.Irrelevant;
 			}
 
@@ -52,6 +55,7 @@ namespace Titanium.Core.Tokens
 				case TokenType.Exponent:
 				case TokenType.Function:
 				case TokenType.Factorial:
+				case TokenType.Root:
 					return true;
 			}
 
