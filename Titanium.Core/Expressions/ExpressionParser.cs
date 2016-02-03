@@ -18,13 +18,15 @@ namespace Titanium.Core.Expressions
 			return ParsePostfix(postfix);
 		}
 
-		private static IEnumerable<Token> CreatePostfixTokenList(IEnumerable<Token> tokens)
+		private static IEnumerable<Token> CreatePostfixTokenList(List<Token> tokens)
 		{
+			tokens = InsertImpliedMultiplication(tokens);
+
 			// https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 
 			var outputQueue = new List<Token>();
 			var stack = new Stack<Token>();
-
+			
 			foreach (var currentToken in tokens)
 			{
 				// If the token is a number, then add it to the output queue.
@@ -145,6 +147,36 @@ namespace Titanium.Core.Expressions
 			}
 
 			return outputQueue;
+		}
+
+		private static List<Token> InsertImpliedMultiplication(List<Token> tokens)
+		{
+			var insertPoints = new List<int>();
+			for (var i = 0; i < tokens.Count - 1; i++)
+			{
+				if (IsImpliedMultiplication(tokens[i].Type, tokens[i + 1].Type))
+				{
+					insertPoints.Add(i + 1);
+				}
+			}
+
+			insertPoints.Reverse();
+			foreach (var point in insertPoints)
+			{
+				tokens.Insert(point, new Token(TokenType.Multiply, "*"));
+			}
+
+			return tokens;
+		}
+
+		private static bool IsImpliedMultiplication(TokenType left, TokenType right)
+		{
+			return
+				(left.IsOperand() && right == TokenType.OpenParenthesis) ||
+				(left == TokenType.CloseParenthesis && right.IsOperand()) ||
+				(left == TokenType.CloseParenthesis && right == TokenType.OpenParenthesis) ||
+				(left.IsOperand() && right == TokenType.Function) ||
+				(left.IsOperand() && right.IsOperand());
 		}
 
 		private static Expression ParsePostfix(IEnumerable<Token> tokens)

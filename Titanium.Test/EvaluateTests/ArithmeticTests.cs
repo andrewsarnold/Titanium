@@ -85,6 +85,15 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("1/2+1/2", "1");
 			Common.EvaluateAndAssert("1/2*1/2", "1/4");
 		}
+
+		[TestMethod]
+		public void EvaluateImpliedMultiplicationTest()
+		{
+			Common.EvaluateAndAssert("2(3)", "6");
+			Common.EvaluateAndAssert("(2)3", "6");
+			Common.EvaluateAndAssert("(3)(2)", "6");
+			Common.EvaluateAndAssert("2cos(1)", "2*cos(1)");
+			Common.EvaluateAndAssert("2cos(0)", "2");
+		}
 	}
 }
- 
