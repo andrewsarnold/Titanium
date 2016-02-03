@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="EvaluateTests\ArithmeticTests.cs" />
     <Compile Include="EvaluateTests\Common.cs" />
+    <Compile Include="EvaluateTests\CompositeTests.cs" />
     <Compile Include="EvaluateTests\MiscTests.cs" />
     <Compile Include="EvaluateTests\TrigonometryTests.cs" />
     <Compile Include="ExpressionBuilderTests.cs" />

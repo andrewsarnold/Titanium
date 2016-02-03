@@ -176,6 +176,20 @@ namespace Titanium.Core.Components
 				: new SingleFactorComponent(new NumericFactor(left - (Float)right));
 		}
 
+		public static Component operator +(Number left, IntegerFraction right)
+		{
+			return left is Integer
+				? (Component)((Integer)left + right)
+				: new SingleFactorComponent(new NumericFactor((Float)left + right));
+		}
+
+		public static Component operator -(Number left, IntegerFraction right)
+		{
+			return left is Integer
+				? (Component)(((Integer)left) - right)
+				: new SingleFactorComponent(new NumericFactor((Float)left - right));
+		}
+
 		public override string ToString()
 		{
 			return string.Format("{0}{1}{2}", IsNegative ? "⁻" : string.Empty, Math.Abs(Numerator), Denominator == 1 ? string.Empty : string.Format("/{0}", Denominator));

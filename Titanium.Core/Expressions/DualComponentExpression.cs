@@ -47,6 +47,20 @@ namespace Titanium.Core.Expressions
 					: leftFraction - rightFraction);
 			}
 
+			if (leftFraction != null && Common.IsNumber(right, out rightNumber))
+			{
+				return new SingleComponentExpression(_isAdd
+					? leftFraction + rightNumber
+					: leftFraction - rightNumber);
+			}
+
+			if (leftNumber != null && Common.IsIntegerFraction(right, out rightFraction))
+			{
+				return new SingleComponentExpression(_isAdd
+					? leftNumber + rightFraction
+					: leftNumber - rightFraction);
+			}
+
 			return new DualComponentExpression(Common.ToComponent(left), Common.ToComponent(right), _isAdd);
 		}
 	}

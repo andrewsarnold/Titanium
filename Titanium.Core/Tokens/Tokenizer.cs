@@ -55,7 +55,7 @@ namespace Titanium.Core.Tokens
 		{
 			while (input.Contains("⁻⁻"))
 			{
-				input = input.Replace("⁻⁻", "⁻");
+				input = input.Replace("⁻⁻", "");
 			}
 
 			return input;

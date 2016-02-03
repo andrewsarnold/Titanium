@@ -2,6 +2,7 @@
 {
 	public enum OperatorAssociativity
 	{
+		Irrelevant,
 		Left,
 		Right
 	}

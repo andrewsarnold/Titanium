@@ -33,8 +33,9 @@ namespace Titanium.Core.Tokens
 				case TokenType.Divide:
 					return OperatorAssociativity.Left;
 				case TokenType.Exponent:
-				case TokenType.Factorial: // ?
 					return OperatorAssociativity.Right;
+				case TokenType.Factorial:
+					return OperatorAssociativity.Irrelevant;
 			}
 
 			throw new UnexpectedTokenTypeException(type);

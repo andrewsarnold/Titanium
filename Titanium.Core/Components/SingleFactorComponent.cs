@@ -47,7 +47,7 @@ namespace Titanium.Core.Components
 						var nf = (NumericFactor)factor;
 						if (nf.Number is Integer)
 						{
-							return Common.ToExpression(new IntegerFraction((Integer)nf.Number));
+							return Common.ToExpression(new NumericFactor((Integer)nf.Number));
 						}
 					}
 				}

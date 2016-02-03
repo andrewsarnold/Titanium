@@ -36,13 +36,13 @@ namespace Titanium.Core.Functions
 					var result = _function(integer.Value);
 					if (IsInteger(result))
 					{
-						return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(new Integer((int)result))));
+						return Common.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
 				}
 				else
 				{
 					var aFloat = (Float)number.Number;
-					return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(new Float(_function(aFloat.Value)))));
+					return Common.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
 				}
 			}
 			else if (factor is AlphabeticFactor)
@@ -54,13 +54,13 @@ namespace Titanium.Core.Functions
 					var result = _function(Constants.Get(alph.Value));
 					if (IsInteger(result))
 					{
-						return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(new Integer((int)result))));
+						return Common.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
-					return new SingleComponentExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+					return Common.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
 				}
 			}
 
-			return new SingleComponentExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+			return Common.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
 		}
 
 		private static bool IsInteger(double d)
