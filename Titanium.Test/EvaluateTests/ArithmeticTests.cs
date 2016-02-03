@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Titanium.Test.EvaluateTests
 {
@@ -50,7 +51,7 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("3 / 9", "1/3");
 			Common.EvaluateAndAssert("10 / 5", "2");
 			Common.EvaluateAndAssert("15 / 10", "3/2");
-			Common.AssertThrows("1 / 0");
+			Common.AssertThrows<DivideByZeroException>("1 / 0");
 		}
 
 		[TestMethod]

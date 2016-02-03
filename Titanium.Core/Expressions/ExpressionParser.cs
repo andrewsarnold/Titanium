@@ -129,6 +129,11 @@ namespace Titanium.Core.Expressions
 					// If the stack runs out without finding a left parenthesis,
 					// then there are mismatched parentheses.
 				}
+
+				else
+				{
+					throw new SyntaxErrorException("Unexpected token", currentToken.Value);
+				}
 			}
 
 			// When there are no more tokens to read:

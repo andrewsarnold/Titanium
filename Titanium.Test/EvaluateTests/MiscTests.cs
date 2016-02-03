@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Titanium.Core.Exceptions;
 
 namespace Titanium.Test.EvaluateTests
 {
@@ -33,9 +34,8 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void EvaluateErrorTest()
 		{
-			Common.AssertThrows("aa4");
-			Common.AssertThrows("12*");
-			Common.AssertThrows(".5.");
+			Common.AssertThrows<SyntaxErrorException>("12*");
+			Common.AssertThrows<SyntaxErrorException>(".5.");
 		}
 
 		[TestMethod]

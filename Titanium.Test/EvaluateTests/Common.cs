@@ -13,16 +13,16 @@ namespace Titanium.Test.EvaluateTests
 			Assert.AreEqual(output, result.ToString());
 		}
 
-		internal static void AssertThrows(string input)
+		internal static void AssertThrows<T>(string input)
 		{
 			try
 			{
 				EvaluateAndAssert(input, string.Empty);
 				Assert.Fail();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				Assert.IsTrue(true);
+				Assert.IsTrue(ex.GetType() == typeof(T));
 			}
 		}
 	}
