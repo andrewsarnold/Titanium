@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 
@@ -17,49 +19,48 @@ namespace Titanium.Core.Functions
 			_function = function;
 		}
 
-		internal override Component Evaluate(List<object> parameters)
+		public override Expression Evaluate(List<Expression> parameters)
 		{
 			if (parameters.Count != 1)
 			{
 				throw new WrongArgumentCountException(Name, 1, parameters.Count);
 			}
 
-			if (parameters[0] is AlphabeticFactor)
+			var factor = Common.ToFactor(parameters[0]);
+			if (factor is NumericFactor)
 			{
-				// If operand is a constant (like pi), and the result is not an integer, don't evaluate
-				var factor = (AlphabeticFactor)parameters[0];
-				if (Constants.IsNamedConstant(factor.Value))
+				var number = (NumericFactor)factor;
+				if (number.Number is Integer)
 				{
-					var result = _function(Constants.Get(factor.Value));
+					var integer = (Integer)number.Number;
+					var result = _function(integer.Value);
 					if (IsInteger(result))
 					{
-						return new SingleFactorComponent(new NumericFactor(new Integer((int)result)));
-					}
-					return new FunctionComponent(Name, parameters);
-				}
-			}
-
-			var operand = Reducer.GetFactor(parameters[0]);
-			if (operand is NumericFactor)
-			{
-				var factor = (NumericFactor)operand;
-				if (factor.Number is Integer)
-				{
-					var number = (Integer)factor.Number;
-					var result = _function(number.Value);
-					if (IsInteger(result))
-					{
-						return new SingleFactorComponent(new NumericFactor(new Integer((int)result)));
+						return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(new Integer((int)result))));
 					}
 				}
 				else
 				{
-					var number = (Float)factor.Number;
-					return new SingleFactorComponent(new NumericFactor(new Float(_function(number.Value))));
+					var aFloat = (Float)number.Number;
+					return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(new Float(_function(aFloat.Value)))));
+				}
+			}
+			else if (factor is AlphabeticFactor)
+			{
+				// If operand is a constant (like pi), and the result is not an integer, don't evaluate
+				var alph = (AlphabeticFactor)factor;
+				if (Constants.IsNamedConstant(alph.Value))
+				{
+					var result = _function(Constants.Get(alph.Value));
+					if (IsInteger(result))
+					{
+						return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(new Integer((int)result))));
+					}
+					return new SingleComponentExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
 				}
 			}
 
-			return new FunctionComponent(Name, parameters);
+			return new SingleComponentExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
 		}
 
 		private static bool IsInteger(double d)

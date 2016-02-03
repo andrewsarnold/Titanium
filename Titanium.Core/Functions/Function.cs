@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Titanium.Core.Components;
+using Titanium.Core.Expressions;
 
 namespace Titanium.Core.Functions
 {
@@ -12,6 +12,6 @@ namespace Titanium.Core.Functions
 			Name = name;
 		}
 
-		internal abstract Component Evaluate(List<object> parameters);
+		public abstract Expression Evaluate(List<Expression> parameters);
 	}
 }

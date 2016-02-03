@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 
@@ -13,32 +15,40 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		internal override Component Evaluate(List<object> operands)
+		public override Expression Evaluate(List<Expression> parameters)
 		{
-			if (operands.Count != 1)
+			if (parameters.Count != 1)
 			{
-				throw new WrongArgumentCountException("!", 1, operands.Count);
+				throw new WrongArgumentCountException("!", 1, parameters.Count);
 			}
 
-			if (operands[0] is NumericFactor)
+			if (parameters[0] is SingleComponentExpression)
 			{
-				var operand = (NumericFactor)operands[0];
-				if (operand.Number is Integer)
+				var component = ((SingleComponentExpression)parameters[0]).Component;
+				if (component is SingleFactorComponent)
 				{
-					var number = (Integer)operand.Number;
-					return new IntegerFraction(new Integer(BasicFactorial(number.Value)));
+					var factor = ((SingleFactorComponent)component).Factor;
+					if (factor is NumericFactor)
+					{
+						var operand = (NumericFactor)factor;
+						if (operand.Number is Integer)
+						{
+							var number = (Integer)operand.Number;
+							return new SingleComponentExpression(new IntegerFraction(new Integer(BasicFactorial(number.Value))));
+						}
+					}
 				}
-			}
-			else if (operands[0] is IntegerFraction)
-			{
-				var operand = (IntegerFraction)operands[0];
-				if (operand.Denominator == 1)
+				else if (component is IntegerFraction)
 				{
-					return new IntegerFraction(new Integer(BasicFactorial(operand.Numerator)));
+					var operand = (IntegerFraction)component;
+					if (operand.Denominator == 1)
+					{
+						return new SingleComponentExpression(new IntegerFraction(new Integer(BasicFactorial(operand.Numerator))));
+					}
 				}
 			}
 
-			return new FunctionComponent("!", operands);
+			return new SingleComponentExpression(new FunctionComponent("!", parameters.Cast<IEvaluatable>().ToList()));
 		}
 
 		private static int BasicFactorial(int i)

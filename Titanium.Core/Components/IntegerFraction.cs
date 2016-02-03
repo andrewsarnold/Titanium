@@ -1,5 +1,6 @@
 ﻿using System;
 using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 
@@ -180,11 +181,11 @@ namespace Titanium.Core.Components
 			return string.Format("{0}{1}{2}", IsNegative ? "⁻" : string.Empty, Math.Abs(Numerator), Denominator == 1 ? string.Empty : string.Format("/{0}", Denominator));
 		}
 
-		internal override Component Evaluate()
+		public override Expression Evaluate()
 		{
 			return Denominator == 1
-				? new SingleFactorComponent(new NumericFactor(new Integer(Numerator)))
-				: (Component)this;
+				? Common.ToExpression(new NumericFactor(new Integer(Numerator)))
+				: Common.ToExpression(this);
 		}
 
 		private Float ValueAsFloat()

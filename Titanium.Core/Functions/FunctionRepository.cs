@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Titanium.Core.Components;
+using Titanium.Core.Expressions;
 using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Functions
@@ -16,11 +16,11 @@ namespace Titanium.Core.Functions
 			{ "tan", new Trigonometric("tan", Math.Tan) }
 		};
 
-		internal static Component Evaluate(string name, List<object> parameters)
+		internal static Expression Evaluate(string name, List<IEvaluatable> parameters)
 		{
 			if (Funcs.ContainsKey(name))
 			{
-				return Funcs[name].Evaluate(parameters);
+				return Funcs[name].Evaluate(parameters.Select(p => p.Evaluate()).ToList());
 			}
 
 			throw new NotImplementedException(name);

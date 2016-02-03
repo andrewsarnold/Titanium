@@ -32,9 +32,9 @@ namespace Titanium.Core.Expressions
 
 			if (Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber))
 			{
-				return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(_isAdd
+				return Common.ToExpression(new NumericFactor(_isAdd
 					? leftNumber + rightNumber
-					: leftNumber - rightNumber)));
+					: leftNumber - rightNumber));
 			}
 
 			IntegerFraction leftFraction;
@@ -47,7 +47,7 @@ namespace Titanium.Core.Expressions
 					: leftFraction - rightFraction);
 			}
 
-			return new DualComponentExpression(left, right, _isAdd);
+			return new DualComponentExpression(Common.ToComponent(left), Common.ToComponent(right), _isAdd);
 		}
 	}
 }

@@ -18,33 +18,42 @@ namespace Titanium.Core.Components
 			return Factor.ToString();
 		}
 
-		internal override Component Evaluate()
+		public override Expression Evaluate()
 		{
 			var result = Factor.Evaluate();
 
-			if (result is ExpressionFactor)
+			if (result is SingleComponentExpression)
 			{
-				var expressionFactor = (ExpressionFactor)result;
-				if (expressionFactor.Expression is SingleComponentExpression)
+				var component = ((SingleComponentExpression) result).Component;
+				if (component is SingleFactorComponent)
 				{
-					var singleComponentExpression = (SingleComponentExpression)expressionFactor.Expression;
-					if (singleComponentExpression.Component is IntegerFraction)
+					var factor = ((SingleFactorComponent) component).Factor;
+
+					if (factor is ExpressionFactor)
 					{
-						return (IntegerFraction)singleComponentExpression.Component;
+						var expressionFactor = (ExpressionFactor)factor;
+						if (expressionFactor.Expression is SingleComponentExpression)
+						{
+							var singleComponentExpression = (SingleComponentExpression)expressionFactor.Expression;
+							if (singleComponentExpression.Component is IntegerFraction)
+							{
+								return Common.ToExpression((IntegerFraction)singleComponentExpression.Component);
+							}
+						}
+					}
+
+					if (factor is NumericFactor)
+					{
+						var nf = (NumericFactor)factor;
+						if (nf.Number is Integer)
+						{
+							return Common.ToExpression(new IntegerFraction((Integer)nf.Number));
+						}
 					}
 				}
 			}
 
-			if (result is NumericFactor)
-			{
-				var nf = (NumericFactor)result;
-				if (nf.Number is Integer)
-				{
-					return new IntegerFraction((Integer)nf.Number);
-				}
-			}
-
-			return new SingleFactorComponent(result);
+			return result;
 		}
 	}
 }

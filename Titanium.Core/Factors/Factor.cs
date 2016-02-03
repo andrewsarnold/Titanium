@@ -1,9 +1,10 @@
-﻿using Titanium.Core.Numbers;
+﻿using Titanium.Core.Expressions;
+using Titanium.Core.Numbers;
 using Titanium.Core.Tokens;
 
 namespace Titanium.Core.Factors
 {
-	internal abstract class Factor
+	internal abstract class Factor : IEvaluatable
 	{
 		internal static NumericFactor GetIntegerFactor(Token token)
 		{
@@ -17,6 +18,6 @@ namespace Titanium.Core.Factors
 			return new NumericFactor(new Float(double.Parse(stringVal)));
 		}
 
-		internal abstract Factor Evaluate();
+		public abstract Expression Evaluate();
 	}
 }

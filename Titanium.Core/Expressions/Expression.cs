@@ -3,7 +3,7 @@ using Titanium.Core.Exceptions;
 
 namespace Titanium.Core.Expressions
 {
-	public abstract class Expression
+	public abstract class Expression : IEvaluatable
 	{
 		public static Expression ParseExpression(string input)
 		{

@@ -147,12 +147,12 @@ namespace Titanium.Core.Expressions
 
 		private static Expression ParsePostfix(IEnumerable<Token> tokens)
 		{
-			var stack = new Stack<object>();
+			var stack = new Stack<IEvaluatable>();
 			foreach (var token in tokens)
 			{
 				if (token.Type.IsOperand())
 				{
-					stack.Push(ParseOperand(token));
+					stack.Push(new SingleFactorComponent(ParseOperand(token)));
 				}
 				else if (token.Type == TokenType.Function)
 				{
@@ -162,12 +162,12 @@ namespace Titanium.Core.Expressions
 				}
 				else if (token.Type.IsOperator())
 				{
-					object parent;
+					IEvaluatable parent;
 
 					if (token.Type == TokenType.Factorial)
 					{
 						var argument = stack.Pop();
-						parent = new FunctionComponent("!", new List<object> { argument });
+						parent = new FunctionComponent("!", new List<IEvaluatable> { argument });
 					}
 					else
 					{
@@ -178,12 +178,12 @@ namespace Titanium.Core.Expressions
 						{
 							case TokenType.Plus:
 							case TokenType.Minus:
-								parent = new DualComponentExpression(Reducer.GetComponent(left), Reducer.GetComponent(right), token.Type == TokenType.Plus);
+								parent = new DualComponentExpression(Common.ToComponent(left), Common.ToComponent(right), token.Type == TokenType.Plus);
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
 							case TokenType.Exponent:
-								parent = new DualFactorComponent(Reducer.GetFactor(left), Reducer.GetFactor(right),
+								parent = new DualFactorComponent(Common.ToFactor(left), Common.ToFactor(right),
 									token.Type == TokenType.Multiply
 										? ComponentType.Multiply
 										: token.Type == TokenType.Divide
