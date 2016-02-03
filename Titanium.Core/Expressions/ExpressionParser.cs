@@ -3,6 +3,7 @@ using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions;
 using Titanium.Core.Reducer;
 using Titanium.Core.Tokens;
 
@@ -157,8 +158,13 @@ namespace Titanium.Core.Expressions
 				}
 				else if (token.Type == TokenType.Function)
 				{
-					var operands = stack.Reverse().ToList();
-					stack.Clear();
+					var operands = new List<IEvaluatable>();
+					var operatorCount = FunctionRepository.ArgumentCount(token.Value);
+					for (var i = 0; i < operatorCount; i++)
+					{
+						operands.Add(stack.Pop());
+					}
+
 					stack.Push(new FunctionComponent(token.Value, operands));
 				}
 				else if (token.Type.IsOperator())
@@ -169,6 +175,11 @@ namespace Titanium.Core.Expressions
 					{
 						var argument = stack.Pop();
 						parent = new FunctionComponent("!", new List<IEvaluatable> { argument });
+					}
+					else if (token.Type == TokenType.Root)
+					{
+						var argument = stack.Pop();
+						parent = new FunctionComponent("√", new List<IEvaluatable> { argument });
 					}
 					else
 					{

@@ -11,12 +11,14 @@ namespace Titanium.Core.Functions
 		private static readonly Dictionary<string, Function> Funcs = new Dictionary<string, Function>
 		{
 			{ "!", new Factorial() },
-			{ "sin", new Trigonometric("sin", Math.Sin) },
-			{ "cos", new Trigonometric("cos", Math.Cos) },
-			{ "tan", new Trigonometric("tan", Math.Tan) }
+			{ "sin", new SimpleFloatCalculation("sin", Math.Sin) },
+			{ "cos", new SimpleFloatCalculation("cos", Math.Cos) },
+			{ "tan", new SimpleFloatCalculation("tan", Math.Tan) },
+			{ "√", new SimpleFloatCalculation("√", Math.Sqrt) },
+			{ "sqrt", new SimpleFloatCalculation("√", Math.Sqrt) }
 		};
 
-		internal static Expression Evaluate(string name, List<IEvaluatable> parameters)
+		internal static Expression Evaluate(string name, IEnumerable<IEvaluatable> parameters)
 		{
 			if (Funcs.ContainsKey(name))
 			{
@@ -29,6 +31,16 @@ namespace Titanium.Core.Functions
 		internal static bool Contains(string name)
 		{
 			return Funcs.Any(f => f.Key == name);
+		}
+
+		internal static int ArgumentCount(string name)
+		{
+			if (Contains(name))
+			{
+				return Funcs[name].ArgumentCount;
+			}
+
+			throw new NotImplementedException();
 		}
 	}
 }

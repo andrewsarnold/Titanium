@@ -8,6 +8,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void MultiFunctionTest()
 		{
+			Common.EvaluateAndAssert("2/cos(0)", "2");
 			Common.EvaluateAndAssert("3!!", "720");
 			Common.EvaluateAndAssert("cos(sin(0))", "1");
 			Common.EvaluateAndAssert("cos(sin(sin(0)))", "1");

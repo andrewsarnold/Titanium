@@ -11,7 +11,7 @@ namespace Titanium.Core.Functions.Implementations
 	internal class Factorial : Function
 	{
 		public Factorial()
-			: base("!")
+			: base("!", 1)
 		{
 		}
 
