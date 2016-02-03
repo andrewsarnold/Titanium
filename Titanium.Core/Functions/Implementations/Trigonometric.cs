@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 
-namespace Titanium.Core.Functions
+namespace Titanium.Core.Functions.Implementations
 {
 	internal class Trigonometric : Function
 	{
@@ -55,6 +56,12 @@ namespace Titanium.Core.Functions
 				else
 				{
 					var number = (Float)factor.Number;
+
+					if (Name == "tan" && Math.Abs(number.Value - Math.PI / 2) < Constants.Tolerance)
+					{
+						return new SingleFactorComponent(new ExpressionFactor(new UndefinedExpression()));
+					}
+
 					return new SingleFactorComponent(new NumericFactor(new Float(_function(number.Value))));
 				}
 			}

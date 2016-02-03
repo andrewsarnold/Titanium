@@ -32,7 +32,11 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("tan(1.3)", "3.60210244796798");
 			Common.EvaluateAndAssert("tan(⁻1.3)", "⁻3.60210244796798");
 			Common.EvaluateAndAssert("tan(0)", "0");
-			// todo: tan pi / 2
+			Common.EvaluateAndAssert("tan(π)", "0");
+			Common.EvaluateAndAssert("tan(1/2)", "tan(1/2)");
+			Common.EvaluateAndAssert("tan(1/2.)", "0.54630248984379");
+			Common.EvaluateAndAssert("tan(π/2)", "undef");
+			Common.EvaluateAndAssert("tan(⁻π/2)", "undef");
 		}
 	}
 }
