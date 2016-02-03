@@ -3,6 +3,7 @@ using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
+using Titanium.Core.Reducer;
 using Titanium.Core.Tokens;
 
 namespace Titanium.Core.Expressions
@@ -178,12 +179,12 @@ namespace Titanium.Core.Expressions
 						{
 							case TokenType.Plus:
 							case TokenType.Minus:
-								parent = new DualComponentExpression(Common.ToComponent(left), Common.ToComponent(right), token.Type == TokenType.Plus);
+								parent = new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), token.Type == TokenType.Plus);
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
 							case TokenType.Exponent:
-								parent = new DualFactorComponent(Common.ToFactor(left), Common.ToFactor(right),
+								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right),
 									token.Type == TokenType.Multiply
 										? ComponentType.Multiply
 										: token.Type == TokenType.Divide

@@ -65,6 +65,9 @@
     <Compile Include="Numbers\Integer.cs" />
     <Compile Include="Numbers\Number.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reducer\Componentizer.cs" />
+    <Compile Include="Reducer\Expressionizer.cs" />
+    <Compile Include="Reducer\Factorizer.cs" />
     <Compile Include="Tokens\OperatorAssociativity.cs" />
     <Compile Include="Tokens\OperatorExtensions.cs" />
     <Compile Include="Tokens\Token.cs" />

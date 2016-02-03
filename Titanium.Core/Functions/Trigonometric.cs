@@ -6,6 +6,7 @@ using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Functions
 {
@@ -26,7 +27,7 @@ namespace Titanium.Core.Functions
 				throw new WrongArgumentCountException(Name, 1, parameters.Count);
 			}
 
-			var factor = Common.ToFactor(parameters[0]);
+			var factor = Factorizer.ToFactor(parameters[0]);
 			if (factor is NumericFactor)
 			{
 				var number = (NumericFactor)factor;
@@ -36,13 +37,13 @@ namespace Titanium.Core.Functions
 					var result = _function(integer.Value);
 					if (IsInteger(result))
 					{
-						return Common.ToExpression(new NumericFactor(new Integer((int)result)));
+						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
 				}
 				else
 				{
 					var aFloat = (Float)number.Number;
-					return Common.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
+					return Expressionizer.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
 				}
 			}
 			else if (factor is AlphabeticFactor)
@@ -54,13 +55,13 @@ namespace Titanium.Core.Functions
 					var result = _function(Constants.Get(alph.Value));
 					if (IsInteger(result))
 					{
-						return Common.ToExpression(new NumericFactor(new Integer((int)result)));
+						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
-					return Common.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+					return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
 				}
 			}
 
-			return Common.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+			return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
 		}
 
 		private static bool IsInteger(double d)

@@ -1,6 +1,7 @@
 ﻿using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
@@ -21,7 +22,7 @@ namespace Titanium.Core.Components
 		public override Expression Evaluate()
 		{
 			var result = Factor.Evaluate();
-
+			
 			if (result is SingleComponentExpression)
 			{
 				var component = ((SingleComponentExpression) result).Component;
@@ -37,7 +38,7 @@ namespace Titanium.Core.Components
 							var singleComponentExpression = (SingleComponentExpression)expressionFactor.Expression;
 							if (singleComponentExpression.Component is IntegerFraction)
 							{
-								return Common.ToExpression((IntegerFraction)singleComponentExpression.Component);
+								return Expressionizer.ToExpression((IntegerFraction)singleComponentExpression.Component);
 							}
 						}
 					}
@@ -47,7 +48,7 @@ namespace Titanium.Core.Components
 						var nf = (NumericFactor)factor;
 						if (nf.Number is Integer)
 						{
-							return Common.ToExpression(new NumericFactor((Integer)nf.Number));
+							return Expressionizer.ToExpression(new NumericFactor((Integer)nf.Number));
 						}
 					}
 				}

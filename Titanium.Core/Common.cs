@@ -1,5 +1,4 @@
 ﻿using Titanium.Core.Components;
-using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
@@ -8,85 +7,6 @@ namespace Titanium.Core
 {
 	internal static class Common
 	{
-		internal static Expression ToExpression(IEvaluatable thing)
-		{
-			if (thing is Expression)
-			{
-				return (Expression)thing;
-			}
-
-			if (thing is Component)
-			{
-				return new SingleComponentExpression((Component)thing);
-			}
-
-			if (thing is Factor)
-			{
-				var factor = (Factor)thing;
-				return factor is ExpressionFactor
-					? ((ExpressionFactor)factor).Expression
-					: new SingleComponentExpression(new SingleFactorComponent((Factor)thing));
-			}
-
-			throw new UnexpectedTypeException(thing.GetType());
-		}
-
-		internal static Component ToComponent(IEvaluatable thing)
-		{
-			if (thing is Expression)
-			{
-				var expression = (Expression)thing;
-				return expression is SingleComponentExpression
-					? ((SingleComponentExpression)expression).Component
-					: new SingleFactorComponent(new ExpressionFactor(expression));
-			}
-
-			if (thing is Component)
-			{
-				return (Component)thing;
-			}
-
-			if (thing is Factor)
-			{
-				return new SingleFactorComponent((Factor)thing);
-			}
-
-			throw new UnexpectedTypeException(thing.GetType());
-		}
-
-		internal static Factor ToFactor(IEvaluatable thing)
-		{
-			if (thing is Expression)
-			{
-				var result = ((Expression)thing).Evaluate();
-				if (result is SingleComponentExpression)
-				{
-					var component = ((SingleComponentExpression)result).Component;
-					if (component is SingleFactorComponent)
-					{
-						return ((SingleFactorComponent)component).Factor;
-					}
-				}
-
-				return new ExpressionFactor(result);
-			}
-
-			if (thing is Component)
-			{
-				var component = (Component)thing;
-				return component is SingleFactorComponent
-					? ((SingleFactorComponent)component).Factor
-					: new ExpressionFactor(new SingleComponentExpression(component));
-			}
-
-			if (thing is Factor)
-			{
-				return (Factor)thing;
-			}
-
-			throw new UnexpectedTypeException(thing.GetType());
-		}
-
 		internal static bool IsNumber(Factor factor, out Number number)
 		{
 			if (factor is NumericFactor)

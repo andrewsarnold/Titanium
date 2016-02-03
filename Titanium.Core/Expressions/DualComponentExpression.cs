@@ -1,6 +1,7 @@
 ﻿using Titanium.Core.Components;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Expressions
 {
@@ -32,7 +33,7 @@ namespace Titanium.Core.Expressions
 
 			if (Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber))
 			{
-				return Common.ToExpression(new NumericFactor(_isAdd
+				return Expressionizer.ToExpression(new NumericFactor(_isAdd
 					? leftNumber + rightNumber
 					: leftNumber - rightNumber));
 			}
@@ -61,7 +62,7 @@ namespace Titanium.Core.Expressions
 					: leftNumber - rightFraction);
 			}
 
-			return new DualComponentExpression(Common.ToComponent(left), Common.ToComponent(right), _isAdd);
+			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
 		}
 	}
 }

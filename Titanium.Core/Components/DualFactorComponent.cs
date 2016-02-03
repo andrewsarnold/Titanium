@@ -1,6 +1,7 @@
 ﻿using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
@@ -42,11 +43,11 @@ namespace Titanium.Core.Components
 				{
 					var result = leftNumber / rightNumber;
 					return result is IntegerFraction
-						? Common.ToExpression((IntegerFraction)result)
-						: Common.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
+						? Expressionizer.ToExpression((IntegerFraction)result)
+						: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
 				}
 
-				return Common.ToExpression(new NumericFactor(_componentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(new NumericFactor(_componentType == ComponentType.Multiply
 					? leftNumber * rightNumber
 					: leftNumber ^ rightNumber));
 			}
@@ -56,7 +57,7 @@ namespace Titanium.Core.Components
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				return Common.ToExpression(_componentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(_componentType == ComponentType.Multiply
 					? leftFraction * rightFraction
 					: _componentType == ComponentType.Divide
 						? leftFraction / rightFraction
@@ -73,7 +74,7 @@ namespace Titanium.Core.Components
 						: _componentType == ComponentType.Divide
 							? leftFraction / rightInteger
 							: leftFraction ^ rightInteger;
-					return Common.ToExpression(result);
+					return Expressionizer.ToExpression(result);
 				}
 				else
 				{
@@ -83,11 +84,11 @@ namespace Titanium.Core.Components
 						: _componentType == ComponentType.Divide
 							? leftFraction / rightDouble
 							: leftFraction ^ rightDouble;
-					return Common.ToExpression(new NumericFactor(result));
+					return Expressionizer.ToExpression(new NumericFactor(result));
 				}
 			}
 
-			return Common.ToExpression(new DualFactorComponent(Common.ToFactor(left), Common.ToFactor(right), _componentType));
+			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
 		}
 	}
 }

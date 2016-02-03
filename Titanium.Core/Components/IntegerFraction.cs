@@ -3,6 +3,7 @@ using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
@@ -198,8 +199,8 @@ namespace Titanium.Core.Components
 		public override Expression Evaluate()
 		{
 			return Denominator == 1
-				? Common.ToExpression(new NumericFactor(new Integer(Numerator)))
-				: Common.ToExpression(this);
+				? Expressionizer.ToExpression(new NumericFactor(new Integer(Numerator)))
+				: Expressionizer.ToExpression(this);
 		}
 
 		private Float ValueAsFloat()
