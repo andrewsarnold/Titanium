@@ -38,7 +38,10 @@
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\ComponentType.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
+    <Compile Include="Functions\Implementations\Factorial.cs" />
+    <Compile Include="Functions\Function.cs" />
     <Compile Include="Components\FunctionComponent.cs" />
+    <Compile Include="Functions\FunctionRepository.cs" />
     <Compile Include="Exceptions\AlgorithmException.cs" />
     <Compile Include="Exceptions\FunctionNotDefinedException.cs" />
     <Compile Include="Components\IntegerFraction.cs" />
@@ -56,6 +59,7 @@
     <Compile Include="Factors\ExpressionFactor.cs" />
     <Compile Include="Factors\Factor.cs" />
     <Compile Include="Factors\NumericFactor.cs" />
+    <Compile Include="Functions\Trigonometric.cs" />
     <Compile Include="Numbers\Float.cs" />
     <Compile Include="Numbers\Integer.cs" />
     <Compile Include="Numbers\Number.cs" />

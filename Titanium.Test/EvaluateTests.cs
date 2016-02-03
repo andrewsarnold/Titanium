@@ -137,9 +137,9 @@ namespace Titanium.Test
 			EvaluateAndAssert("cos(3)", "cos(3)");
 			EvaluateAndAssert("cos(π)", "⁻1");
 
-			EvaluateAndAssert("tan(1.3)", "0.267498828624587");
-			EvaluateAndAssert("tan(⁻1.3)", "0.267498828624587");
-			EvaluateAndAssert("tan(0)", "1");
+			EvaluateAndAssert("tan(1.3)", "3.60210244796798");
+			EvaluateAndAssert("tan(⁻1.3)", "⁻3.60210244796798");
+			EvaluateAndAssert("tan(0)", "0");
 			// todo: tan pi / 2
 		}
 
