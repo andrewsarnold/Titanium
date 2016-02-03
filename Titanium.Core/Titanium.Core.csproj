@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B93ABD2A-280F-42E1-AF33-29CEA3239CA3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Titanium.Core</RootNamespace>
+    <AssemblyName>Titanium.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\ComponentType.cs" />
+    <Compile Include="Components\DualFactorComponent.cs" />
+    <Compile Include="Components\FunctionComponent.cs" />
+    <Compile Include="Exceptions\AlgorithmException.cs" />
+    <Compile Include="Exceptions\FunctionNotDefinedException.cs" />
+    <Compile Include="Components\IntegerFraction.cs" />
+    <Compile Include="Components\SingleFactorComponent.cs" />
+    <Compile Include="Exceptions\SyntaxErrorException.cs" />
+    <Compile Include="Exceptions\UnexpectedTokenTypeException.cs" />
+    <Compile Include="Exceptions\UnexpectedTypeException.cs" />
+    <Compile Include="Exceptions\WrongArgumentCountException.cs" />
+    <Compile Include="Expressions\DualComponentExpression.cs" />
+    <Compile Include="Expressions\Expression.cs" />
+    <Compile Include="Expressions\ExpressionParser.cs" />
+    <Compile Include="Expressions\SingleComponentExpression.cs" />
+    <Compile Include="Factors\AlphabeticFactor.cs" />
+    <Compile Include="Factors\Constants.cs" />
+    <Compile Include="Factors\ExpressionFactor.cs" />
+    <Compile Include="Factors\Factor.cs" />
+    <Compile Include="Factors\NumericFactor.cs" />
+    <Compile Include="Numbers\Float.cs" />
+    <Compile Include="Numbers\Integer.cs" />
+    <Compile Include="Numbers\Number.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reducer.cs" />
+    <Compile Include="Tokens\OperatorAssociativity.cs" />
+    <Compile Include="Tokens\OperatorExtensions.cs" />
+    <Compile Include="Tokens\Token.cs" />
+    <Compile Include="Tokens\Tokenizer.cs" />
+    <Compile Include="Tokens\TokenType.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
