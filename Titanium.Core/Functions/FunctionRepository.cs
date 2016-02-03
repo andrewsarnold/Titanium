@@ -16,10 +16,8 @@ namespace Titanium.Core.Functions
 			{ "tan", new SimpleFloatCalculation("tan", Math.Tan) },
 			{ "√", new SimpleFloatCalculation("√", Math.Sqrt) },
 			{ "sqrt", new SimpleFloatCalculation("√", Math.Sqrt) },
-			{ "abs", new SimpleFloatCalculation("abs", Math.Abs) },
 			{ "ceil", new SimpleFloatCalculation("ceil", Math.Ceiling) },
-			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
-			{ "ln", new SimpleFloatCalculation("ln", Math.Log) }
+			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) }
 		};
 
 		internal static Expression Evaluate(string name, IEnumerable<IEvaluatable> parameters)
