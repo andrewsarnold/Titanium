@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titanium.Test", "Titanium.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titanium.Core", "Titanium.Core\Titanium.Core.csproj", "{B93ABD2A-280F-42E1-AF33-29CEA3239CA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titanium.WinConsole", "Titanium.WinConsole\Titanium.WinConsole.csproj", "{B2516696-CD95-4A6F-85A5-52AD7C409DE5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{B93ABD2A-280F-42E1-AF33-29CEA3239CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B93ABD2A-280F-42E1-AF33-29CEA3239CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B93ABD2A-280F-42E1-AF33-29CEA3239CA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2516696-CD95-4A6F-85A5-52AD7C409DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2516696-CD95-4A6F-85A5-52AD7C409DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2516696-CD95-4A6F-85A5-52AD7C409DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2516696-CD95-4A6F-85A5-52AD7C409DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
