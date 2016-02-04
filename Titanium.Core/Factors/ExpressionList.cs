@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Expressions;
 using Titanium.Core.Reducer;
 
@@ -6,7 +7,7 @@ namespace Titanium.Core.Factors
 {
 	internal class ExpressionList : Factor
 	{
-		internal readonly List<Expression> Expressions;
+		internal List<Expression> Expressions;
 
 		public ExpressionList(List<Expression> expressions)
 		{
@@ -15,7 +16,7 @@ namespace Titanium.Core.Factors
 
 		public override Expression Evaluate()
 		{
-			Expressions.ForEach(e => e.Evaluate());
+			Expressions = Expressions.Select(e => e.Evaluate()).ToList();
 			return Expressionizer.ToExpression(this);
 		}
 
