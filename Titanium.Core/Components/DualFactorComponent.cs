@@ -20,13 +20,13 @@ namespace Titanium.Core.Components
 
 		public override string ToString()
 		{
-			return string.Format("{0}{1}{2}", _leftFactor,
+			return string.Format("{0}{1}{2}", ToString(_leftFactor),
 				_componentType == ComponentType.Multiply
 					? "*"
 					: _componentType == ComponentType.Divide
 						? "/"
 						: "^",
-				_rightFactor);
+				ToString(_rightFactor));
 		}
 
 		public override Expression Evaluate()
@@ -89,6 +89,13 @@ namespace Titanium.Core.Components
 			}
 
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
+		}
+
+		private static string ToString(Factor factor)
+		{
+			return factor is ExpressionFactor
+				? string.Format("({0})", factor)
+				: factor.ToString();
 		}
 	}
 }
