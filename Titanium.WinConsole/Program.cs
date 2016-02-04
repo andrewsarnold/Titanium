@@ -12,6 +12,7 @@ namespace Titanium.WinConsole
 				Console.Write("> ");
 				var input = Console.ReadLine();
 				if (input != null && input.Equals("exit")) break;
+				if (string.IsNullOrWhiteSpace(input)) continue;
 
 				try
 				{
