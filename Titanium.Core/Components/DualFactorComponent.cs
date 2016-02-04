@@ -93,9 +93,16 @@ namespace Titanium.Core.Components
 
 		private static string ToString(Factor factor)
 		{
-			return factor is ExpressionFactor
-				? string.Format("({0})", factor)
-				: factor.ToString();
+			if (factor is ExpressionFactor)
+			{
+				var expression = ((ExpressionFactor)factor).Expression;
+				if (expression is DualComponentExpression)
+				{
+					return string.Format("({0})", expression);
+				}
+			}
+
+			return factor.ToString();
 		}
 	}
 }
