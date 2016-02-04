@@ -12,12 +12,7 @@ namespace Titanium.Test
 		public void OneElementListTest()
 		{
 			var expression = Expression.ParseExpression("{1}");
-			Assert.IsTrue(expression is SingleComponentExpression);
-			var component = ((SingleComponentExpression)expression).Component;
-			Assert.IsTrue(component is SingleFactorComponent);
-			var factor = ((SingleFactorComponent)component).Factor;
-			Assert.IsTrue(factor is ExpressionList);
-			var list = (ExpressionList)factor;
+			var list = GetAsExpressionList(expression);
 
 			Assert.AreEqual(1, list.Count);
 			Assert.AreEqual("{1}", list.ToString());
@@ -27,15 +22,27 @@ namespace Titanium.Test
 		public void TwoElementListTest()
 		{
 			var expression = Expression.ParseExpression("{1,2}");
+			var list = GetAsExpressionList(expression);
+
+			Assert.AreEqual(2, list.Count);
+			Assert.AreEqual("{1,2}", list.ToString());
+		}
+
+		[TestMethod]
+		public void NestedElementListTest()
+		{
+			var expression = Expression.ParseExpression("{1,2,{a,b}}");
+			var list = GetAsExpressionList(expression);
+		}
+
+		private static ExpressionList GetAsExpressionList(Expression expression)
+		{
 			Assert.IsTrue(expression is SingleComponentExpression);
 			var component = ((SingleComponentExpression)expression).Component;
 			Assert.IsTrue(component is SingleFactorComponent);
 			var factor = ((SingleFactorComponent)component).Factor;
 			Assert.IsTrue(factor is ExpressionList);
-			var list = (ExpressionList)factor;
-
-			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual("{1,2}", list.ToString());
+			return (ExpressionList)factor;
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace Titanium.Core.Expressions
 				var currentToken = tokens[index];
 
 				// If the token is a number, then add it to the output queue.
-				if (currentToken.Type == TokenType.Integer || currentToken.Type == TokenType.Float || currentToken.Type == TokenType.Letter)
+				if (currentToken.Type.IsOperand())
 				{
 					outputQueue.Add(currentToken);
 				}
@@ -332,7 +332,9 @@ namespace Titanium.Core.Expressions
 				{
 					var indexOfMatchingBrace = IndexOfMatchingBrace(tokens, i);
 					var tokenSubList = tokens.Skip(i + 1).Take(indexOfMatchingBrace - i - 1).ToList();
-					var innerList = ParseCommaSeparatedList(tokenSubList);
+					var innerList = ParseCommaSeparatedList(tokenSubList).ToList();
+					var list = new ExpressionListToken(new ExpressionList(innerList));
+					currentElement.Add(list);
 					i = indexOfMatchingBrace;
 				}
 
