@@ -18,7 +18,7 @@ namespace Titanium.Core.Expressions
 
 		public override Expression Evaluate()
 		{
-			return new SingleComponentExpression(Component.Evaluate());
+			return Component.Evaluate();
 		}
 	}
 }

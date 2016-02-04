@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions;
+using Titanium.Core.Reducer;
 using Titanium.Core.Tokens;
 
 namespace Titanium.Core.Expressions
@@ -17,17 +18,19 @@ namespace Titanium.Core.Expressions
 			return ParsePostfix(postfix);
 		}
 
-		private static IEnumerable<Token> CreatePostfixTokenList(IEnumerable<Token> tokens)
+		private static IEnumerable<Token> CreatePostfixTokenList(List<Token> tokens)
 		{
+			tokens = InsertImpliedMultiplication(tokens);
+
 			// https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 
 			var outputQueue = new List<Token>();
 			var stack = new Stack<Token>();
-
+			
 			foreach (var currentToken in tokens)
 			{
 				// If the token is a number, then add it to the output queue.
-				if (currentToken.Type == TokenType.Number || currentToken.Type == TokenType.Letter)
+				if (currentToken.Type == TokenType.Integer || currentToken.Type == TokenType.Float || currentToken.Type == TokenType.Letter)
 				{
 					outputQueue.Add(currentToken);
 				}
@@ -126,6 +129,11 @@ namespace Titanium.Core.Expressions
 					// If the stack runs out without finding a left parenthesis,
 					// then there are mismatched parentheses.
 				}
+
+				else
+				{
+					throw new SyntaxErrorException("Unexpected token", currentToken.Value);
+				}
 			}
 
 			// When there are no more tokens to read:
@@ -146,29 +154,69 @@ namespace Titanium.Core.Expressions
 			return outputQueue;
 		}
 
+		private static List<Token> InsertImpliedMultiplication(List<Token> tokens)
+		{
+			var insertPoints = new List<int>();
+			for (var i = 0; i < tokens.Count - 1; i++)
+			{
+				if (IsImpliedMultiplication(tokens[i].Type, tokens[i + 1].Type))
+				{
+					insertPoints.Add(i + 1);
+				}
+			}
+
+			insertPoints.Reverse();
+			foreach (var point in insertPoints)
+			{
+				tokens.Insert(point, new Token(TokenType.Multiply, "*"));
+			}
+
+			return tokens;
+		}
+
+		private static bool IsImpliedMultiplication(TokenType left, TokenType right)
+		{
+			return
+				(left.IsOperand() && right == TokenType.OpenParenthesis) ||
+				(left == TokenType.CloseParenthesis && right.IsOperand()) ||
+				(left == TokenType.CloseParenthesis && right == TokenType.OpenParenthesis) ||
+				(left.IsOperand() && right == TokenType.Function) ||
+				(left.IsOperand() && right.IsOperand());
+		}
+
 		private static Expression ParsePostfix(IEnumerable<Token> tokens)
 		{
-			var stack = new Stack<object>();
+			var stack = new Stack<IEvaluatable>();
 			foreach (var token in tokens)
 			{
 				if (token.Type.IsOperand())
 				{
-					stack.Push(ParseOperand(token));
+					stack.Push(new SingleFactorComponent(ParseOperand(token)));
 				}
 				else if (token.Type == TokenType.Function)
 				{
-					var operands = stack.Reverse().ToList();
-					stack.Clear();
+					var operands = new List<IEvaluatable>();
+					var operatorCount = FunctionRepository.ArgumentCount(token.Value);
+					for (var i = 0; i < operatorCount; i++)
+					{
+						operands.Add(stack.Pop());
+					}
+
 					stack.Push(new FunctionComponent(token.Value, operands));
 				}
 				else if (token.Type.IsOperator())
 				{
-					object parent;
+					IEvaluatable parent;
 
 					if (token.Type == TokenType.Factorial)
 					{
 						var argument = stack.Pop();
-						parent = new FunctionComponent("!", new List<object> { argument });
+						parent = new FunctionComponent("!", new List<IEvaluatable> { argument });
+					}
+					else if (token.Type == TokenType.Root)
+					{
+						var argument = stack.Pop();
+						parent = new FunctionComponent("√", new List<IEvaluatable> { argument });
 					}
 					else
 					{
@@ -179,12 +227,12 @@ namespace Titanium.Core.Expressions
 						{
 							case TokenType.Plus:
 							case TokenType.Minus:
-								parent = new DualComponentExpression(Reducer.GetComponent(left), Reducer.GetComponent(right), token.Type == TokenType.Plus);
+								parent = new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), token.Type == TokenType.Plus);
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
 							case TokenType.Exponent:
-								parent = new DualFactorComponent(Reducer.GetFactor(left), Reducer.GetFactor(right),
+								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right),
 									token.Type == TokenType.Multiply
 										? ComponentType.Multiply
 										: token.Type == TokenType.Divide
@@ -229,8 +277,11 @@ namespace Titanium.Core.Expressions
 		{
 			switch (token.Type)
 			{
-				case TokenType.Number:
-					return Factor.GetNumericFactor(token);
+				case TokenType.Integer:
+					return Factor.GetIntegerFactor(token);
+
+				case TokenType.Float:
+					return Factor.GetFloatFactor(token);
 
 				case TokenType.Letter:
 					return new AlphabeticFactor(token.Value);

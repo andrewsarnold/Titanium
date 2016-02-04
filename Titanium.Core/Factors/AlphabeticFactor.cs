@@ -1,4 +1,6 @@
-﻿using Titanium.Core.Numbers;
+﻿using Titanium.Core.Components;
+using Titanium.Core.Expressions;
+using Titanium.Core.Numbers;
 
 namespace Titanium.Core.Factors
 {
@@ -16,11 +18,11 @@ namespace Titanium.Core.Factors
 			return Value;
 		}
 
-		internal override Factor Evaluate()
+		public override Expression Evaluate()
 		{
-			return Constants.IsNamedConstant(Value)
+			return new SingleComponentExpression(new SingleFactorComponent(Constants.IsNamedConstant(Value)
 				? (Factor)new NumericFactor(new Float(Constants.Get(Value)))
-				: this;
+				: this));
 		}
 	}
 }

@@ -19,6 +19,18 @@ namespace Titanium.Core
 			return false;
 		}
 
+		internal static bool IsNumber(Expression expression, out Number number)
+		{
+			if (expression is SingleComponentExpression)
+			{
+				var c = ((SingleComponentExpression)expression).Component;
+				return IsNumber(c, out number);
+			}
+
+			number = null;
+			return false;
+		}
+
 		internal static bool IsNumber(Component component, out Number number)
 		{
 			if (component is SingleFactorComponent)
@@ -46,17 +58,12 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsIntegerFraction(Factor factor, out IntegerFraction fraction)
+		internal static bool IsIntegerFraction(Expression expression, out IntegerFraction fraction)
 		{
-			if (factor is ExpressionFactor)
+			if (expression is SingleComponentExpression)
 			{
-				var ef = (ExpressionFactor)factor;
-				var ex = ef.Expression;
-				if (ex is SingleComponentExpression)
-				{
-					var sce = (SingleComponentExpression)ex;
-					return IsIntegerFraction(sce.Component, out fraction);
-				}
+				var component = ((SingleComponentExpression)expression).Component;
+				return IsIntegerFraction(component, out fraction);
 			}
 
 			fraction = null;
@@ -69,6 +76,18 @@ namespace Titanium.Core
 			{
 				fraction = (IntegerFraction)component;
 				return true;
+			}
+
+			fraction = null;
+			return false;
+		}
+
+		internal static bool IsIntegerFraction(Factor factor, out IntegerFraction fraction)
+		{
+			if (factor is ExpressionFactor)
+			{
+				var expression = ((ExpressionFactor)factor).Expression;
+				return IsIntegerFraction(expression, out fraction);
 			}
 
 			fraction = null;

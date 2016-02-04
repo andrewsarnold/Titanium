@@ -1,7 +1,9 @@
 ﻿using System;
 using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
@@ -175,16 +177,30 @@ namespace Titanium.Core.Components
 				: new SingleFactorComponent(new NumericFactor(left - (Float)right));
 		}
 
+		public static Component operator +(Number left, IntegerFraction right)
+		{
+			return left is Integer
+				? (Component)((Integer)left + right)
+				: new SingleFactorComponent(new NumericFactor((Float)left + right));
+		}
+
+		public static Component operator -(Number left, IntegerFraction right)
+		{
+			return left is Integer
+				? (Component)(((Integer)left) - right)
+				: new SingleFactorComponent(new NumericFactor((Float)left - right));
+		}
+
 		public override string ToString()
 		{
 			return string.Format("{0}{1}{2}", IsNegative ? "⁻" : string.Empty, Math.Abs(Numerator), Denominator == 1 ? string.Empty : string.Format("/{0}", Denominator));
 		}
 
-		internal override Component Evaluate()
+		public override Expression Evaluate()
 		{
 			return Denominator == 1
-				? new SingleFactorComponent(new NumericFactor(new Integer(Numerator)))
-				: (Component)this;
+				? Expressionizer.ToExpression(new NumericFactor(new Integer(Numerator)))
+				: Expressionizer.ToExpression(this);
 		}
 
 		private Float ValueAsFloat()

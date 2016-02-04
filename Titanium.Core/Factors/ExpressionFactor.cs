@@ -17,7 +17,7 @@ namespace Titanium.Core.Factors
 			return Expression.ToString();
 		}
 
-		internal override Factor Evaluate()
+		public override Expression Evaluate()
 		{
 			var result = Expression.Evaluate();
 			var singleComponentExpression = result as SingleComponentExpression;
@@ -27,11 +27,11 @@ namespace Titanium.Core.Factors
 				var singleFactorComponent = component as SingleFactorComponent;
 				if (singleFactorComponent != null)
 				{
-					return singleFactorComponent.Factor;
+					return new SingleComponentExpression(new SingleFactorComponent(singleFactorComponent.Factor));
 				}
 			}
 
-			return new ExpressionFactor(result);
+			return result;
 		}
 	}
 }

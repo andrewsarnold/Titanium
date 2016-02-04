@@ -32,7 +32,7 @@ namespace Titanium.Test
 		[TestMethod]
 		public void FactorDoubleTest()
 		{
-			var factor = Factor.GetNumericFactor(new Token(TokenType.Number, "2.03"));
+			var factor = Factor.GetFloatFactor(new Token(TokenType.Float, "2.03"));
 			Assert.IsTrue(factor.Number is Float);
 			Assert.AreEqual(2.03, ((Float)factor.Number).Value);
 		}
@@ -40,7 +40,7 @@ namespace Titanium.Test
 		[TestMethod]
 		public void FactorIntegerTest()
 		{
-			var factor = Factor.GetNumericFactor(new Token(TokenType.Number, "⁻44"));
+			var factor = Factor.GetIntegerFactor(new Token(TokenType.Integer, "⁻44"));
 			Assert.IsTrue(factor.Number is Integer);
 			Assert.AreEqual(-44, ((Integer)factor.Number).Value);
 		}

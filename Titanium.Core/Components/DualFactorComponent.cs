@@ -1,6 +1,7 @@
 ﻿using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
@@ -28,7 +29,7 @@ namespace Titanium.Core.Components
 				_rightFactor);
 		}
 
-		internal override Component Evaluate()
+		public override Expression Evaluate()
 		{
 			var left = _leftFactor.Evaluate();
 			var right = _rightFactor.Evaluate();
@@ -42,11 +43,11 @@ namespace Titanium.Core.Components
 				{
 					var result = leftNumber / rightNumber;
 					return result is IntegerFraction
-						? (Component)(IntegerFraction)result
-						: new SingleFactorComponent(new NumericFactor((Number)result));
+						? Expressionizer.ToExpression((IntegerFraction)result)
+						: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
 				}
 
-				return new SingleFactorComponent(new NumericFactor(_componentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(new NumericFactor(_componentType == ComponentType.Multiply
 					? leftNumber * rightNumber
 					: leftNumber ^ rightNumber));
 			}
@@ -56,11 +57,11 @@ namespace Titanium.Core.Components
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				return new SingleFactorComponent(new ExpressionFactor(new SingleComponentExpression(_componentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(_componentType == ComponentType.Multiply
 					? leftFraction * rightFraction
 					: _componentType == ComponentType.Divide
 						? leftFraction / rightFraction
-						: leftFraction ^ rightFraction)));
+						: leftFraction ^ rightFraction);
 			}
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
@@ -73,7 +74,7 @@ namespace Titanium.Core.Components
 						: _componentType == ComponentType.Divide
 							? leftFraction / rightInteger
 							: leftFraction ^ rightInteger;
-					return new SingleFactorComponent(new ExpressionFactor(new SingleComponentExpression(result)));
+					return Expressionizer.ToExpression(result);
 				}
 				else
 				{
@@ -83,11 +84,11 @@ namespace Titanium.Core.Components
 						: _componentType == ComponentType.Divide
 							? leftFraction / rightDouble
 							: leftFraction ^ rightDouble;
-					return new SingleFactorComponent(new NumericFactor(result));
+					return Expressionizer.ToExpression(new NumericFactor(result));
 				}
 			}
 
-			return new DualFactorComponent(left, right, _componentType);
+			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
 		}
 	}
 }
