@@ -15,5 +15,6 @@ namespace Titanium.Core.Functions
 		}
 
 		public abstract Expression Evaluate(List<Expression> parameters);
+		public abstract string ToString(List<Expression> parameters);
 	}
 }

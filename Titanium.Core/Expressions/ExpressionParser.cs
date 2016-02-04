@@ -195,11 +195,11 @@ namespace Titanium.Core.Expressions
 				}
 				else if (token.Type == TokenType.Function)
 				{
-					var operands = new List<IEvaluatable>();
-					var operatorCount = FunctionRepository.ArgumentCount(token.Value);
+					var operands = new List<Expression>();
+					var operatorCount = FunctionRepository.Get(token.Value).ArgumentCount;
 					for (var i = 0; i < operatorCount; i++)
 					{
-						operands.Add(stack.Pop());
+						operands.Add(Expressionizer.ToExpression(stack.Pop()));
 					}
 
 					stack.Push(new FunctionComponent(token.Value, operands));
@@ -211,12 +211,12 @@ namespace Titanium.Core.Expressions
 					if (token.Type == TokenType.Factorial)
 					{
 						var argument = stack.Pop();
-						parent = new FunctionComponent("!", new List<IEvaluatable> { argument });
+						parent = new FunctionComponent("!", new List<Expression> { Expressionizer.ToExpression(argument) });
 					}
 					else if (token.Type == TokenType.Root)
 					{
 						var argument = stack.Pop();
-						parent = new FunctionComponent("√", new List<IEvaluatable> { argument });
+						parent = new FunctionComponent("√", new List<Expression> { Expressionizer.ToExpression(argument) });
 					}
 					else
 					{

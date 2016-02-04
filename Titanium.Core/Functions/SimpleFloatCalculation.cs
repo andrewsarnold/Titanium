@@ -27,7 +27,7 @@ namespace Titanium.Core.Functions
 				throw new WrongArgumentCountException(Name, 1, parameters.Count);
 			}
 
-			var factor = Factorizer.ToFactor(parameters[0]);
+			var factor = Factorizer.ToFactor(parameters[0].Evaluate());
 			if (factor is NumericFactor)
 			{
 				var number = (NumericFactor)factor;
@@ -39,6 +39,8 @@ namespace Titanium.Core.Functions
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
+
+					return Expressionizer.ToExpression(new FunctionComponent(Name, new List<Expression> { Expressionizer.ToExpression(number) }));
 				}
 				else
 				{
@@ -57,11 +59,16 @@ namespace Titanium.Core.Functions
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
-					return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+					return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.ToList()));
 				}
 			}
 
-			return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+			return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.ToList()));
+		}
+
+		public override string ToString(List<Expression> parameters)
+		{
+			return string.Format("{0}({1})", Name, string.Join(",", parameters));
 		}
 
 		private static bool IsInteger(double d)
