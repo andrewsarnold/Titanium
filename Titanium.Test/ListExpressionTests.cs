@@ -14,7 +14,7 @@ namespace Titanium.Test
 			var expression = Expression.ParseExpression("{1}");
 			var list = GetAsExpressionList(expression);
 
-			Assert.AreEqual(1, list.Count);
+			Assert.AreEqual(1, list.Expressions.Count);
 			Assert.AreEqual("{1}", list.ToString());
 		}
 
@@ -24,7 +24,7 @@ namespace Titanium.Test
 			var expression = Expression.ParseExpression("{1,2}");
 			var list = GetAsExpressionList(expression);
 
-			Assert.AreEqual(2, list.Count);
+			Assert.AreEqual(2, list.Expressions.Count);
 			Assert.AreEqual("{1,2}", list.ToString());
 		}
 
@@ -33,6 +33,21 @@ namespace Titanium.Test
 		{
 			var expression = Expression.ParseExpression("{1,2,{a,b}}");
 			var list = GetAsExpressionList(expression);
+			Assert.AreEqual(3, list.Expressions.Count);
+			var innerList = GetAsExpressionList(list.Expressions[2]);
+			Assert.AreEqual(2, innerList.Expressions.Count);
+		}
+
+		[TestMethod]
+		public void DoubleNestedElementListTest()
+		{
+			var expression = Expression.ParseExpression("{1,{2,{a,b},4}}");
+			var list = GetAsExpressionList(expression);
+			Assert.AreEqual(2, list.Expressions.Count);
+			var innerList = GetAsExpressionList(list.Expressions[1]);
+			Assert.AreEqual(3, innerList.Expressions.Count);
+			var innerInnerList = GetAsExpressionList(innerList.Expressions[1]);
+			Assert.AreEqual(2, innerInnerList.Expressions.Count);
 		}
 
 		private static ExpressionList GetAsExpressionList(Expression expression)

@@ -6,27 +6,22 @@ namespace Titanium.Core.Factors
 {
 	internal class ExpressionList : Factor
 	{
-		private readonly List<Expression> _expressions;
+		internal readonly List<Expression> Expressions;
 
 		public ExpressionList(List<Expression> expressions)
 		{
-			_expressions = expressions;
+			Expressions = expressions;
 		}
 
 		public override Expression Evaluate()
 		{
-			_expressions.ForEach(e => e.Evaluate());
+			Expressions.ForEach(e => e.Evaluate());
 			return Expressionizer.ToExpression(this);
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{{{0}}}", string.Join(",", _expressions));
-		}
-
-		internal int Count
-		{
-			get { return _expressions.Count; }
+			return string.Format("{{{0}}}", string.Join(",", Expressions));
 		}
 	}
 }
