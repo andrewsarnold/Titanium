@@ -37,8 +37,8 @@ namespace Titanium.Core.Components
 			Number leftNumber;
 			Number rightNumber;
 
-			if ((IsConstant(left, out leftNumber) && Common.IsNumber(right, out rightNumber)) ||
-				(Common.IsNumber(left, out leftNumber) && IsConstant(right, out rightNumber)) ||
+			if ((IsConstant(left, out leftNumber) && Common.IsFloat(right, out rightNumber)) ||
+				(Common.IsFloat(left, out leftNumber) && IsConstant(right, out rightNumber)) ||
 				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
 			{
 				return Evaluate(leftNumber, rightNumber);
