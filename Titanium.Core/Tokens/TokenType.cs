@@ -7,6 +7,7 @@
 		Float,
 		Function,
 		Letter,
+		Negate,
 		OpenParenthesis,
 		CloseParenthesis,
 		Period,
