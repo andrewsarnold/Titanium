@@ -159,7 +159,7 @@ namespace Titanium.Core.Expressions
 			var insertPoints = new List<int>();
 			for (var i = 0; i < tokens.Count - 1; i++)
 			{
-				if (IsImpliedMultiplication(tokens[i].Type, tokens[i + 1].Type))
+				if (IsImpliedMultiplication(tokens[i], tokens[i + 1]))
 				{
 					insertPoints.Add(i + 1);
 				}
@@ -174,14 +174,14 @@ namespace Titanium.Core.Expressions
 			return tokens;
 		}
 
-		private static bool IsImpliedMultiplication(TokenType left, TokenType right)
+		private static bool IsImpliedMultiplication(Token left, Token right)
 		{
 			return
-				(left.IsOperand() && right == TokenType.OpenParenthesis) ||
-				(left == TokenType.CloseParenthesis && right.IsOperand()) ||
-				(left == TokenType.CloseParenthesis && right == TokenType.OpenParenthesis) ||
-				(left.IsOperand() && right == TokenType.Function) ||
-				(left.IsOperand() && right.IsOperand());
+				(left.Type.IsOperand() && right.Type == TokenType.OpenParenthesis) ||
+				(left.Type == TokenType.CloseParenthesis && right.Type.IsOperand()) ||
+				(left.Type == TokenType.CloseParenthesis && right.Type == TokenType.OpenParenthesis) ||
+				(left.Type.IsOperand() && right.Type == TokenType.Function && !FunctionRepository.Get(right.Value).IsPostFix) ||
+				(left.Type.IsOperand() && right.Type.IsOperand());
 		}
 
 		private static Expression ParsePostfix(IEnumerable<Token> tokens)
