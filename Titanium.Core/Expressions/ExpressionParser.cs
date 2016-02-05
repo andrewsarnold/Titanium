@@ -208,10 +208,10 @@ namespace Titanium.Core.Expressions
 				{
 					IEvaluatable parent;
 
-					if (token.Type == TokenType.Factorial)
+					if (token.Type == TokenType.Factorial || token.Type == TokenType.Negate)
 					{
 						var argument = stack.Pop();
-						parent = new FunctionComponent("!", new List<Expression> { Expressionizer.ToExpression(argument) });
+						parent = new FunctionComponent(token.Value, new List<Expression> { Expressionizer.ToExpression(argument) });
 					}
 					else if (token.Type == TokenType.Root)
 					{
