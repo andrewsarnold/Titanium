@@ -16,7 +16,8 @@ namespace Titanium.Core.Functions
 			{ "√", new SimpleFloatCalculation("√", Math.Sqrt) },
 			{ "sqrt", new SimpleFloatCalculation("√", Math.Sqrt) },
 			{ "ceil", new SimpleFloatCalculation("ceil", Math.Ceiling) },
-			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) }
+			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
+			{ "abs", new AbsoluteValue() }
 		};
 
 		internal static bool Contains(string name)
