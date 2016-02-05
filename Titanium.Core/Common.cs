@@ -7,18 +7,6 @@ namespace Titanium.Core
 {
 	internal static class Common
 	{
-		internal static bool IsNumber(Factor factor, out Number number)
-		{
-			if (factor is NumericFactor)
-			{
-				number = ((NumericFactor)factor).Number;
-				return true;
-			}
-
-			number = null;
-			return false;
-		}
-
 		internal static bool IsNumber(Expression expression, out Number number)
 		{
 			if (expression is SingleComponentExpression)
@@ -30,8 +18,25 @@ namespace Titanium.Core
 			number = null;
 			return false;
 		}
+		
+		internal static bool IsIntegerFraction(Expression expression, out IntegerFraction fraction)
+		{
+			if (expression is SingleComponentExpression)
+			{
+				var component = ((SingleComponentExpression)expression).Component;
+				return IsIntegerFraction(component, out fraction);
+			}
 
-		internal static bool IsNumber(Component component, out Number number)
+			fraction = null;
+			return false;
+		}
+
+		internal static bool IsFloat(Expression expression, out Number number)
+		{
+			return IsNumber(expression, out number) && number is Float;
+		}
+
+		private static bool IsNumber(Component component, out Number number)
 		{
 			if (component is SingleFactorComponent)
 			{
@@ -58,36 +63,12 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsIntegerFraction(Expression expression, out IntegerFraction fraction)
-		{
-			if (expression is SingleComponentExpression)
-			{
-				var component = ((SingleComponentExpression)expression).Component;
-				return IsIntegerFraction(component, out fraction);
-			}
-
-			fraction = null;
-			return false;
-		}
-
-		internal static bool IsIntegerFraction(Component component, out IntegerFraction fraction)
+		private static bool IsIntegerFraction(Component component, out IntegerFraction fraction)
 		{
 			if (component is IntegerFraction)
 			{
 				fraction = (IntegerFraction)component;
 				return true;
-			}
-
-			fraction = null;
-			return false;
-		}
-
-		internal static bool IsIntegerFraction(Factor factor, out IntegerFraction fraction)
-		{
-			if (factor is ExpressionFactor)
-			{
-				var expression = ((ExpressionFactor)factor).Expression;
-				return IsIntegerFraction(expression, out fraction);
 			}
 
 			fraction = null;

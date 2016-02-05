@@ -9,6 +9,7 @@ namespace Titanium.Core.Functions
 	{
 		private static readonly Dictionary<string, Function> Funcs = new Dictionary<string, Function>
 		{
+			{ "⁻", new Negate() },
 			{ "!", new Factorial() },
 			{ "sin", new SimpleFloatCalculation("sin", Math.Sin) },
 			{ "cos", new SimpleFloatCalculation("cos", Math.Cos) },

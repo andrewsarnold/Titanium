@@ -27,8 +27,12 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void EvaluateConstantTest()
 		{
-			Common.EvaluateAndAssert("π", Math.PI.ToString(CultureInfo.InvariantCulture));
-			Common.EvaluateAndAssert("e", Math.E.ToString(CultureInfo.InvariantCulture));
+			Common.EvaluateAndAssert("π", "π");
+			Common.EvaluateAndAssert("π*2", "π*2");
+			Common.EvaluateAndAssert("π*1.", Math.PI.ToString(CultureInfo.InvariantCulture));
+			Common.EvaluateAndAssert("e", "e");
+			Common.EvaluateAndAssert("e*2", "e*2");
+			Common.EvaluateAndAssert("e*1.", Math.E.ToString(CultureInfo.InvariantCulture));
 		}
 
 		[TestMethod]

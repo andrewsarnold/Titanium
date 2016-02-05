@@ -7,9 +7,11 @@ namespace Titanium.Core.Functions
 	{
 		internal readonly string Name;
 		internal readonly int ArgumentCount;
+		internal readonly bool IsPostFix;
 
-		protected Function(string name, int argumentCount)
+		protected Function(string name, int argumentCount, bool isPostFix = false)
 		{
+			IsPostFix = isPostFix;
 			Name = name;
 			ArgumentCount = argumentCount;
 		}
