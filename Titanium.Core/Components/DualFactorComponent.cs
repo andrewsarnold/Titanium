@@ -37,19 +37,11 @@ namespace Titanium.Core.Components
 			Number leftNumber;
 			Number rightNumber;
 
-			if (Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber))
+			if ((IsConstant(left, out leftNumber) && Common.IsNumber(right, out rightNumber)) ||
+				(Common.IsNumber(left, out leftNumber) && IsConstant(right, out rightNumber)) ||
+				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
 			{
-				if (_componentType == ComponentType.Divide)
-				{
-					var result = leftNumber / rightNumber;
-					return result is IntegerFraction
-						? Expressionizer.ToExpression((IntegerFraction)result)
-						: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
-				}
-
-				return Expressionizer.ToExpression(new NumericFactor(_componentType == ComponentType.Multiply
-					? leftNumber * rightNumber
-					: leftNumber ^ rightNumber));
+				return Evaluate(leftNumber, rightNumber);
 			}
 
 			IntegerFraction leftFraction;
@@ -89,6 +81,39 @@ namespace Titanium.Core.Components
 			}
 
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
+		}
+
+		private Expression Evaluate(Number leftNumber, Number rightNumber)
+		{
+			if (_componentType == ComponentType.Divide)
+			{
+				var result = leftNumber / rightNumber;
+				return result is IntegerFraction
+					? Expressionizer.ToExpression((IntegerFraction)result)
+					: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
+			}
+
+			return Expressionizer.ToExpression(new NumericFactor(_componentType == ComponentType.Multiply
+				? leftNumber * rightNumber
+				: leftNumber ^ rightNumber));
+		}
+
+		private static bool IsConstant(IEvaluatable expression, out Number value)
+		{
+			var factor = Factorizer.ToFactor(expression);
+			if (factor is AlphabeticFactor)
+			{
+				var name = ((AlphabeticFactor)factor).Value;
+
+				if (Constants.IsNamedConstant(name))
+				{
+					value = new Float(Constants.Get(name));
+					return true;
+				}
+			}
+
+			value = Integer.Zero;
+			return false;
 		}
 
 		private static string ToString(Factor factor)
