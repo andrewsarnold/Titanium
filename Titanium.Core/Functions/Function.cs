@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Functions
 {
@@ -25,6 +27,11 @@ namespace Titanium.Core.Functions
 			}
 
 			return InnerEvaluate(parameters);
+		}
+
+		protected Expression AsExpression(List<Expression> parameters)
+		{
+			return Expressionizer.ToExpression(new FunctionComponent(this, parameters));
 		}
 
 		protected abstract Expression InnerEvaluate(List<Expression> parameters);

@@ -1,6 +1,6 @@
-﻿using Titanium.Core.Components;
-using Titanium.Core.Expressions;
+﻿using Titanium.Core.Expressions;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Factors
 {
@@ -20,7 +20,7 @@ namespace Titanium.Core.Factors
 
 		public override Expression Evaluate()
 		{
-			return new SingleComponentExpression(new SingleFactorComponent(new NumericFactor(Number)));
+			return Expressionizer.ToExpression(new NumericFactor(Number));
 		}
 	}
 }

@@ -50,7 +50,7 @@ namespace Titanium.Core.Functions.Implementations
 				}
 			}
 
-			return Expressionizer.ToExpression(new FunctionComponent("!", new List<Expression> { parameter }));
+			return AsExpression(parameters);
 		}
 
 		public override string ToString(List<Expression> parameters)
