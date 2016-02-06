@@ -11,7 +11,7 @@ namespace Titanium.Core.Functions
 		{
 		}
 
-		public override Expression Evaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
 			throw new NotImplementedException();
 		}

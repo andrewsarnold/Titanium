@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Titanium.Core.Components;
-using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
@@ -16,13 +14,8 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		public override Expression Evaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
-			if (parameters.Count != 1)
-			{
-				throw new WrongArgumentCountException("!", 1, parameters.Count);
-			}
-
 			var parameter = parameters[0].Evaluate();
 
 			if (parameter is SingleComponentExpression)

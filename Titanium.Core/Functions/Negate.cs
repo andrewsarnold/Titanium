@@ -14,7 +14,7 @@ namespace Titanium.Core.Functions
 		{
 		}
 
-		public override Expression Evaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
 			var p = parameters[0].Evaluate();
 			if (p is SingleComponentExpression)

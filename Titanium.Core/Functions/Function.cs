@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 
 namespace Titanium.Core.Functions
@@ -16,7 +17,17 @@ namespace Titanium.Core.Functions
 			ArgumentCount = argumentCount;
 		}
 
-		public abstract Expression Evaluate(List<Expression> parameters);
+		public Expression Evaluate(List<Expression> parameters)
+		{
+			if (parameters.Count != ArgumentCount)
+			{
+				throw new WrongArgumentCountException(Name, ArgumentCount, parameters.Count);
+			}
+
+			return InnerEvaluate(parameters);
+		}
+
+		protected abstract Expression InnerEvaluate(List<Expression> parameters);
 		public abstract string ToString(List<Expression> parameters);
 	}
 }
