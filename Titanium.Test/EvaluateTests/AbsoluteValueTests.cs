@@ -58,6 +58,24 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("abs(⁻4/3)", "4/3");
 		}
+
+		[TestMethod]
+		public void AbsOfZeroEvaluatableFunction()
+		{
+			Common.EvaluateAndAssert("abs(sin(0))", "0");
+		}
+
+		[TestMethod]
+		public void AbsOfPositiveEvaluatableFunction()
+		{
+			Common.EvaluateAndAssert("abs(cos(0))", "1");
+		}
+
+		[TestMethod]
+		public void AbsOfNegativeEvaluatableFunction()
+		{
+			Common.EvaluateAndAssert("abs(cos(π))", "1");
+		}
 		
 		[TestMethod]
 		public void AbsoluteValueOfPositiveInfinity()

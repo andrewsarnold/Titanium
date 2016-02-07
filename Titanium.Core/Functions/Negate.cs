@@ -16,10 +16,10 @@ namespace Titanium.Core.Functions
 
 		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
-			var p = parameters[0].Evaluate();
-			if (p is SingleComponentExpression)
+			var parameter = parameters[0].Evaluate();
+			if (parameter is SingleComponentExpression)
 			{
-				var c = ((SingleComponentExpression)p).Component;
+				var c = ((SingleComponentExpression)parameter).Component;
 				if (c is SingleFactorComponent)
 				{
 					var f = ((SingleFactorComponent)c).Factor;
@@ -36,7 +36,7 @@ namespace Titanium.Core.Functions
 				}
 			}
 			
-			return AsExpression(parameters);
+			return AsExpression(parameter);
 		}
 
 		public override string ToString(List<Expression> parameters)

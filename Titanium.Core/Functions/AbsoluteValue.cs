@@ -17,52 +17,52 @@ namespace Titanium.Core.Functions
 
 		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
-			var p = parameters[0].Evaluate();
-			var c = Componentizer.ToComponent(p);
-			var f = Factorizer.ToFactor(p);
+			var parameter = parameters[0].Evaluate();
+			var component = Componentizer.ToComponent(parameter);
+			var factor = Factorizer.ToFactor(parameter);
 
 			// If parameter is a number, get the raw absolute value
-			if (f is NumericFactor)
+			if (factor is NumericFactor)
 			{
-				var n = ((NumericFactor)f).Number;
+				var n = ((NumericFactor)factor).Number;
 				return Expressionizer.ToExpression(new NumericFactor(n is Integer
 					? new Integer(Math.Abs((((Integer)n).Value)))
 					: (Number)new Float(Math.Abs((((Float)n).Value)))));
 			}
 			
 			// If parameter is an integer fraction, likewise
-			if (c is IntegerFraction)
+			if (component is IntegerFraction)
 			{
-				var frac = (IntegerFraction)c;
+				var frac = (IntegerFraction)component;
 				return Expressionizer.ToExpression(new IntegerFraction(new Integer(Math.Abs(frac.Numerator)), new Integer(frac.Denominator)));
 			}
 
 			// If parameter is a constant, return itself if it evaluates to a positive number
-			if (f is AlphabeticFactor)
+			if (factor is AlphabeticFactor)
 			{
-				var a = ((AlphabeticFactor)f).Value;
+				var a = ((AlphabeticFactor)factor).Value;
 				if (Constants.IsNamedConstant(a))
 				{
 					var constant = Constants.Get(a);
 					if (constant >= 0)
 					{
-						return p;
+						return parameter;
 					}
 				}
 			}
 
-			if (c is FunctionComponent)
+			if (component is FunctionComponent)
 			{
 				// TODO - See if the function evaluates to a negative value; if not, return it
 			}
 
 			// Otherwise just return this
-			return AsExpression(parameters);
+			return AsExpression(parameter);
 		}
 
 		public override string ToString(List<Expression> parameters)
 		{
-			return string.Format("|{0}|", parameters[0]);
+			return string.Format("abs({0})", parameters[0]);
 		}
 	}
 }

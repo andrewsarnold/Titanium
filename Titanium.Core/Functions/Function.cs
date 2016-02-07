@@ -29,9 +29,9 @@ namespace Titanium.Core.Functions
 			return InnerEvaluate(parameters);
 		}
 
-		protected Expression AsExpression(List<Expression> parameters)
+		protected Expression AsExpression(params Expression[] parameters)
 		{
-			return Expressionizer.ToExpression(new FunctionComponent(this, parameters));
+			return Expressionizer.ToExpression(new FunctionComponent(this, new List<Expression>(parameters)));
 		}
 
 		protected abstract Expression InnerEvaluate(List<Expression> parameters);

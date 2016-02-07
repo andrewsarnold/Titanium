@@ -57,7 +57,7 @@ namespace Titanium.Core.Functions.Implementations
 				}
 			}
 
-			return AsExpression(parameters);
+			return AsExpression(parameter);
 		}
 
 		public override string ToString(List<Expression> parameters)
