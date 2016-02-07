@@ -57,9 +57,11 @@
     <Compile Include="EvaluateTests\CompositeTests.cs" />
     <Compile Include="EvaluateTests\ConstantTests.cs" />
     <Compile Include="EvaluateTests\DivisionTests.cs" />
+    <Compile Include="EvaluateTests\ExponentTests.cs" />
     <Compile Include="EvaluateTests\FactorialTests.cs" />
     <Compile Include="EvaluateTests\AlphabeticOperandTests.cs" />
     <Compile Include="EvaluateTests\FloorTests.cs" />
+    <Compile Include="EvaluateTests\IntegerFractionTests.cs" />
     <Compile Include="EvaluateTests\LogarithmTests.cs" />
     <Compile Include="EvaluateTests\MultiplicationTests.cs" />
     <Compile Include="EvaluateTests\NegationTests.cs" />

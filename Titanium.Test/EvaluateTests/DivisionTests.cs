@@ -25,9 +25,15 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void IntegerDividedByOne()
+		{
+			Common.EvaluateAndAssert("4 / 1", "4");
+		}
+
+		[TestMethod]
 		public void IntegerDividedByItself()
 		{
-			Common.EvaluateAndAssert("1 / 1", "1");
+			Common.EvaluateAndAssert("4 / 4", "1");
 		}
 
 		[TestMethod]
@@ -64,6 +70,12 @@ namespace Titanium.Test.EvaluateTests
 		public void FloatDividedByItself()
 		{
 			Common.EvaluateAndAssert("1.4 / 1.4", "1.");
+		}
+
+		[TestMethod]
+		public void FloatDividedByOne()
+		{
+			Common.EvaluateAndAssert("4.5 / 1", "4.5");
 		}
 
 		[TestMethod]

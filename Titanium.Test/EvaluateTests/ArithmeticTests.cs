@@ -6,16 +6,6 @@ namespace Titanium.Test.EvaluateTests
 	public class ArithmeticTests
 	{
 		[TestMethod]
-		public void EvaluateExponentTest()
-		{
-			Common.EvaluateAndAssert("3 ^ 1", "3");
-			Common.EvaluateAndAssert("3 ^ 2", "9");
-			Common.EvaluateAndAssert("4 ^ .5", "2");
-			Common.EvaluateAndAssert("4 ^ (1/2.)", "2");
-			Common.EvaluateAndAssert("3 ^ 0", "1");
-		}
-
-		[TestMethod]
 		public void EvaluateComplexTest()
 		{
 			Common.EvaluateAndAssert("(12 - 3) + 5 / 4", "41/4");
@@ -27,16 +17,6 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("4+(3/1)+2", "9");
 			Common.EvaluateAndAssert("3*4/3", "4");
 			Common.EvaluateAndAssert("3*(4/3)", "4");
-		}
-
-		[TestMethod]
-		public void EvaluateFractionTest()
-		{
-			Common.EvaluateAndAssert("1/2", "1/2");
-			Common.EvaluateAndAssert("2/1", "2");
-			Common.EvaluateAndAssert("4+1/2", "9/2");
-			Common.EvaluateAndAssert("1/2+1/2", "1");
-			Common.EvaluateAndAssert("1/2*1/2", "1/4");
 		}
 
 		[TestMethod]
