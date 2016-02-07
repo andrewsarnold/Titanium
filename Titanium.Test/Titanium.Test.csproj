@@ -57,11 +57,12 @@
     <Compile Include="EvaluateTests\ConstantTests.cs" />
     <Compile Include="EvaluateTests\FactorialTests.cs" />
     <Compile Include="EvaluateTests\AlphabeticOperandTests.cs" />
+    <Compile Include="EvaluateTests\FloorTests.cs" />
     <Compile Include="EvaluateTests\LogarithmTests.cs" />
     <Compile Include="EvaluateTests\NegationTests.cs" />
     <Compile Include="EvaluateTests\NestedParenthesesTests.cs" />
     <Compile Include="EvaluateTests\RootTests.cs" />
-    <Compile Include="EvaluateTests\SimpleFloatFunctionTests.cs" />
+    <Compile Include="EvaluateTests\CeilingTests.cs" />
     <Compile Include="EvaluateTests\SyntaxErrorTests.cs" />
     <Compile Include="EvaluateTests\TrigonometryTests.cs" />
     <Compile Include="ExpressionBuilderTests.cs" />
