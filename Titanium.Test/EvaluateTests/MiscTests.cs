@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Titanium.Core.Exceptions;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Titanium.Test.EvaluateTests
 {
@@ -9,37 +6,10 @@ namespace Titanium.Test.EvaluateTests
 	public class MiscTests
 	{
 		[TestMethod]
-		public void EvaluateNestedParenthesesTest()
-		{
-			Common.EvaluateAndAssert("(1)", "1");
-			Common.EvaluateAndAssert("((1))", "1");
-			Common.EvaluateAndAssert("(((1)))", "1");
-			Common.EvaluateAndAssert("((((1))))", "1");
-		}
-
-		[TestMethod]
 		public void EvaluateAlphaTest()
 		{
 			Common.EvaluateAndAssert("(12 - a)", "12-a");
 			Common.EvaluateAndAssert("a * b -3", "a*b-3");
-		}
-
-		[TestMethod]
-		public void EvaluateConstantTest()
-		{
-			Common.EvaluateAndAssert("π", "π");
-			Common.EvaluateAndAssert("π*2", "π*2");
-			Common.EvaluateAndAssert("π*1.", Math.PI.ToString(CultureInfo.InvariantCulture));
-			Common.EvaluateAndAssert("e", "e");
-			Common.EvaluateAndAssert("e*2", "e*2");
-			Common.EvaluateAndAssert("e*1.", Math.E.ToString(CultureInfo.InvariantCulture));
-		}
-
-		[TestMethod]
-		public void EvaluateErrorTest()
-		{
-			Common.AssertThrows<SyntaxErrorException>("12*");
-			Common.AssertThrows<SyntaxErrorException>(".5.");
 		}
 
 		[TestMethod]
