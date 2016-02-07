@@ -39,11 +39,11 @@
     <Compile Include="Components\ComponentType.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
-    <Compile Include="Functions\AbsoluteValue.cs" />
+    <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Functions\NaturalLog.cs" />
-    <Compile Include="Functions\Negate.cs" />
-    <Compile Include="Functions\SquareRoot.cs" />
+    <Compile Include="Functions\Implementations\Negate.cs" />
+    <Compile Include="Functions\Implementations\SquareRoot.cs" />
     <Compile Include="IEvaluatable.cs" />
     <Compile Include="Functions\Implementations\Factorial.cs" />
     <Compile Include="Functions\Function.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Factors\ExpressionFactor.cs" />
     <Compile Include="Factors\Factor.cs" />
     <Compile Include="Factors\NumericFactor.cs" />
-    <Compile Include="Functions\SimpleFloatCalculation.cs" />
+    <Compile Include="Functions\Implementations\SimpleFloatCalculation.cs" />
     <Compile Include="Numbers\Float.cs" />
     <Compile Include="Numbers\Integer.cs" />
     <Compile Include="Numbers\Number.cs" />

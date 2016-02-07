@@ -34,7 +34,9 @@ namespace Titanium.Core.Numbers
 
 		internal static bool IsWholeNumber(double f)
 		{
-			return Math.Abs(f % 1) < Constants.Tolerance;
+			return Math.Abs(f % 1) < Constants.Tolerance ||
+				double.IsInfinity(f) ||
+				double.IsNegativeInfinity(f);
 		}
 
 		internal static bool IsWholeNumber(Float f)

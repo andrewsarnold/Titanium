@@ -5,7 +5,7 @@ using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
-namespace Titanium.Core.Functions
+namespace Titanium.Core.Functions.Implementations
 {
 	internal class Negate : Function
 	{
