@@ -63,7 +63,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void ZeroDividedByFloat()
 		{
-			Common.EvaluateAndAssert("0 / 12.4", "0.0");
+			Common.EvaluateAndAssert("0 / 12.4", "0.");
 		}
 
 		[TestMethod]

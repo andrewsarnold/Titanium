@@ -26,7 +26,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void IntegerRaisedToFloatFraction()
 		{
-			Common.EvaluateAndAssert("4 ^ (1/2.)", "2");
+			Common.EvaluateAndAssert("4 ^ (1/2.)", "2.");
 		}
 		
 		[TestMethod]

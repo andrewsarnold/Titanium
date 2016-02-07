@@ -26,7 +26,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void NegativeFactorialOfIntegerIsEvaluated()
 		{
-			Common.EvaluateAndAssert("⁻4!", "24");
+			Common.EvaluateAndAssert("⁻4!", "⁻24");
 		}
 
 		[TestMethod]
@@ -38,7 +38,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void FactorialOfZeroFloatIsEvaluated()
 		{
-			Common.EvaluateAndAssert("0.0!", "0.");
+			Common.EvaluateAndAssert("0.0!", "1.");
 		}
 
 		[TestMethod]

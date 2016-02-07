@@ -35,27 +35,26 @@ namespace Titanium.Core.Functions
 				{
 					var integer = (Integer)number.Number;
 					var result = _function(integer.Value);
-					if (IsInteger(result))
+					if (Float.IsWholeNumber(result))
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
 
 					return Expressionizer.ToExpression(new FunctionComponent(Name, new List<Expression> { Expressionizer.ToExpression(number) }));
 				}
-				else
-				{
-					var aFloat = (Float)number.Number;
-					return Expressionizer.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
-				}
+				
+				var aFloat = (Float)number.Number;
+				return Expressionizer.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
 			}
-			else if (factor is AlphabeticFactor)
+			
+			if (factor is AlphabeticFactor)
 			{
 				// If operand is a constant (like pi), and the result is not an integer, don't evaluate
 				var alph = (AlphabeticFactor)factor;
 				if (Constants.IsNamedConstant(alph.Value))
 				{
 					var result = _function(Constants.Get(alph.Value));
-					if (IsInteger(result))
+					if (Float.IsWholeNumber(result))
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
@@ -69,11 +68,6 @@ namespace Titanium.Core.Functions
 		public override string ToString(List<Expression> parameters)
 		{
 			return string.Format("{0}({1})", Name, string.Join(",", parameters));
-		}
-
-		private static bool IsInteger(double d)
-		{
-			return Math.Abs(d % 1) < Constants.Tolerance;
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
@@ -25,35 +24,42 @@ namespace Titanium.Core.Functions.Implementations
 
 			var parameter = parameters[0].Evaluate();
 
-			if (parameter is SingleComponentExpression)
+			var factor = Factorizer.ToFactor(parameter);
+			if (factor is NumericFactor)
 			{
-				var component = ((SingleComponentExpression)parameter).Component;
-				if (component is SingleFactorComponent)
+				var operand = (NumericFactor)factor;
+				
+				if (operand.Number is Integer)
 				{
-					var factor = ((SingleFactorComponent)component).Factor;
-					if (factor is NumericFactor)
+					if (operand.Number.IsNegative)
 					{
-						var operand = (NumericFactor)factor;
-						if (operand.Number is Integer)
-						{
-							var number = (Integer)operand.Number;
-							return Expressionizer.ToExpression(new NumericFactor(new Integer(BasicFactorial(number.Value))));
-						}
+						return new UndefinedExpression();
+					}
+					var number = (Integer)operand.Number;
+					return Expressionizer.ToExpression(new NumericFactor(new Integer(BasicFactorial(number.Value))));
+				}
+				else
+				{
+					var number = (Float)operand.Number;
+					if (Float.IsWholeNumber(number))
+					{
+						return Expressionizer.ToExpression(new NumericFactor(new Float(BasicFactorial((int)number.Value))));
 					}
 				}
+			}
 
-				if (component is FunctionComponent)
-				{
-					return Expressionizer.ToExpression(((FunctionComponent)component).Evaluate());
-				}
+			var component = Componentizer.ToComponent(parameter);
+			if (component is FunctionComponent)
+			{
+				return Expressionizer.ToExpression(((FunctionComponent)component).Evaluate());
+			}
 
-				if (component is IntegerFraction)
+			if (component is IntegerFraction)
+			{
+				var operand = (IntegerFraction)component;
+				if (operand.Denominator == 1)
 				{
-					var operand = (IntegerFraction)component;
-					if (operand.Denominator == 1)
-					{
-						return Expressionizer.ToExpression(new IntegerFraction(new Integer(BasicFactorial(operand.Numerator))));
-					}
+					return Expressionizer.ToExpression(new IntegerFraction(new Integer(BasicFactorial(operand.Numerator))));
 				}
 			}
 
