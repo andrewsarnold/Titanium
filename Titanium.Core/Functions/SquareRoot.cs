@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
@@ -16,13 +15,8 @@ namespace Titanium.Core.Functions
 		{
 		}
 
-		public override Expression Evaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
-			if (parameters.Count != 1)
-			{
-				throw new WrongArgumentCountException(Name, 1, parameters.Count);
-			}
-
 			var parameter = parameters[0].Evaluate();
 			var factor = Factorizer.ToFactor(parameter);
 			if (factor is NumericFactor)
@@ -47,7 +41,7 @@ namespace Titanium.Core.Functions
 				}
 			}
 
-			return Expressionizer.ToExpression(new FunctionComponent(Name, parameters));
+			return AsExpression(parameter);
 		}
 
 		public override string ToString(List<Expression> parameters)

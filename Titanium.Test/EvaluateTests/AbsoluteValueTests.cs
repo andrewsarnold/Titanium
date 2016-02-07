@@ -38,7 +38,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void AbsOfZeroFloat()
 		{
-			Common.EvaluateAndAssert("abs(0.0)", "0.0");
+			Common.EvaluateAndAssert("abs(0.0)", "0.");
 		}
 
 		[TestMethod]
@@ -58,17 +58,23 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("abs(⁻4/3)", "4/3");
 		}
-		
+
 		[TestMethod]
-		public void AbsoluteValueOfPositiveInfinity()
+		public void AbsOfZeroEvaluatableFunction()
 		{
-			Common.EvaluateAndAssert("abs(∞)", "∞");
+			Common.EvaluateAndAssert("abs(sin(0))", "0");
 		}
 
 		[TestMethod]
-		public void AbsoluteValueOfNegativeInfinity()
+		public void AbsOfPositiveEvaluatableFunction()
 		{
-			Common.EvaluateAndAssert("abs(⁻∞)", "∞");
+			Common.EvaluateAndAssert("abs(cos(0))", "1");
+		}
+
+		[TestMethod]
+		public void AbsOfNegativeEvaluatableFunction()
+		{
+			Common.EvaluateAndAssert("abs(cos(π))", "1");
 		}
 	}
 }

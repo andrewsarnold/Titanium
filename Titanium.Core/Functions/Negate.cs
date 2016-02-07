@@ -14,12 +14,12 @@ namespace Titanium.Core.Functions
 		{
 		}
 
-		public override Expression Evaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
-			var p = parameters[0].Evaluate();
-			if (p is SingleComponentExpression)
+			var parameter = parameters[0].Evaluate();
+			if (parameter is SingleComponentExpression)
 			{
-				var c = ((SingleComponentExpression)p).Component;
+				var c = ((SingleComponentExpression)parameter).Component;
 				if (c is SingleFactorComponent)
 				{
 					var f = ((SingleFactorComponent)c).Factor;
@@ -36,7 +36,7 @@ namespace Titanium.Core.Functions
 				}
 			}
 			
-			return Expressionizer.ToExpression(new FunctionComponent(this, new List<Expression> { p }));
+			return AsExpression(parameter);
 		}
 
 		public override string ToString(List<Expression> parameters)
