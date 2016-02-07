@@ -7,32 +7,32 @@ namespace Titanium.Core.Components
 {
 	internal class DualFactorComponent : Component
 	{
-		private readonly Factor _leftFactor;
-		private readonly Factor _rightFactor;
-		private readonly ComponentType _componentType;
+		internal readonly Factor LeftFactor;
+		internal readonly Factor RightFactor;
+		internal readonly ComponentType ComponentType;
 
 		public DualFactorComponent(Factor leftFactor, Factor rightFactor, ComponentType componentType)
 		{
-			_componentType = componentType;
-			_leftFactor = leftFactor;
-			_rightFactor = rightFactor;
+			ComponentType = componentType;
+			LeftFactor = leftFactor;
+			RightFactor = rightFactor;
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{0}{1}{2}", ToString(_leftFactor),
-				_componentType == ComponentType.Multiply
+			return string.Format("{0}{1}{2}", ToString(LeftFactor),
+				ComponentType == ComponentType.Multiply
 					? "*"
-					: _componentType == ComponentType.Divide
+					: ComponentType == ComponentType.Divide
 						? "/"
 						: "^",
-				ToString(_rightFactor));
+				ToString(RightFactor));
 		}
 
 		public override Expression Evaluate()
 		{
-			var left = _leftFactor.Evaluate();
-			var right = _rightFactor.Evaluate();
+			var left = LeftFactor.Evaluate();
+			var right = RightFactor.Evaluate();
 
 			Number leftNumber;
 			Number rightNumber;
@@ -49,9 +49,9 @@ namespace Titanium.Core.Components
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				return Expressionizer.ToExpression(_componentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
 					? leftFraction * rightFraction
-					: _componentType == ComponentType.Divide
+					: ComponentType == ComponentType.Divide
 						? leftFraction / rightFraction
 						: leftFraction ^ rightFraction);
 			}
@@ -61,9 +61,9 @@ namespace Titanium.Core.Components
 				if (rightNumber is Integer)
 				{
 					var rightInteger = (Integer)rightNumber;
-					var result = _componentType == ComponentType.Multiply
+					var result = ComponentType == ComponentType.Multiply
 						? leftFraction * rightInteger
-						: _componentType == ComponentType.Divide
+						: ComponentType == ComponentType.Divide
 							? leftFraction / rightInteger
 							: leftFraction ^ rightInteger;
 					return Expressionizer.ToExpression(result);
@@ -71,21 +71,21 @@ namespace Titanium.Core.Components
 				else
 				{
 					var rightDouble = (Float)rightNumber;
-					var result = _componentType == ComponentType.Multiply
+					var result = ComponentType == ComponentType.Multiply
 						? leftFraction * rightDouble
-						: _componentType == ComponentType.Divide
+						: ComponentType == ComponentType.Divide
 							? leftFraction / rightDouble
 							: leftFraction ^ rightDouble;
 					return Expressionizer.ToExpression(new NumericFactor(result));
 				}
 			}
 
-			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
+			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), ComponentType));
 		}
 
 		private Expression Evaluate(Number leftNumber, Number rightNumber)
 		{
-			if (_componentType == ComponentType.Divide)
+			if (ComponentType == ComponentType.Divide)
 			{
 				var result = leftNumber / rightNumber;
 				return result is IntegerFraction
@@ -93,7 +93,7 @@ namespace Titanium.Core.Components
 					: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
 			}
 
-			return Expressionizer.ToExpression(new NumericFactor(_componentType == ComponentType.Multiply
+			return Expressionizer.ToExpression(new NumericFactor(ComponentType == ComponentType.Multiply
 				? leftNumber * rightNumber
 				: leftNumber ^ rightNumber));
 		}

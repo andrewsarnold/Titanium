@@ -8,16 +8,9 @@ namespace Titanium.Core
 {
 	internal static class Common
 	{
-		internal static bool IsNumber(Expression expression, out Number number)
+		internal static bool IsNumber(IEvaluatable evaluatable, out Number number)
 		{
-			if (expression is SingleComponentExpression)
-			{
-				var c = ((SingleComponentExpression)expression).Component;
-				return IsNumber(c, out number);
-			}
-
-			number = null;
-			return false;
+			return IsNumber(Componentizer.ToComponent(evaluatable), out number);
 		}
 		
 		internal static bool IsIntegerFraction(Expression expression, out IntegerFraction fraction)
@@ -73,18 +66,6 @@ namespace Titanium.Core
 			}
 
 			number = null;
-			return false;
-		}
-
-		private static bool IsIntegerFraction(Component component, out IntegerFraction fraction)
-		{
-			if (component is IntegerFraction)
-			{
-				fraction = (IntegerFraction)component;
-				return true;
-			}
-
-			fraction = null;
 			return false;
 		}
 	}
