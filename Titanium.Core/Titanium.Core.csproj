@@ -41,6 +41,7 @@
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Functions\AbsoluteValue.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
+    <Compile Include="Functions\NaturalLog.cs" />
     <Compile Include="Functions\Negate.cs" />
     <Compile Include="Functions\SquareRoot.cs" />
     <Compile Include="IEvaluatable.cs" />
