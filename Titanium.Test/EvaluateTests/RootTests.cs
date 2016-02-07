@@ -25,6 +25,18 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void SquareRootOfFloatSquare()
+		{
+			Common.EvaluateAndAssert("√4.", "2.");
+		}
+
+		[TestMethod]
+		public void SquareRootOfFloatNonSquare()
+		{
+			Common.EvaluateAndAssert("√2.", "1.4142135623731");
+		}
+
+		[TestMethod]
 		public void SquareRootOfNegativeIntegerSquare()
 		{
 			Common.AssertThrows<NonRealResultException>("√(⁻4)");

@@ -19,7 +19,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 			if (parameters.Count != 1)
 			{
-				throw new WrongArgumentCountException("!", 1, parameters.Count);
+				throw new WrongArgumentCountException(Name, 1, parameters.Count);
 			}
 
 			var parameter = parameters[0].Evaluate();
@@ -63,7 +63,7 @@ namespace Titanium.Core.Functions.Implementations
 				}
 			}
 
-			return Expressionizer.ToExpression(new FunctionComponent("!", new List<Expression> { parameter }));
+			return Expressionizer.ToExpression(new FunctionComponent(Name, new List<Expression> { parameter }));
 		}
 
 		public override string ToString(List<Expression> parameters)
@@ -71,10 +71,11 @@ namespace Titanium.Core.Functions.Implementations
 			var parameterAsFactor = Factorizer.ToFactor(parameters[0]);
 			var shouldWrap = parameterAsFactor is ExpressionFactor ||
 				(parameterAsFactor is NumericFactor && ((NumericFactor)parameterAsFactor).Number is Float);
-			return string.Format("{0}{1}{2}!",
+			return string.Format("{0}{1}{2}{3}",
 				shouldWrap ? "(" : string.Empty,
 				parameters[0],
-				shouldWrap ? ")" : string.Empty);
+				shouldWrap ? ")" : string.Empty,
+				Name);
 		}
 
 		private static int BasicFactorial(int i)
