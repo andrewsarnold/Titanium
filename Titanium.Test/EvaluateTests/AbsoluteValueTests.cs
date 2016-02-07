@@ -76,17 +76,5 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("abs(cos(π))", "1");
 		}
-		
-		[TestMethod]
-		public void AbsoluteValueOfPositiveInfinity()
-		{
-			Common.EvaluateAndAssert("abs(∞)", "∞");
-		}
-
-		[TestMethod]
-		public void AbsoluteValueOfNegativeInfinity()
-		{
-			Common.EvaluateAndAssert("abs(⁻∞)", "∞");
-		}
 	}
 }
