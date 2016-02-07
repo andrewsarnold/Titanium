@@ -56,7 +56,7 @@
     <Compile Include="EvaluateTests\CompositeTests.cs" />
     <Compile Include="EvaluateTests\ConstantTests.cs" />
     <Compile Include="EvaluateTests\FactorialTests.cs" />
-    <Compile Include="EvaluateTests\MiscTests.cs" />
+    <Compile Include="EvaluateTests\AlphabeticOperandTests.cs" />
     <Compile Include="EvaluateTests\LogarithmTests.cs" />
     <Compile Include="EvaluateTests\NegationTests.cs" />
     <Compile Include="EvaluateTests\NestedParenthesesTests.cs" />
