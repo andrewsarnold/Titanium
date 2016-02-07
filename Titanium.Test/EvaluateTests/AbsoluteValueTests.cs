@@ -6,23 +6,69 @@ namespace Titanium.Test.EvaluateTests
 	public class AbsoluteValueTests
 	{
 		[TestMethod]
-		public void AbsoluteValueTest()
+		public void AbsOfPositiveInteger()
 		{
 			Common.EvaluateAndAssert("abs(3)", "3");
+		}
+
+		[TestMethod]
+		public void AbsOfNegativeInteger()
+		{
 			Common.EvaluateAndAssert("abs(⁻3)", "3");
+		}
+
+		[TestMethod]
+		public void AbsOfZeroInteger()
+		{
 			Common.EvaluateAndAssert("abs(0)", "0");
-			Common.EvaluateAndAssert("abs(e)", "e");
-			Common.EvaluateAndAssert("abs(b)", "|b|");
-			Common.EvaluateAndAssert("abs(⁻b)", "|⁻b|");
-			Common.EvaluateAndAssert("abs(4/3)", "4/3");
-			Common.EvaluateAndAssert("abs(⁻4/3)", "4/3");
+		}
+
+		[TestMethod]
+		public void AbsOfPositiveFloat()
+		{
 			Common.EvaluateAndAssert("abs(3.4)", "3.4");
+		}
+
+		[TestMethod]
+		public void AbsOfNegativeFloat()
+		{
 			Common.EvaluateAndAssert("abs(⁻3.4)", "3.4");
-			//Common.EvaluateAndAssert("abs(∞)", "∞");
-			//Common.EvaluateAndAssert("abs(⁻∞)", "∞");
-			Common.EvaluateAndAssert("abs(a-b)", "|a-b|");
-			Common.EvaluateAndAssert("abs(cos(1/10))", "cos(1/10)");
-			Common.EvaluateAndAssert("abs(cos(9/5))", "abs(cos(9/5))");
+		}
+
+		[TestMethod]
+		public void AbsOfZeroFloat()
+		{
+			Common.EvaluateAndAssert("abs(0.0)", "0.");
+		}
+
+		[TestMethod]
+		public void AbsOfConstant()
+		{
+			Common.EvaluateAndAssert("abs(e)", "e");
+		}
+
+		[TestMethod]
+		public void AbsOfPositiveIntegerFraction()
+		{
+			Common.EvaluateAndAssert("abs(4/3)", "4/3");
+		}
+
+		[TestMethod]
+		public void AbsOfNegativeIntegerFraction()
+		{
+			Common.EvaluateAndAssert("abs(⁻4/3)", "4/3");
+		}
+		
+		[TestMethod]
+		public void AbsoluteValueOfPositiveInfinity()
+		{
+			Common.EvaluateAndAssert("abs(∞)", "∞");
+		}
+
+		[TestMethod]
+		public void AbsoluteValueOfNegativeInfinity()
+		{
+			Common.EvaluateAndAssert("abs(⁻∞)", "∞");
 		}
 	}
 }

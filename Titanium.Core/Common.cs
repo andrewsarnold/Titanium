@@ -2,6 +2,7 @@
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core
 {
@@ -21,10 +22,22 @@ namespace Titanium.Core
 		
 		internal static bool IsIntegerFraction(Expression expression, out IntegerFraction fraction)
 		{
-			if (expression is SingleComponentExpression)
+			var component = Componentizer.ToComponent(expression);
+			if (component is IntegerFraction)
 			{
-				var component = ((SingleComponentExpression)expression).Component;
-				return IsIntegerFraction(component, out fraction);
+				fraction = (IntegerFraction)component;
+				return true;
+			}
+
+			var factor = Factorizer.ToFactor(expression);
+			if (factor is NumericFactor)
+			{
+				var number = ((NumericFactor)factor).Number;
+				if (number is Integer)
+				{
+					fraction = new IntegerFraction((Integer)number);
+					return true;
+				}
 			}
 
 			fraction = null;
