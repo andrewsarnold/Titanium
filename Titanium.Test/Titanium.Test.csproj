@@ -51,19 +51,35 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EvaluateTests\AbsoluteValueTests.cs" />
-    <Compile Include="EvaluateTests\ArithmeticTests.cs" />
+    <Compile Include="EvaluateTests\AdditionTests.cs" />
+    <Compile Include="EvaluateTests\ImpliedMultiplicationTests.cs" />
     <Compile Include="EvaluateTests\Common.cs" />
+    <Compile Include="EvaluateTests\ComplexArithmeticTests.cs" />
     <Compile Include="EvaluateTests\CompositeTests.cs" />
     <Compile Include="EvaluateTests\ListTests.cs" />
-    <Compile Include="EvaluateTests\MiscTests.cs" />
+    <Compile Include="EvaluateTests\ConstantTests.cs" />
+    <Compile Include="EvaluateTests\DivisionTests.cs" />
+    <Compile Include="EvaluateTests\ExponentTests.cs" />
+    <Compile Include="EvaluateTests\FactorialTests.cs" />
+    <Compile Include="EvaluateTests\AlphabeticOperandTests.cs" />
+    <Compile Include="EvaluateTests\FloorTests.cs" />
+    <Compile Include="EvaluateTests\IntegerFractionTests.cs" />
     <Compile Include="EvaluateTests\LogarithmTests.cs" />
+    <Compile Include="EvaluateTests\MultiplicationTests.cs" />
+    <Compile Include="EvaluateTests\NegationTests.cs" />
+    <Compile Include="EvaluateTests\NestedParenthesesTests.cs" />
     <Compile Include="EvaluateTests\RootTests.cs" />
-    <Compile Include="EvaluateTests\SimpleFloatFunctionTests.cs" />
+    <Compile Include="EvaluateTests\CeilingTests.cs" />
+    <Compile Include="EvaluateTests\SubractionTests.cs" />
+    <Compile Include="EvaluateTests\SyntaxErrorTests.cs" />
     <Compile Include="EvaluateTests\TrigonometryTests.cs" />
+    <Compile Include="EvaluateTests\UnaryEvaluationTests.cs" />
     <Compile Include="ExpressionBuilderTests.cs" />
     <Compile Include="ExpressionTests.cs" />
+    <Compile Include="PrintingTests\Common.cs" />
     <Compile Include="ListExpressionTests.cs" />
-    <Compile Include="PrintTests.cs" />
+    <Compile Include="PrintingTests\ImpliedMultiplicationTests.cs" />
+    <Compile Include="PrintingTests\ExponentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TokenizeTests.cs" />
   </ItemGroup>

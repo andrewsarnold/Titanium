@@ -11,9 +11,10 @@ namespace Titanium.Core.Tokens
 	{
 		private static readonly Dictionary<TokenType, Regex> TokenDefinitions = new Dictionary<TokenType, Regex>
 		{
-			{ TokenType.Integer, new Regex(@"^⁻?\d+$") },
-			{ TokenType.Float, new Regex(@"^(⁻?\d*\.\d+|⁻?\d+\.\d*)$") },
+			{ TokenType.Integer, new Regex(@"^\d+$") },
+			{ TokenType.Float, new Regex(@"^(\d*\.\d+|\d+\.\d*)$") },
 			{ TokenType.Letter, new Regex(@"^[a-zA-ZΑ-ώ_]+[a-zA-ZΑ-ώ_\d]*$") },
+			{ TokenType.Negate, new Regex(@"^⁻$") },
 			{ TokenType.OpenParenthesis, new Regex(@"^\($") },
 			{ TokenType.CloseParenthesis, new Regex(@"^\)$") },
 			{ TokenType.OpenBrace, new Regex(@"^\{$") },
@@ -85,7 +86,7 @@ namespace Titanium.Core.Tokens
 
 		private static IEnumerable<Token> ConvertFunctions(IEnumerable<Token> tokens)
 		{
-			return tokens.Select(token => token.Type == TokenType.Letter && FunctionRepository.Contains(token.Value)
+			return tokens.Select(token => FunctionRepository.Contains(token.Value)
 				? new Token(TokenType.Function, token.Value)
 				: token);
 		}

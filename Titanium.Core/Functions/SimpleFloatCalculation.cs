@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Titanium.Core.Components;
-using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
@@ -20,14 +18,10 @@ namespace Titanium.Core.Functions
 			_function = function;
 		}
 
-		public override Expression Evaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
-			if (parameters.Count != 1)
-			{
-				throw new WrongArgumentCountException(Name, 1, parameters.Count);
-			}
-
-			var factor = Factorizer.ToFactor(parameters[0]);
+			var parameter = parameters[0].Evaluate();
+			var factor = Factorizer.ToFactor(parameter);
 			if (factor is NumericFactor)
 			{
 				var number = (NumericFactor)factor;
@@ -35,38 +29,39 @@ namespace Titanium.Core.Functions
 				{
 					var integer = (Integer)number.Number;
 					var result = _function(integer.Value);
-					if (IsInteger(result))
+					if (Float.IsWholeNumber(result))
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
+
+					return Expressionizer.ToExpression(new FunctionComponent(Name, new List<Expression> { Expressionizer.ToExpression(number) }));
 				}
-				else
-				{
-					var aFloat = (Float)number.Number;
-					return Expressionizer.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
-				}
+				
+				var aFloat = (Float)number.Number;
+				return Expressionizer.ToExpression(new NumericFactor(new Float(_function(aFloat.Value))));
 			}
-			else if (factor is AlphabeticFactor)
+			
+			if (factor is AlphabeticFactor)
 			{
 				// If operand is a constant (like pi), and the result is not an integer, don't evaluate
 				var alph = (AlphabeticFactor)factor;
 				if (Constants.IsNamedConstant(alph.Value))
 				{
 					var result = _function(Constants.Get(alph.Value));
-					if (IsInteger(result))
+					if (Float.IsWholeNumber(result))
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
 					}
-					return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+					return Expressionizer.ToExpression(new FunctionComponent(Name, new List<Expression> { parameter }));
 				}
 			}
 
-			return Expressionizer.ToExpression(new FunctionComponent(Name, parameters.Cast<IEvaluatable>().ToList()));
+			return AsExpression(parameter);
 		}
 
-		private static bool IsInteger(double d)
+		public override string ToString(List<Expression> parameters)
 		{
-			return Math.Abs(d % 1) < Constants.Tolerance;
+			return string.Format("{0}({1})", Name, string.Join(",", parameters));
 		}
 	}
 }
