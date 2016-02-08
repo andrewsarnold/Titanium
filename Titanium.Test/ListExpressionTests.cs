@@ -2,6 +2,7 @@
 using Titanium.Core.Components;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Test
 {
@@ -48,6 +49,24 @@ namespace Titanium.Test
 			Assert.AreEqual(3, innerList.Expressions.Count);
 			var innerInnerList = GetAsExpressionList(innerList.Expressions[1]);
 			Assert.AreEqual(2, innerInnerList.Expressions.Count);
+		}
+
+		[TestMethod]
+		public void ListAsFirstFactorTest()
+		{
+			var expression = Expression.ParseExpression("{1,2}*3");
+			var component = (DualFactorComponent)(Componentizer.ToComponent(expression));
+			Assert.IsTrue(component.LeftFactor is ExpressionList);
+			Assert.IsTrue(component.RightFactor is NumericFactor);
+		}
+
+		[TestMethod]
+		public void ListAsSecondFactorTest()
+		{
+			var expression = Expression.ParseExpression("3*{1,2}");
+			var component = (DualFactorComponent)(Componentizer.ToComponent(expression));
+			Assert.IsTrue(component.LeftFactor is NumericFactor);
+			Assert.IsTrue(component.RightFactor is ExpressionList);
 		}
 
 		private static ExpressionList GetAsExpressionList(Expression expression)

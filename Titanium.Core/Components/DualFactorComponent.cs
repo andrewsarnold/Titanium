@@ -1,4 +1,5 @@
-﻿using Titanium.Core.Expressions;
+﻿using System.Linq;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
@@ -7,32 +8,32 @@ namespace Titanium.Core.Components
 {
 	internal class DualFactorComponent : Component
 	{
-		private readonly Factor _leftFactor;
-		private readonly Factor _rightFactor;
+		internal readonly Factor LeftFactor;
+		internal readonly Factor RightFactor;
 		private readonly ComponentType _componentType;
 
 		public DualFactorComponent(Factor leftFactor, Factor rightFactor, ComponentType componentType)
 		{
 			_componentType = componentType;
-			_leftFactor = leftFactor;
-			_rightFactor = rightFactor;
+			LeftFactor = leftFactor;
+			RightFactor = rightFactor;
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{0}{1}{2}", ToString(_leftFactor),
+			return string.Format("{0}{1}{2}", ToString(LeftFactor),
 				_componentType == ComponentType.Multiply
 					? "*"
 					: _componentType == ComponentType.Divide
 						? "/"
 						: "^",
-				ToString(_rightFactor));
+				ToString(RightFactor));
 		}
 
 		public override Expression Evaluate()
 		{
-			var left = _leftFactor.Evaluate();
-			var right = _rightFactor.Evaluate();
+			var left = LeftFactor.Evaluate();
+			var right = RightFactor.Evaluate();
 
 			Number leftNumber;
 			Number rightNumber;
@@ -42,6 +43,19 @@ namespace Titanium.Core.Components
 				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
 			{
 				return Evaluate(leftNumber, rightNumber);
+			}
+
+			ExpressionList leftList;
+			ExpressionList rightList;
+
+			if (IsList(left, out leftList) && Common.IsNumber(right, out rightNumber))
+			{
+				return Evaluate(leftList, rightNumber, _componentType);
+			}
+
+			if (IsList(right, out rightList) && Common.IsNumber(left, out leftNumber))
+			{
+				return Evaluate(rightList, leftNumber, _componentType);
 			}
 
 			IntegerFraction leftFraction;
@@ -81,6 +95,24 @@ namespace Titanium.Core.Components
 			}
 
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
+		}
+
+		private static Expression Evaluate(ExpressionList leftNumber, Number rightNumber, ComponentType type)
+		{
+			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), new NumericFactor(rightNumber), type).Evaluate()).ToList()));
+		}
+
+		private static bool IsList(IEvaluatable input, out ExpressionList output)
+		{
+			var factor = Factorizer.ToFactor(input);
+			if (factor is ExpressionList)
+			{
+				output = (ExpressionList)factor;
+				return true;
+			}
+
+			output = null;
+			return false;
 		}
 
 		private Expression Evaluate(Number leftNumber, Number rightNumber)

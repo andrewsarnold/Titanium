@@ -138,7 +138,7 @@ namespace Titanium.Core.Expressions
 					var tokenSubstring = tokens.Skip(index + 1).Take(indexOfCloseBrace - index - 1).ToList();
 					var operands = ParseCommaSeparatedList(tokenSubstring).ToList();
 					var list = new ExpressionListToken(new ExpressionList(operands));
-					stack.Push(list);
+					outputQueue.Add(list);
 					index = indexOfCloseBrace;
 				}
 
