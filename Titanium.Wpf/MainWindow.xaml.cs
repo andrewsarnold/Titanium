@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Titanium.Wpf.Symbols;
 
 namespace Titanium.Wpf
 {
@@ -20,7 +21,19 @@ namespace Titanium.Wpf
 		{
 			var menu = new MenuItem { Header = "Symbols" };
 			menu.Items.Add(SymbolMenuItem("⁻", "negative"));
+			menu.Items.Add(SymbolMenuItem("√", "square root"));
+			menu.Items.Add(GreekAlphabet());
 			MenuInsert.Items.Add(menu);
+		}
+
+		private MenuItem GreekAlphabet()
+		{
+			var menu = new MenuItem { Header = "Greek" };
+			foreach (var symbol in Greek.Symbols)
+			{
+				menu.Items.Add(SymbolMenuItem(symbol.Key, symbol.Value));
+			}
+			return menu;
 		}
 
 		private MenuItem SymbolMenuItem(string symbol, string name)
