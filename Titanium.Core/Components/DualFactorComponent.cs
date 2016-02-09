@@ -48,14 +48,14 @@ namespace Titanium.Core.Components
 			ExpressionList leftList;
 			ExpressionList rightList;
 
-			if (IsList(left, out leftList) && Common.IsNumber(right, out rightNumber))
+			if (IsList(left, out leftList))
 			{
-				return Evaluate(leftList, rightNumber, _componentType);
+				return Evaluate(leftList, right, _componentType);
 			}
 
-			if (IsList(right, out rightList) && Common.IsNumber(left, out leftNumber))
+			if (IsList(right, out rightList))
 			{
-				return Evaluate(rightList, leftNumber, _componentType);
+				return Evaluate(rightList, left, _componentType);
 			}
 
 			IntegerFraction leftFraction;
@@ -97,9 +97,9 @@ namespace Titanium.Core.Components
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), _componentType));
 		}
 
-		private static Expression Evaluate(ExpressionList leftNumber, Number rightNumber, ComponentType type)
+		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right, ComponentType type)
 		{
-			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), new NumericFactor(rightNumber), type).Evaluate()).ToList()));
+			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), type).Evaluate()).ToList()));
 		}
 
 		private static bool IsList(IEvaluatable input, out ExpressionList output)

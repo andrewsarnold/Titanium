@@ -46,5 +46,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("{4,5}^2.", "{16.,25.}");
 		}
+
+		[TestMethod]
+		public void ListTimesExpression()
+		{
+			Common.EvaluateAndAssert("{1,2}*(4.8-4.2)", "{0.6,1.2}");
+		}
 	}
 }
