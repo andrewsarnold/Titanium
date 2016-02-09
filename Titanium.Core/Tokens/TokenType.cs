@@ -10,6 +10,8 @@
 		Negate,
 		OpenParenthesis,
 		CloseParenthesis,
+		OpenBrace,
+		CloseBrace,
 		Period,
 		Comma,
 		Plus,
@@ -19,6 +21,7 @@
 		Exponent,
 		Factorial,
 		Root,
-		Space
+		Space,
+		ExpressionList
 	}
 }
