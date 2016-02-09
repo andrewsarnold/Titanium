@@ -81,7 +81,7 @@ namespace Titanium.Wpf
 		{
 			if (e.Key == Key.Enter)
 			{
-				History.Children.Add(new TextBlock{ Text = InputBox.Text, HorizontalAlignment = HorizontalAlignment.Left });
+				AddString(InputBox.Text);
 
 				string result;
 				try
@@ -93,9 +93,20 @@ namespace Titanium.Wpf
 					result = ex.Message;
 				}
 				
-				History.Children.Add(new TextBlock { Text = result, HorizontalAlignment = HorizontalAlignment.Right });
+				AddString(result, false);
 				InputBox.Clear();
 			}
+		}
+
+		private void AddString(string value, bool isLeftAligned = true)
+		{
+			History.Children.Add(new TextBlock
+			{
+				Text = value,
+				HorizontalAlignment = isLeftAligned ? HorizontalAlignment.Left : HorizontalAlignment.Right,
+				TextAlignment = isLeftAligned ? TextAlignment.Left : TextAlignment.Right,
+				TextWrapping = TextWrapping.Wrap
+			});
 		}
 	}
 }
