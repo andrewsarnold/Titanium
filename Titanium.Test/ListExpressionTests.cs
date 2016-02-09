@@ -10,6 +10,16 @@ namespace Titanium.Test
 	public class ListExpressionTests
 	{
 		[TestMethod]
+		public void EmptyList()
+		{
+			var expression = Expression.ParseExpression("{}");
+			var list = GetAsExpressionList(expression);
+
+			Assert.AreEqual(0, list.Expressions.Count);
+			Assert.AreEqual("{}", list.ToString());
+		}
+
+		[TestMethod]
 		public void OneElementListTest()
 		{
 			var expression = Expression.ParseExpression("{1}");

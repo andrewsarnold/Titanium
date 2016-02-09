@@ -136,9 +136,18 @@ namespace Titanium.Core.Expressions
 				{
 					var indexOfCloseBrace = tokens.FindLastIndex(t => t.Type == TokenType.CloseBrace);
 					var tokenSubstring = tokens.Skip(index + 1).Take(indexOfCloseBrace - index - 1).ToList();
-					var operands = ParseCommaSeparatedList(tokenSubstring).ToList();
-					var list = new ExpressionListToken(new ExpressionList(operands));
-					outputQueue.Add(list);
+
+					if (tokenSubstring.Count > 0)
+					{
+						var operands = ParseCommaSeparatedList(tokenSubstring).ToList();
+						var list = new ExpressionListToken(new ExpressionList(operands));
+						outputQueue.Add(list);
+					}
+					else
+					{	// Special case for empty lists
+						outputQueue.Add(new ExpressionListToken(new ExpressionList(new List<Expression>())));
+					}
+
 					index = indexOfCloseBrace;
 				}
 
