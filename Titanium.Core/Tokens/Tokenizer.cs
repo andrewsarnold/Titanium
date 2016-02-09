@@ -17,6 +17,8 @@ namespace Titanium.Core.Tokens
 			{ TokenType.Negate, new Regex(@"^⁻$") },
 			{ TokenType.OpenParenthesis, new Regex(@"^\($") },
 			{ TokenType.CloseParenthesis, new Regex(@"^\)$") },
+			{ TokenType.OpenBrace, new Regex(@"^\{$") },
+			{ TokenType.CloseBrace, new Regex(@"^\}$") },
 			{ TokenType.Period, new Regex(@"^\.$") },
 			{ TokenType.Comma, new Regex(@"^,$") },
 			{ TokenType.Plus, new Regex(@"^\+$") },

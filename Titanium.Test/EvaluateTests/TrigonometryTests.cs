@@ -8,7 +8,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void SineOfFloatTest()
 		{
-			Common.EvaluateAndAssert("sin(1.3)", "0.963558185417193");
+			Common.EvaluateAndAssert("sin(1.3)", ".963558185417193");
 		}
 
 		[TestMethod]
@@ -44,7 +44,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void CosineOfFloatTest()
 		{
-			Common.EvaluateAndAssert("cos(1.3)", "0.267498828624587");
+			Common.EvaluateAndAssert("cos(1.3)", ".267498828624587");
 		}
 
 		[TestMethod]

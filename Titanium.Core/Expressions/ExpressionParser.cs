@@ -26,11 +26,13 @@ namespace Titanium.Core.Expressions
 
 			var outputQueue = new List<Token>();
 			var stack = new Stack<Token>();
-			
-			foreach (var currentToken in tokens)
+
+			for (var index = 0; index < tokens.Count; index++)
 			{
+				var currentToken = tokens[index];
+
 				// If the token is a number, then add it to the output queue.
-				if (currentToken.Type == TokenType.Integer || currentToken.Type == TokenType.Float || currentToken.Type == TokenType.Letter)
+				if (currentToken.Type.IsOperand())
 				{
 					outputQueue.Add(currentToken);
 				}
@@ -86,7 +88,7 @@ namespace Titanium.Core.Expressions
 								var o2Precedence = topType.Precedence();
 
 								if ((o1Associativity == OperatorAssociativity.Left && o1Precedence <= o2Precedence) ||
-									(o1Associativity == OperatorAssociativity.Right && o1Precedence < o2Precedence))
+								    (o1Associativity == OperatorAssociativity.Right && o1Precedence < o2Precedence))
 								{
 									outputQueue.Add(stack.Pop());
 									somethingChanged = true;
@@ -128,6 +130,30 @@ namespace Titanium.Core.Expressions
 
 					// If the stack runs out without finding a left parenthesis,
 					// then there are mismatched parentheses.
+				}
+
+				else if (currentToken.Type == TokenType.OpenBrace)
+				{
+					var indexOfCloseBrace = tokens.FindLastIndex(t => t.Type == TokenType.CloseBrace);
+					var tokenSubstring = tokens.Skip(index + 1).Take(indexOfCloseBrace - index - 1).ToList();
+
+					if (tokenSubstring.Count > 0)
+					{
+						var operands = ParseCommaSeparatedList(tokenSubstring).ToList();
+						var list = new ExpressionListToken(new ExpressionList(operands));
+						outputQueue.Add(list);
+					}
+					else
+					{	// Special case for empty lists
+						outputQueue.Add(new ExpressionListToken(new ExpressionList(new List<Expression>())));
+					}
+
+					index = indexOfCloseBrace;
+				}
+
+				else if (currentToken.Type == TokenType.CloseBrace)
+				{
+					throw new SyntaxErrorException("Mismatched braces");
 				}
 
 				else
@@ -191,7 +217,14 @@ namespace Titanium.Core.Expressions
 			{
 				if (token.Type.IsOperand())
 				{
-					stack.Push(new SingleFactorComponent(ParseOperand(token)));
+					if (token is ExpressionListToken)
+					{
+						stack.Push(((ExpressionListToken)token).List);
+					}
+					else
+					{
+						stack.Push(new SingleFactorComponent(ParseOperand(token)));
+					}
 				}
 				else if (token.Type == TokenType.Function)
 				{
@@ -288,6 +321,73 @@ namespace Titanium.Core.Expressions
 			}
 
 			throw new SyntaxErrorException("Couldn't parse operand {0}", token.Value);
+		}
+
+		private static IEnumerable<Expression> ParseCommaSeparatedList(IReadOnlyList<Token> tokens)
+		{
+			var currentElement = new List<Token>();
+			var tokenGroups = new List<List<Token>>();
+
+			for (var i = 0; i < tokens.Count; i++)
+			{
+				var token = tokens[i];
+				if (token.Type == TokenType.Comma)
+				{
+					tokenGroups.Add(currentElement.Select(e => e).ToList()); // move a copy of the list, not a reference
+					currentElement.Clear();
+				}
+
+				else if (token.Type == TokenType.OpenBrace)
+				{
+					var indexOfMatchingBrace = IndexOfMatchingBrace(tokens, i);
+					var tokenSubList = tokens.Skip(i + 1).Take(indexOfMatchingBrace - i - 1).ToList();
+					var innerList = ParseCommaSeparatedList(tokenSubList).ToList();
+					var list = new ExpressionListToken(new ExpressionList(innerList));
+					currentElement.Add(list);
+					i = indexOfMatchingBrace;
+				}
+
+				else if (token.Type == TokenType.CloseBrace)
+				{
+					throw new SyntaxErrorException("Mismatched braces");
+				}
+
+				else
+				{
+					currentElement.Add(token);
+				}
+			}
+
+			tokenGroups.Add(currentElement.Select(e => e).ToList()); // move a copy of the list
+			currentElement.Clear();
+
+			return tokenGroups.Select(tokenGroup => ParsePostfix(CreatePostfixTokenList(tokenGroup)));
+		}
+
+		private static int IndexOfMatchingBrace(IReadOnlyList<Token> tokens, int indexOfOpeningBrace)
+		{
+			var depth = 0;
+			for (var i = indexOfOpeningBrace + 1; i < tokens.Count; i++)
+			{
+				if (tokens[i].Type == TokenType.OpenBrace)
+				{
+					depth++;
+				}
+
+				if (tokens[i].Type == TokenType.CloseBrace)
+				{
+					if (depth > 0)
+					{
+						depth--;
+					}
+					else
+					{
+						return i;
+					}
+				}
+			}
+
+			throw new SyntaxErrorException("Mismatched braces");
 		}
 	}
 }

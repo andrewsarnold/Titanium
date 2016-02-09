@@ -14,7 +14,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void FloatEvaluatesToItself()
 		{
-			Common.EvaluateAndAssert(".5", "0.5");
+			Common.EvaluateAndAssert("0.5", ".5");
 		}
 
 		[TestMethod]

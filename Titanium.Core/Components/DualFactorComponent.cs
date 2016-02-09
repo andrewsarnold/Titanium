@@ -1,4 +1,5 @@
-﻿using Titanium.Core.Expressions;
+﻿using System.Linq;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
@@ -44,6 +45,19 @@ namespace Titanium.Core.Components
 				return Evaluate(leftNumber, rightNumber);
 			}
 
+			ExpressionList leftList;
+			ExpressionList rightList;
+
+			if (IsList(left, out leftList))
+			{
+				return Evaluate(leftList, right, ComponentType);
+			}
+
+			if (IsList(right, out rightList))
+			{
+				return Evaluate(rightList, left, ComponentType);
+			}
+
 			IntegerFraction leftFraction;
 			IntegerFraction rightFraction;
 
@@ -81,6 +95,24 @@ namespace Titanium.Core.Components
 			}
 
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), ComponentType));
+		}
+
+		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right, ComponentType type)
+		{
+			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), type).Evaluate()).ToList()));
+		}
+
+		private static bool IsList(IEvaluatable input, out ExpressionList output)
+		{
+			var factor = Factorizer.ToFactor(input);
+			if (factor is ExpressionList)
+			{
+				output = (ExpressionList)factor;
+				return true;
+			}
+
+			output = null;
+			return false;
 		}
 
 		private Expression Evaluate(Number leftNumber, Number rightNumber)

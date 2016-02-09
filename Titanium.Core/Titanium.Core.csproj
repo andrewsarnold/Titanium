@@ -40,6 +40,7 @@
     <Compile Include="Components\DualFactorComponent.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
+    <Compile Include="Factors\ExpressionList.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Functions\NaturalLog.cs" />
     <Compile Include="Functions\Implementations\Negate.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Reducer\Componentizer.cs" />
     <Compile Include="Reducer\Expressionizer.cs" />
     <Compile Include="Reducer\Factorizer.cs" />
+    <Compile Include="Tokens\ExpressionListToken.cs" />
     <Compile Include="Tokens\OperatorAssociativity.cs" />
     <Compile Include="Tokens\OperatorExtensions.cs" />
     <Compile Include="Tokens\Token.cs" />

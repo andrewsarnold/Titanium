@@ -17,7 +17,7 @@ namespace Titanium.Core.Numbers
 		{
 			var value = ValueAsFloat().ToString(CultureInfo.InvariantCulture).Replace("-", "⁻");
 			return value.Contains(".")
-				? value
+				? StripTrailingZeros(StripLeadingZeros(value))
 				: string.Format("{0}.",value);
 		}
 
@@ -42,6 +42,16 @@ namespace Titanium.Core.Numbers
 		internal static bool IsWholeNumber(Float f)
 		{
 			return IsWholeNumber(f.Value);
+		}
+
+		private string StripLeadingZeros(string value)
+		{
+			return value.TrimStart('0');
+		}
+
+		private string StripTrailingZeros(string value)
+		{
+			return value.TrimEnd('0');
 		}
 	}
 }
