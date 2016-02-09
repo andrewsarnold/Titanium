@@ -1,5 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Titanium.Wpf.Symbols;
+using Expression = Titanium.Core.Expressions.Expression;
 
 namespace Titanium.Wpf
 {
@@ -11,7 +15,7 @@ namespace Titanium.Wpf
 			FillInsertMenu();
 			InputBox.Focus();
 		}
-
+		
 		private void FillInsertMenu()
 		{
 			FillSymbolMenu();
@@ -46,6 +50,27 @@ namespace Titanium.Wpf
 				InputBox.Focus();
 			};
 			return menuItem;
+		}
+
+		private void InputKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter)
+			{
+				History.Children.Add(new TextBlock{ Text = InputBox.Text, HorizontalAlignment = HorizontalAlignment.Left });
+
+				string result;
+				try
+				{
+					result = Expression.ParseExpression(InputBox.Text).Evaluate().ToString();
+				}
+				catch (Exception ex)
+				{
+					result = ex.Message;
+				}
+				
+				History.Children.Add(new TextBlock { Text = result, HorizontalAlignment = HorizontalAlignment.Right });
+				InputBox.Clear();
+			}
 		}
 	}
 }
