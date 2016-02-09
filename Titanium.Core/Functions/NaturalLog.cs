@@ -70,6 +70,12 @@ namespace Titanium.Core.Functions
 				}
 			}
 
+			if (component is IntegerFraction)
+			{
+				var frac = (IntegerFraction)component;
+				return EvaluateDivision(new NumericFactor(new Integer(frac.Numerator)), new NumericFactor(new Integer(frac.Denominator)));
+			}
+
 			return AsExpression(parameter);
 		}
 
@@ -79,7 +85,7 @@ namespace Titanium.Core.Functions
 			return new DualComponentExpression(
 				Componentizer.ToComponent(new FunctionComponent(Name, new List<Expression> { left.Evaluate() }).Evaluate()),
 				Componentizer.ToComponent(new FunctionComponent(Name, new List<Expression> { right.Evaluate() }).Evaluate()),
-				true);
+				true).Evaluate();
 		}
 
 		private Expression EvaluateDivision(Factor left, Factor right)
@@ -88,7 +94,7 @@ namespace Titanium.Core.Functions
 			return new DualComponentExpression(
 				Componentizer.ToComponent(new FunctionComponent(Name, new List<Expression> { left.Evaluate() }).Evaluate()),
 				Componentizer.ToComponent(new FunctionComponent(Name, new List<Expression> { right.Evaluate() }).Evaluate()),
-				false);
+				false).Evaluate();
 		}
 
 		private Expression EvaluateExponent(Factor left, Factor right)

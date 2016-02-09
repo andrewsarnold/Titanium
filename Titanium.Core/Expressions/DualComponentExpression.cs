@@ -1,5 +1,7 @@
-﻿using Titanium.Core.Components;
+﻿using System.Collections.Generic;
+using Titanium.Core.Components;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
@@ -60,6 +62,18 @@ namespace Titanium.Core.Expressions
 				return new SingleComponentExpression(_isAdd
 					? leftNumber + rightFraction
 					: leftNumber - rightFraction);
+			}
+
+			if (Common.IsNumber(left, out leftNumber) && leftNumber.IsZero)
+			{
+				return _isAdd
+					? Expressionizer.ToExpression(right)
+					: new Negate().Evaluate(new List<Expression> { Expressionizer.ToExpression(right) });
+			}
+
+			if (Common.IsNumber(right, out rightNumber) && rightNumber.IsZero)
+			{
+				return Expressionizer.ToExpression(right);
 			}
 
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
