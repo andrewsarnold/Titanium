@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Titanium.Core.Functions;
 using Titanium.Wpf.Symbols;
 using Expression = Titanium.Core.Expressions.Expression;
 
@@ -15,10 +17,33 @@ namespace Titanium.Wpf
 			FillInsertMenu();
 			InputBox.Focus();
 		}
-		
+
 		private void FillInsertMenu()
 		{
+			FillFunctionMenu();
 			FillSymbolMenu();
+		}
+
+		private void FillFunctionMenu()
+		{
+			var menu = new MenuItem { Header = "Functions" };
+			foreach (var function in FunctionRepository.AllNames.OrderBy(f => f))
+			{
+				menu.Items.Add(FunctionMenuItem(function));
+			}
+			MenuInsert.Items.Add(menu);
+		}
+
+		private MenuItem FunctionMenuItem(string name)
+		{
+			var menuItem = new MenuItem { Header = name };
+			menuItem.Click += (sender, args) =>
+			{
+				InputBox.SelectedText = string.Format("{0}()", name);
+				InputBox.CaretIndex += name.Length + 1;
+				InputBox.Focus();
+			};
+			return menuItem;
 		}
 
 		private void FillSymbolMenu()

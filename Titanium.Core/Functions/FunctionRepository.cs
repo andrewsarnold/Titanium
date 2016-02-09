@@ -5,7 +5,7 @@ using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Functions
 {
-	internal static class FunctionRepository
+	public static class FunctionRepository
 	{
 		private static readonly Dictionary<string, Function> Funcs = new Dictionary<string, Function>
 		{
@@ -20,6 +20,11 @@ namespace Titanium.Core.Functions
 			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
 			{ "abs", new AbsoluteValue() }
 		};
+
+		public static IEnumerable<string> AllNames
+		{
+			get { return Funcs.Select(f => f.Key); }
+		}
 
 		internal static bool Contains(string name)
 		{
