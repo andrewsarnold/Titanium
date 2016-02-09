@@ -51,13 +51,13 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void IntegerDividedByFloat()
 		{
-			Common.EvaluateAndAssert("5 / 8.0", "0.625");
+			Common.EvaluateAndAssert("5 / 8.0", ".625");
 		}
 
 		[TestMethod]
 		public void FloatDividedByInteger()
 		{
-			Common.EvaluateAndAssert("5.0 / 8", "0.625");
+			Common.EvaluateAndAssert("5.0 / 8", ".625");
 		}
 		
 		[TestMethod]
