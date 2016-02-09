@@ -55,9 +55,9 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
-		public void NaturalLogOfRootTwo()
+		public void NaturalLogOfIntegerRoot()
 		{
-			Common.EvaluateAndAssert("ln(√(2))", "ln(2)/2");
+			Common.EvaluateAndAssert("ln(√(5))", "ln(5)/2");
 		}
 
 		[TestMethod]
