@@ -34,6 +34,11 @@ namespace Titanium.Core.Functions
 					throw new NonRealResultException();
 				}
 
+				if (number.IsZero)
+				{
+					return Expressionizer.ToExpression(new NumericFactor(new Infinity(true)));
+				}
+
 				if (number is Float)
 				{
 					return Expressionizer.ToExpression(new NumericFactor(new Float(Math.Log(((Float)number).Value))));

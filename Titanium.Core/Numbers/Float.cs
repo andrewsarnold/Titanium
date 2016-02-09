@@ -32,6 +32,11 @@ namespace Titanium.Core.Numbers
 			get { return Value < 0; }
 		}
 
+		internal override bool IsZero
+		{
+			get { return Math.Abs(Value) < Constants.Tolerance; }
+		}
+
 		internal static bool IsWholeNumber(double f)
 		{
 			return Math.Abs(f % 1) < Constants.Tolerance ||

@@ -53,5 +53,6 @@ namespace Titanium.Core.Numbers
 
 		protected abstract double ValueAsFloat();
 		internal abstract bool IsNegative { get; }
+		internal abstract bool IsZero { get; }
 	}
 }
