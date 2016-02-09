@@ -31,24 +31,74 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void NaturalLogOfNegativeFloat()
+		{
+			Common.AssertThrows<NonRealResultException>("ln(⁻1.3)");
+		}
+
+		[TestMethod]
 		public void NaturalLogOfZero()
 		{
 			Common.EvaluateAndAssert("ln(0)", "⁻∞");
 		}
 
 		[TestMethod]
-		public void NaturalLogTest()
+		public void NaturalLogOfPositiveFloat()
 		{
-			Common.EvaluateAndAssert("ln(1.3)", "0.262364");
+			Common.EvaluateAndAssert("ln(1.3)", ".262364264467491");
+		}
+
+		[TestMethod]
+		public void NaturalLogOfOneHalf()
+		{
 			Common.EvaluateAndAssert("ln(1/2)", "⁻ln(2)");
+		}
+
+		[TestMethod]
+		public void NaturalLogOfRootTwo()
+		{
 			Common.EvaluateAndAssert("ln(√(2))", "ln(2)/2");
-			Common.EvaluateAndAssert("ln(e/2)", "1-ln(2)");
+		}
+
+		[TestMethod]
+		public void NaturalLogOfEOverInteger()
+		{
 			Common.EvaluateAndAssert("ln(e/5)", "1-ln(5)");
+		}
+
+		[TestMethod]
+		public void NaturalLogOfEInIntegerFraction()
+		{
 			Common.EvaluateAndAssert("ln(3e/5)", "ln(3/5)+1");
-			Common.EvaluateAndAssert("ln(6)-ln(4)", "ln(3/2)");
+		}
+
+		[TestMethod]
+		public void NaturalLogsOfIntegerAdded()
+		{
 			Common.EvaluateAndAssert("ln(6)+ln(4)", "ln(24)");
+		}
+
+		[TestMethod]
+		public void NaturalLogsOfIntegerSubtracted()
+		{
+			Common.EvaluateAndAssert("ln(6)-ln(4)", "ln(3/2)");
+		}
+
+		[TestMethod]
+		public void NaturalLogsOfIntegerMultiplied()
+		{
 			Common.EvaluateAndAssert("ln(6)*ln(4)", "2*ln(6)*ln(2)");
+		}
+
+		[TestMethod]
+		public void NaturalLogsOfIntegerDivided()
+		{
 			Common.EvaluateAndAssert("ln(6)/ln(4)", "ln(6)/(2*ln(2))");
+		}
+
+		[TestMethod]
+		public void NaturalLogsOfIntegerRaised()
+		{
 			Common.EvaluateAndAssert("ln(6)^ln(4)", "ln(6)^(2*ln(2))");
 		}
 	}
