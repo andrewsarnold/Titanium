@@ -4,6 +4,7 @@ using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
@@ -67,6 +68,17 @@ namespace Titanium.Core.Functions
 						return EvaluateDivision(dfc.LeftFactor, dfc.RightFactor);
 					case ComponentType.Exponent:
 						return EvaluateExponent(dfc.LeftFactor, dfc.RightFactor);
+				}
+			}
+
+			if (component is FunctionComponent)
+			{
+				var func = (FunctionComponent)component;
+				if (func.Function is SquareRoot)
+				{
+					var innerOperand = func.Operands[0];
+					var exponent = new DualFactorComponent(Factorizer.ToFactor(innerOperand), Factorizer.ToFactor(new IntegerFraction(new Integer(1), new Integer(2))), ComponentType.Exponent);
+					return new NaturalLog().Evaluate(new List<Expression> { Expressionizer.ToExpression(exponent) }).Evaluate();
 				}
 			}
 
