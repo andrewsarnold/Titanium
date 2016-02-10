@@ -77,7 +77,7 @@ namespace Titanium.Core.Functions
 				if (func.Function is SquareRoot)
 				{
 					var innerOperand = func.Operands[0];
-					var exponent = new DualFactorComponent(Factorizer.ToFactor(innerOperand), Factorizer.ToFactor(new IntegerFraction(new Integer(1), new Integer(2))), ComponentType.Exponent);
+					var exponent = new DualFactorComponent(Factorizer.ToFactor(innerOperand), Factorizer.ToFactor(new IntegerFraction(1, 2)), ComponentType.Exponent);
 					return new NaturalLog().Evaluate(new List<Expression> { Expressionizer.ToExpression(exponent) }).Evaluate();
 				}
 			}

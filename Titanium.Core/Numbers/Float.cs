@@ -4,7 +4,7 @@ using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
 {
-	internal class Float : Number
+	public class Float : Number
 	{
 		public readonly double Value;
 
