@@ -68,9 +68,9 @@ namespace Titanium.Core.Components
 			return new IntegerFraction(new Integer(left.Numerator * right.Denominator), new Integer(left.Denominator * right.Numerator));
 		}
 
-		public static IntegerFraction operator ^(IntegerFraction left, IntegerFraction right)
+		public static Component operator ^(IntegerFraction left, IntegerFraction right)
 		{
-			throw new NotImplementedException();
+			return new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), ComponentType.Exponent);
 		}
 
 		public static IntegerFraction operator +(IntegerFraction left, Integer right)

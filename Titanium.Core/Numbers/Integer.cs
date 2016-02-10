@@ -24,6 +24,11 @@
 			get { return Value < 0; }
 		}
 
+		internal override bool IsZero
+		{
+			get { return Value == 0; }
+		}
+
 		internal static Integer Zero { get { return new Integer(0); } }
 
 		internal static Integer GreatestCommonDivisor(Integer a, Integer b)

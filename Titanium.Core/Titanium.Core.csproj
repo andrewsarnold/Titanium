@@ -42,6 +42,7 @@
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Factors\ExpressionList.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
+    <Compile Include="Functions\NaturalLog.cs" />
     <Compile Include="Functions\Implementations\Negate.cs" />
     <Compile Include="Functions\Implementations\SquareRoot.cs" />
     <Compile Include="IEvaluatable.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Factors\NumericFactor.cs" />
     <Compile Include="Functions\Implementations\SimpleFloatCalculation.cs" />
     <Compile Include="Numbers\Float.cs" />
+    <Compile Include="Numbers\Infinity.cs" />
     <Compile Include="Numbers\Integer.cs" />
     <Compile Include="Numbers\Number.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

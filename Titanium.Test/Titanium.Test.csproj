@@ -66,6 +66,7 @@
     <Compile Include="EvaluateTests\IntegerFractionTests.cs" />
     <Compile Include="EvaluateTests\LogarithmTests.cs" />
     <Compile Include="EvaluateTests\MultiplicationTests.cs" />
+    <Compile Include="EvaluateTests\NaturalLogarithmTests.cs" />
     <Compile Include="EvaluateTests\NegationTests.cs" />
     <Compile Include="EvaluateTests\NestedParenthesesTests.cs" />
     <Compile Include="EvaluateTests\RootTests.cs" />
