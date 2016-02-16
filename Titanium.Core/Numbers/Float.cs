@@ -21,7 +21,7 @@ namespace Titanium.Core.Numbers
 				: string.Format("{0}.",value);
 		}
 
-		protected override double ValueAsFloat()
+		internal override double ValueAsFloat()
 		{
 			// Coerce to 0
 			return Math.Abs(Value) < Constants.Tolerance ? 0 : Value;

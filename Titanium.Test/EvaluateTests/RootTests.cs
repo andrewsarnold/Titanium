@@ -71,5 +71,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("sqrt(2)", "√(2)");
 		}
+
+		[TestMethod]
+		public void ExponentResolvesAsSqrt()
+		{
+			Common.EvaluateAndAssert("3^(1/2)", "√(3)");
+		}
 	}
 }

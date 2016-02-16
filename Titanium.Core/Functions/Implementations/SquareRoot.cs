@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Titanium.Core.Components;
-using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
-using Titanium.Core.Factors;
-using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Functions.Implementations
@@ -16,37 +12,10 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
-
-			var exponent = new DualFactorComponent(Factorizer.ToFactor(parameter), Factorizer.ToFactor(new IntegerFraction(1, 2)), ComponentType.Exponent);
-			return exponent.Evaluate();
-
-			var factor = Factorizer.ToFactor(parameter);
-			if (factor is NumericFactor)
-			{
-				var number = ((NumericFactor)factor).Number;
-				if (number.IsNegative)
-				{
-					throw new NonRealResultException();
-				}
-
-				if (number is Float)
-				{
-					var f = ((Float)number).Value;
-					return Expressionizer.ToExpression(new NumericFactor(new Float(Math.Sqrt(f))));
-				}
-
-				var i = ((Integer)number).Value;
-				var result = Math.Sqrt(i);
-				if (Float.IsWholeNumber(result))
-				{
-					return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
-				}
-			}
-
-			return AsExpression(parameter);
+			return new Exponent().Evaluate(parameter, Expressionizer.ToExpression(new IntegerFraction(1, 2)));
 		}
 
 		public override string ToString(List<Expression> parameters)

@@ -7,6 +7,19 @@ namespace Titanium.Core
 {
 	internal static class Common
 	{
+		public static bool IsFunction(IEvaluatable evaluatable, out FunctionComponent function)
+		{
+			var component = Componentizer.ToComponent(evaluatable);
+			if (component is FunctionComponent)
+			{
+				function = (FunctionComponent)component;
+				return true;
+			}
+
+			function = null;
+			return false;
+		}
+
 		internal static bool IsNumber(IEvaluatable evaluatable, out Number number)
 		{
 			return IsNumber(Componentizer.ToComponent(evaluatable), out number);
@@ -41,6 +54,37 @@ namespace Titanium.Core
 			return IsNumber(evaluatable, out number) && number is Float;
 		}
 
+		internal static bool IsConstant(IEvaluatable expression, out Number value)
+		{
+			var factor = Factorizer.ToFactor(expression);
+			if (factor is AlphabeticFactor)
+			{
+				var name = ((AlphabeticFactor)factor).Value;
+
+				if (Constants.IsNamedConstant(name))
+				{
+					value = new Float(Constants.Get(name));
+					return true;
+				}
+			}
+
+			value = Integer.Zero;
+			return false;
+		}
+
+		internal static bool IsList(IEvaluatable input, out ExpressionList output)
+		{
+			var factor = Factorizer.ToFactor(input);
+			if (factor is ExpressionList)
+			{
+				output = (ExpressionList)factor;
+				return true;
+			}
+
+			output = null;
+			return false;
+		}
+
 		private static bool IsNumber(Component component, out Number number)
 		{
 			if (component is SingleFactorComponent)
@@ -65,19 +109,6 @@ namespace Titanium.Core
 			}
 
 			number = null;
-			return false;
-		}
-
-		public static bool IsFunction(IEvaluatable evaluatable, out FunctionComponent function)
-		{
-			var component = Componentizer.ToComponent(evaluatable);
-			if (component is FunctionComponent)
-			{
-				function = (FunctionComponent)component;
-				return true;
-			}
-
-			function = null;
 			return false;
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Functions
@@ -10,6 +11,7 @@ namespace Titanium.Core.Functions
 		private static readonly Dictionary<string, Function> Funcs = new Dictionary<string, Function>
 		{
 			{ "⁻", new Negate() },
+			{ "^", new Exponent() },
 			{ "!", new Factorial() },
 			{ "sin", new SimpleFloatCalculation("sin", Math.Sin) },
 			{ "cos", new SimpleFloatCalculation("cos", Math.Cos) },
@@ -40,7 +42,7 @@ namespace Titanium.Core.Functions
 				return Funcs[name];
 			}
 
-			throw new NotImplementedException();
+			throw new FunctionNotDefinedException(name);
 		}
 	}
 }

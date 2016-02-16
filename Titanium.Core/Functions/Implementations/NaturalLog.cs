@@ -16,7 +16,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
 
@@ -58,7 +58,7 @@ namespace Titanium.Core.Functions.Implementations
 					// For now just reduce if it's a square
 					if (Float.IsWholeNumber(Math.Sqrt(integer.Value)))
 					{
-						parameter = Expressionizer.ToExpression(new DualFactorComponent(new NumericFactor(new Integer((int)Math.Sqrt(integer.Value))), new NumericFactor(new Integer(2)), ComponentType.Exponent));
+						return EvaluateExponent(new NumericFactor(new Integer((int)Math.Sqrt(integer.Value))), new NumericFactor(new Integer(2)));
 					}
 				}
 			}
@@ -67,15 +67,9 @@ namespace Titanium.Core.Functions.Implementations
 			if (component is DualFactorComponent)
 			{
 				var dfc = (DualFactorComponent)component;
-				switch (dfc.ComponentType)
-				{
-					case ComponentType.Multiply:
-						return EvaluateMultiplication(dfc.LeftFactor, dfc.RightFactor);
-					case ComponentType.Divide:
-						return EvaluateDivision(dfc.LeftFactor, dfc.RightFactor);
-					case ComponentType.Exponent:
-						return EvaluateExponent(dfc.LeftFactor, dfc.RightFactor);
-				}
+				return dfc.IsMultiply
+					? EvaluateMultiplication(dfc.LeftFactor, dfc.RightFactor)
+					: EvaluateDivision(dfc.LeftFactor, dfc.RightFactor);
 			}
 
 			if (component is FunctionComponent)
@@ -84,8 +78,13 @@ namespace Titanium.Core.Functions.Implementations
 				if (func.Function is SquareRoot)
 				{
 					var innerOperand = func.Operands[0];
-					var exponent = new DualFactorComponent(Factorizer.ToFactor(innerOperand), Factorizer.ToFactor(new IntegerFraction(1, 2)), ComponentType.Exponent);
-					return new NaturalLog().Evaluate(new List<Expression> { Expressionizer.ToExpression(exponent) }).Evaluate();
+					var exponent = new Exponent().Evaluate(innerOperand, Expressionizer.ToExpression(new IntegerFraction(1, 2)));
+					return new NaturalLog().Evaluate(Expressionizer.ToExpression(exponent)).Evaluate();
+				}
+
+				if (func.Function is Exponent)
+				{
+					return EvaluateExponent(func.Operands[0], func.Operands[1]);
 				}
 			}
 
@@ -116,13 +115,13 @@ namespace Titanium.Core.Functions.Implementations
 				false).Evaluate();
 		}
 
-		private Expression EvaluateExponent(Factor left, Factor right)
+		private Expression EvaluateExponent(IEvaluatable left, IEvaluatable right)
 		{
 			// ln(a ^ b) = b * ln(a)
 			return new DualFactorComponent(
 				Factorizer.ToFactor(right.Evaluate()),
 				Factorizer.ToFactor(new FunctionComponent(Name, new List<Expression> { left.Evaluate() })),
-				ComponentType.Multiply).Evaluate();
+				true).Evaluate();
 		}
 
 		public override string ToString(List<Expression> parameters)

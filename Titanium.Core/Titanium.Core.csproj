@@ -36,13 +36,14 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\ComponentType.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
+    <Compile Include="Functions\FixType.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Factors\ExpressionList.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Functions\Implementations\BaseTenLogarithm.cs" />
+    <Compile Include="Functions\Implementations\Exponent.cs" />
     <Compile Include="Functions\Implementations\NaturalLog.cs" />
     <Compile Include="Functions\Implementations\Negate.cs" />
     <Compile Include="Functions\Implementations\SquareRoot.cs" />

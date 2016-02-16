@@ -35,7 +35,7 @@ namespace Titanium.Core.Expressions
 			{
 				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
 				{
-					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd ? ComponentType.Multiply : ComponentType.Divide));
+					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd));
 					return new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
 				}
 			}
@@ -81,7 +81,7 @@ namespace Titanium.Core.Expressions
 			{
 				return _isAdd
 					? Expressionizer.ToExpression(right)
-					: new Negate().Evaluate(new List<Expression> { Expressionizer.ToExpression(right) });
+					: new Negate().Evaluate(Expressionizer.ToExpression(right));
 			}
 
 			if (Common.IsNumber(right, out rightNumber) && rightNumber.IsZero)

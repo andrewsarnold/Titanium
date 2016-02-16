@@ -111,7 +111,7 @@ namespace Titanium.Core.Numbers
 				return new SingleFactorComponent(new NumericFactor((Float)left ^ right));
 			}
 
-			return (Integer)left ^ right;
+			return ((Integer)left) ^ right;
 		}
 
 		internal static bool IsWholeNumber(Number n)
@@ -133,7 +133,7 @@ namespace Titanium.Core.Numbers
 			return new Float(operation(left.ValueAsFloat(), right.ValueAsFloat()));
 		}
 
-		protected abstract double ValueAsFloat();
+		internal abstract double ValueAsFloat();
 		internal abstract bool IsNegative { get; }
 		internal abstract bool IsZero { get; }
 	}

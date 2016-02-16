@@ -15,7 +15,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0];
 
@@ -36,9 +36,9 @@ namespace Titanium.Core.Functions.Implementations
 			}
 
 			// Otherwise, conver to natural log and evaluate that
-			var numerator = Factorizer.ToFactor(new NaturalLog().Evaluate(new List<Expression> { parameter }).Evaluate());
-			var denominator = Factorizer.ToFactor(new NaturalLog().Evaluate(new List<Expression> { Expressionizer.ToExpression(new NumericFactor(new Integer(10))) }).Evaluate());
-			return new DualFactorComponent(numerator, denominator, ComponentType.Divide).Evaluate();
+			var numerator = Factorizer.ToFactor(new NaturalLog().Evaluate(parameter).Evaluate());
+			var denominator = Factorizer.ToFactor(new NaturalLog().Evaluate(Expressionizer.ToExpression(new NumericFactor(new Integer(10)))).Evaluate());
+			return new DualFactorComponent(numerator, denominator, false).Evaluate();
 		}
 
 		public override string ToString(List<Expression> parameters)

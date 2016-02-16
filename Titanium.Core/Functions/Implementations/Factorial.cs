@@ -10,11 +10,11 @@ namespace Titanium.Core.Functions.Implementations
 	internal class Factorial : Function
 	{
 		public Factorial()
-			: base("!", 1, true)
+			: base("!", 1, FixType.PreFix)
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
 

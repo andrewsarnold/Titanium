@@ -40,7 +40,14 @@ namespace Titanium.Core.Expressions
 				// If the token is a function token, then push it onto the stack.
 				else if (currentToken.Type == TokenType.Function)
 				{
-					stack.Push(currentToken);
+					if (FunctionRepository.Get(currentToken.Value).FixType == FixType.PreFix)
+					{
+						outputQueue.Add(currentToken);
+					}
+					else
+					{
+						stack.Push(currentToken);
+					}
 				}
 
 				// If the token is a function argument separator (e.g., a comma):
@@ -123,7 +130,7 @@ namespace Titanium.Core.Expressions
 					stack.Pop();
 
 					// If the token at the top of the stack is a function token, pop it onto the output queue.
-					if (stack.Any() && stack.Peek().Type == TokenType.Letter)
+					if (stack.Any() && stack.Peek().Type == TokenType.Function)
 					{
 						outputQueue.Add(stack.Pop());
 					}
@@ -206,7 +213,7 @@ namespace Titanium.Core.Expressions
 				(left.Type.IsOperand() && right.Type == TokenType.OpenParenthesis) ||
 				(left.Type == TokenType.CloseParenthesis && right.Type.IsOperand()) ||
 				(left.Type == TokenType.CloseParenthesis && right.Type == TokenType.OpenParenthesis) ||
-				(left.Type.IsOperand() && right.Type == TokenType.Function && !FunctionRepository.Get(right.Value).IsPostFix) ||
+				(left.Type.IsOperand() && right.Type == TokenType.Function && FunctionRepository.Get(right.Value).FixType == FixType.PostFix) ||
 				(left.Type.IsOperand() && right.Type.IsOperand());
 		}
 
@@ -235,6 +242,7 @@ namespace Titanium.Core.Expressions
 						operands.Add(Expressionizer.ToExpression(stack.Pop()));
 					}
 
+					operands.Reverse();
 					stack.Push(new FunctionComponent(token.Value, operands));
 				}
 				else if (token.Type.IsOperator())
@@ -264,13 +272,7 @@ namespace Titanium.Core.Expressions
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
-							case TokenType.Exponent:
-								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right),
-									token.Type == TokenType.Multiply
-										? ComponentType.Multiply
-										: token.Type == TokenType.Divide
-											? ComponentType.Divide
-											: ComponentType.Exponent);
+								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), token.Type == TokenType.Multiply);
 								break;
 							default:
 								throw new SyntaxErrorException("Token {0} not expected", token.Value);
