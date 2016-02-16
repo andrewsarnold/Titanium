@@ -157,6 +157,12 @@ namespace Titanium.Core.Components
 				{
 					return string.Format("({0})", expression);
 				}
+				
+				var component = ((SingleComponentExpression)expression).Component;
+				if (component is DualFactorComponent)
+				{
+					return string.Format("({0})", expression);
+				}
 			}
 
 			return factor.ToString();

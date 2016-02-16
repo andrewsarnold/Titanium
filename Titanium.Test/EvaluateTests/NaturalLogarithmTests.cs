@@ -43,6 +43,12 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void NaturalLogOfIntegerSquare()
+		{
+			Common.EvaluateAndAssert("ln(9)", "2*ln(3)");
+		}
+
+		[TestMethod]
 		public void NaturalLogOfPositiveFloat()
 		{
 			Common.EvaluateAndAssert("ln(1.3)", ".262364264467491");

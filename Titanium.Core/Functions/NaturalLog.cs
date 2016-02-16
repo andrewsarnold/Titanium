@@ -48,10 +48,18 @@ namespace Titanium.Core.Functions
 
 				if (number is Integer)
 				{
-					var result = Math.Log(((Integer)number).Value);
+					var integer = (Integer)number;
+					var result = Math.Log((integer).Value);
 					if (Float.IsWholeNumber(result))
 					{
 						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
+					}
+
+					// If integer x can be written as x = y^z, evaluate the exponential version: ln(y^z) = z*ln(y)
+					// For now just reduce if it's a square
+					if (Integer.IsSquare(integer))
+					{
+						parameter = Expressionizer.ToExpression(new DualFactorComponent(new NumericFactor(new Integer((int)Math.Sqrt(integer.Value))), new NumericFactor(new Integer(2)), ComponentType.Exponent));
 					}
 				}
 			}
