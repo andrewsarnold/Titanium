@@ -22,20 +22,6 @@ namespace Titanium.Core.Components
 
 		public override string ToString()
 		{
-			// Special case for square root
-			if (ComponentType == ComponentType.Exponent)
-			{
-				var powerAsComponent = Componentizer.ToComponent(RightFactor);
-				if (powerAsComponent is IntegerFraction)
-				{
-					var frac = (IntegerFraction)powerAsComponent;
-					if (frac.Numerator == 1 && frac.Denominator == 2)
-					{
-						return string.Format("√({0})", ToString(LeftFactor));
-					}
-				}
-			}
-
 			return string.Format("{0}{1}{2}", ToString(LeftFactor),
 				ComponentType == ComponentType.Multiply
 					? "*"

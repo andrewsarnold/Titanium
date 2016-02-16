@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
@@ -107,12 +107,43 @@ namespace Titanium.Core.Functions.Implementations
 
 		public override string ToString(List<Expression> parameters)
 		{
-			return string.Format("{0}^{1}", parameters[0], parameters[1]);
+			// Special case for square root
+			var powerAsComponent = Componentizer.ToComponent(parameters[1]);
+			if (powerAsComponent is IntegerFraction)
+			{
+				var frac = (IntegerFraction)powerAsComponent;
+				if (frac.Numerator == 1 && frac.Denominator == 2)
+				{
+					return string.Format("√({0})", ToString(parameters[0]));
+				}
+			}
+
+			return string.Format("{0}^{1}", ToString(parameters[0]), ToString(parameters[1]));
 		}
 
 		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right)
 		{
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(new List<Expression> { e, Expressionizer.ToExpression(right) }).Evaluate()).ToList()));
+		}
+
+		private static string ToString(IEvaluatable expression)
+		{
+			if (expression is DualComponentExpression)
+			{
+				return string.Format("({0})", expression);
+			}
+
+			var component = Componentizer.ToComponent(expression);
+			if (component is DualFactorComponent)
+			{
+				var output = expression.ToString();
+				if (output.Contains("("))
+				{
+					return string.Format("({0})", expression);
+				}
+			}
+
+			return expression.ToString();
 		}
 	}
 }
