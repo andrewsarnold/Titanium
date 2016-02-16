@@ -19,7 +19,8 @@ namespace Titanium.Core.Functions
 			{ "ceiling", new SimpleFloatCalculation("ceiling", Math.Ceiling) },
 			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
 			{ "abs", new AbsoluteValue() },
-			{ "ln", new NaturalLog() }
+			{ "ln", new NaturalLog() },
+			{ "log", new BaseTenLogarithm() }
 		};
 
 		public static IEnumerable<string> AllNames

@@ -56,7 +56,7 @@ namespace Titanium.Core.Functions.Implementations
 
 					// If integer x can be written as x = y^z, evaluate the exponential version: ln(y^z) = z*ln(y)
 					// For now just reduce if it's a square
-					if (Integer.IsSquare(integer))
+					if (Float.IsWholeNumber(Math.Sqrt(integer.Value)))
 					{
 						parameter = Expressionizer.ToExpression(new DualFactorComponent(new NumericFactor(new Integer((int)Math.Sqrt(integer.Value))), new NumericFactor(new Integer(2)), ComponentType.Exponent));
 					}
