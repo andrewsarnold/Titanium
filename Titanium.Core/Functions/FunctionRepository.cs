@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Functions
@@ -41,7 +42,7 @@ namespace Titanium.Core.Functions
 				return Funcs[name];
 			}
 
-			throw new NotImplementedException();
+			throw new FunctionNotDefinedException(name);
 		}
 	}
 }
