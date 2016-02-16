@@ -1,4 +1,6 @@
-﻿namespace Titanium.Core.Numbers
+﻿using System;
+
+namespace Titanium.Core.Numbers
 {
 	public class Integer : Number
 	{
@@ -48,6 +50,11 @@
 		private static Integer Mod(Integer a, Integer b)
 		{
 			return new Integer(a.Value % b.Value);
+		}
+
+		public static bool IsSquare(Integer integer)
+		{
+			return Float.IsWholeNumber(Math.Sqrt(integer.ValueAsFloat()));
 		}
 	}
 }

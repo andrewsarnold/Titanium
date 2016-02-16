@@ -1,5 +1,4 @@
 ﻿using Titanium.Core.Components;
-using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
@@ -12,17 +11,17 @@ namespace Titanium.Core
 		{
 			return IsNumber(Componentizer.ToComponent(evaluatable), out number);
 		}
-		
-		internal static bool IsIntegerFraction(Expression expression, out IntegerFraction fraction)
+
+		internal static bool IsIntegerFraction(IEvaluatable evaluatable, out IntegerFraction fraction)
 		{
-			var component = Componentizer.ToComponent(expression);
+			var component = Componentizer.ToComponent(evaluatable);
 			if (component is IntegerFraction)
 			{
 				fraction = (IntegerFraction)component;
 				return true;
 			}
 
-			var factor = Factorizer.ToFactor(expression);
+			var factor = Factorizer.ToFactor(evaluatable);
 			if (factor is NumericFactor)
 			{
 				var number = ((NumericFactor)factor).Number;
@@ -37,9 +36,9 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsFloat(Expression expression, out Number number)
+		internal static bool IsFloat(IEvaluatable evaluatable, out Number number)
 		{
-			return IsNumber(expression, out number) && number is Float;
+			return IsNumber(evaluatable, out number) && number is Float;
 		}
 
 		private static bool IsNumber(Component component, out Number number)
@@ -66,6 +65,19 @@ namespace Titanium.Core
 			}
 
 			number = null;
+			return false;
+		}
+
+		public static bool IsFunction(IEvaluatable evaluatable, out FunctionComponent function)
+		{
+			var component = Componentizer.ToComponent(evaluatable);
+			if (component is FunctionComponent)
+			{
+				function = (FunctionComponent)component;
+				return true;
+			}
+
+			function = null;
 			return false;
 		}
 	}
