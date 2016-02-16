@@ -27,6 +27,19 @@ namespace Titanium.Core.Expressions
 
 		public override Expression Evaluate()
 		{
+			// Combine natural log functions
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+
+			if (Common.IsFunction(_leftComponent, out leftFunction) && Common.IsFunction(_rightComponent, out rightFunction))
+			{
+				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
+				{
+					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd ? ComponentType.Multiply : ComponentType.Divide));
+					return new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
+				}
+			}
+
 			var left = _leftComponent.Evaluate();
 			var right = _rightComponent.Evaluate();
 
@@ -74,20 +87,6 @@ namespace Titanium.Core.Expressions
 			if (Common.IsNumber(right, out rightNumber) && rightNumber.IsZero)
 			{
 				return Expressionizer.ToExpression(right);
-			}
-
-			// Combine natural log functions
-
-			FunctionComponent leftFunction;
-			FunctionComponent rightFunction;
-
-			if (Common.IsFunction(left, out leftFunction) && Common.IsFunction(right, out rightFunction))
-			{
-				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
-				{
-					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd ? ComponentType.Multiply : ComponentType.Divide));
-					return new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
-				}
 			}
 
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
