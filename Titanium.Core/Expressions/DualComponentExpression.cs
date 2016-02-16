@@ -76,6 +76,20 @@ namespace Titanium.Core.Expressions
 				return Expressionizer.ToExpression(right);
 			}
 
+			// Combine natural log functions
+
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+
+			if (Common.IsFunction(left, out leftFunction) && Common.IsFunction(right, out rightFunction))
+			{
+				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
+				{
+					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd ? ComponentType.Multiply : ComponentType.Divide));
+					return new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
+				}
+			}
+
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
 		}
 	}
