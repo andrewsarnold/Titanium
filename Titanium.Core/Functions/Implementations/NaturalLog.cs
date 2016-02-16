@@ -4,11 +4,10 @@ using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
-using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
-namespace Titanium.Core.Functions
+namespace Titanium.Core.Functions.Implementations
 {
 	internal class NaturalLog : Function
 	{

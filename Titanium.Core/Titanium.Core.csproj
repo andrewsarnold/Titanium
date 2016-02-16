@@ -42,7 +42,7 @@
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Factors\ExpressionList.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
-    <Compile Include="Functions\NaturalLog.cs" />
+    <Compile Include="Functions\Implementations\NaturalLog.cs" />
     <Compile Include="Functions\Implementations\Negate.cs" />
     <Compile Include="Functions\Implementations\SquareRoot.cs" />
     <Compile Include="IEvaluatable.cs" />
