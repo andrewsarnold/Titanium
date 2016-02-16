@@ -114,6 +114,12 @@ namespace Titanium.Core.Numbers
 			return (Integer)left ^ right;
 		}
 
+		internal static bool IsWholeNumber(Number n)
+		{
+			if (n is Integer) return true;
+			return Float.IsWholeNumber((Float)n);
+		}
+
 		private static Number Evaluate(Number left, Number right, Func<double, double, double> operation)
 		{
 			var leftInteger = left as Integer;
