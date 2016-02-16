@@ -130,7 +130,7 @@ namespace Titanium.Core.Expressions
 					stack.Pop();
 
 					// If the token at the top of the stack is a function token, pop it onto the output queue.
-					if (stack.Any() && stack.Peek().Type == TokenType.Letter)
+					if (stack.Any() && stack.Peek().Type == TokenType.Function)
 					{
 						outputQueue.Add(stack.Pop());
 					}
