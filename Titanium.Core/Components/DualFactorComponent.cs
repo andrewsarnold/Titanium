@@ -216,7 +216,7 @@ namespace Titanium.Core.Components
 				}
 
 				var component = Componentizer.ToComponent(factor);
-				if (isDenominator && component is FunctionComponent)
+				if (component is DualFactorComponent || (isDenominator && component is FunctionComponent))
 				{
 					var output = expression.ToString();
 					if (output.Contains("("))
