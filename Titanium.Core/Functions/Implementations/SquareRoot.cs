@@ -12,10 +12,10 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
-			return new Exponent().Evaluate(new List<Expression> { parameter, Expressionizer.ToExpression(new IntegerFraction(1, 2)) });
+			return new Exponent().Evaluate(parameter, Expressionizer.ToExpression(new IntegerFraction(1, 2)));
 		}
 
 		public override string ToString(List<Expression> parameters)

@@ -81,7 +81,7 @@ namespace Titanium.Core.Expressions
 			{
 				return _isAdd
 					? Expressionizer.ToExpression(right)
-					: new Negate().Evaluate(new List<Expression> { Expressionizer.ToExpression(right) });
+					: new Negate().Evaluate(Expressionizer.ToExpression(right));
 			}
 
 			if (Common.IsNumber(right, out rightNumber) && rightNumber.IsZero)

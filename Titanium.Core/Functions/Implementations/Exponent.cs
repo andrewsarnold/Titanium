@@ -16,7 +16,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var left = parameters[0].Evaluate();
 			var right = parameters[1].Evaluate();
@@ -134,7 +134,7 @@ namespace Titanium.Core.Functions.Implementations
 
 		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right)
 		{
-			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(new List<Expression> { e, Expressionizer.ToExpression(right) }).Evaluate()).ToList()));
+			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(e, Expressionizer.ToExpression(right)).Evaluate()).ToList()));
 		}
 
 		private static string ToString(IEvaluatable expression)

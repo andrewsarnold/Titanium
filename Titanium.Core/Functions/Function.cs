@@ -19,11 +19,11 @@ namespace Titanium.Core.Functions
 			ArgumentCount = argumentCount;
 		}
 
-		public Expression Evaluate(List<Expression> parameters)
+		public Expression Evaluate(params Expression[] parameters)
 		{
-			if (parameters.Count != ArgumentCount)
+			if (parameters.Length != ArgumentCount)
 			{
-				throw new WrongArgumentCountException(Name, ArgumentCount, parameters.Count);
+				throw new WrongArgumentCountException(Name, ArgumentCount, parameters.Length);
 			}
 
 			return InnerEvaluate(parameters);
@@ -34,14 +34,7 @@ namespace Titanium.Core.Functions
 			return Expressionizer.ToExpression(new FunctionComponent(this, new List<Expression>(parameters)));
 		}
 
-		protected abstract Expression InnerEvaluate(List<Expression> parameters);
+		protected abstract Expression InnerEvaluate(params Expression[] parameters);
 		public abstract string ToString(List<Expression> parameters);
-	}
-
-	internal enum FixType
-	{
-		PreFix,
-		MidFix,
-		PostFix
 	}
 }

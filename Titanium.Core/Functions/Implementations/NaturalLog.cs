@@ -16,7 +16,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
 
@@ -78,8 +78,8 @@ namespace Titanium.Core.Functions.Implementations
 				if (func.Function is SquareRoot)
 				{
 					var innerOperand = func.Operands[0];
-					var exponent = new Exponent().Evaluate(new List<Expression> { innerOperand, Expressionizer.ToExpression(new IntegerFraction(1, 2)) });
-					return new NaturalLog().Evaluate(new List<Expression> { Expressionizer.ToExpression(exponent) }).Evaluate();
+					var exponent = new Exponent().Evaluate(innerOperand, Expressionizer.ToExpression(new IntegerFraction(1, 2)));
+					return new NaturalLog().Evaluate(Expressionizer.ToExpression(exponent)).Evaluate();
 				}
 
 				if (func.Function is Exponent)

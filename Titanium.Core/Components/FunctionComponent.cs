@@ -23,7 +23,7 @@ namespace Titanium.Core.Components
 
 		public override Expression Evaluate()
 		{
-			return Function.Evaluate(Operands);
+			return Function.Evaluate(Operands.ToArray());
 		}
 		
 		public override string ToString()

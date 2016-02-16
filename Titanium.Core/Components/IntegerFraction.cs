@@ -93,7 +93,7 @@ namespace Titanium.Core.Components
 		{
 			return left.Numerator == 0
 				? new IntegerFraction(0)
-				: Componentizer.ToComponent(new Exponent().Evaluate(new List<Expression> { Expressionizer.ToExpression(left), Expressionizer.ToExpression(right) }));
+				: Componentizer.ToComponent(new Exponent().Evaluate(Expressionizer.ToExpression(left), Expressionizer.ToExpression(right)));
 		}
 
 		public static IntegerFraction operator +(IntegerFraction left, Integer right)
@@ -155,7 +155,7 @@ namespace Titanium.Core.Components
 				return new IntegerFraction((int)rawResult);
 			}
 
-			return Componentizer.ToComponent(new Exponent().Evaluate(new List<Expression>{ Expressionizer.ToExpression(new NumericFactor(left)), Expressionizer.ToExpression(right) }));
+			return Componentizer.ToComponent(new Exponent().Evaluate(Expressionizer.ToExpression(new NumericFactor(left)), Expressionizer.ToExpression(right)));
 		}
 
 		public static Number operator +(IntegerFraction left, Float right)
