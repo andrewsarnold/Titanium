@@ -1,0 +1,118 @@
+using System.Collections.Generic;
+using System.Linq;
+using Titanium.Core.Components;
+using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
+using Titanium.Core.Factors;
+using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
+
+namespace Titanium.Core.Functions.Implementations
+{
+	internal class Exponent : Function
+	{
+		public Exponent()
+			: base("^", 2, FixType.MidFix)
+		{
+		}
+
+		protected override Expression InnerEvaluate(List<Expression> parameters)
+		{
+			var left = parameters[0].Evaluate();
+			var right = parameters[1].Evaluate();
+
+			Number leftNumber;
+			Number rightNumber;
+
+			if ((Common.IsConstant(left, out leftNumber) && Common.IsFloat(right, out rightNumber)) ||
+				(Common.IsFloat(left, out leftNumber) && Common.IsConstant(right, out rightNumber)) ||
+				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
+			{
+				return Expressionizer.ToExpression(new NumericFactor(leftNumber ^ rightNumber));
+			}
+
+			ExpressionList leftList;
+			ExpressionList rightList;
+
+			if (Common.IsList(left, out leftList))
+			{
+				return Evaluate(leftList, right);
+			}
+
+			if (Common.IsList(right, out rightList))
+			{
+				return Evaluate(rightList, left);
+			}
+
+			IntegerFraction leftFraction;
+			IntegerFraction rightFraction;
+
+			if (Common.IsNumber(left, out leftNumber) && Common.IsIntegerFraction(right, out rightFraction))
+			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftNumber.IsNegative && rightFraction.Denominator > 1)
+				{
+					throw new NonRealResultException();
+				}
+
+				return Expressionizer.ToExpression(leftNumber ^ rightFraction);
+			}
+
+			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
+			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftFraction.IsNegative && !Number.IsWholeNumber(rightNumber))
+				{
+					throw new NonRealResultException();
+				}
+
+				return Expressionizer.ToExpression(leftFraction ^ rightNumber);
+			}
+
+			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
+			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftFraction.IsNegative && rightFraction.Denominator > 1)
+				{
+					throw new NonRealResultException();
+				}
+
+				return Expressionizer.ToExpression(leftFraction ^ rightFraction);
+			}
+
+			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
+			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftFraction.IsNegative && !Number.IsWholeNumber(rightNumber))
+				{
+					throw new NonRealResultException();
+				}
+
+				if (rightNumber is Integer)
+				{
+					var rightInteger = (Integer)rightNumber;
+					var result = leftFraction ^ rightInteger;
+					return Expressionizer.ToExpression(result);
+				}
+				else
+				{
+					var rightDouble = (Float)rightNumber;
+					var result = leftFraction ^ rightDouble;
+					return Expressionizer.ToExpression(new NumericFactor(result));
+				}
+			}
+
+			return AsExpression(left, right);
+		}
+
+		public override string ToString(List<Expression> parameters)
+		{
+			return string.Format("{0}^{1}", parameters[0], parameters[1]);
+		}
+
+		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right)
+		{
+			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(new List<Expression> { e, Expressionizer.ToExpression(right) }).Evaluate()).ToList()));
+		}
+	}
+}

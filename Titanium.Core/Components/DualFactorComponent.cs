@@ -53,8 +53,8 @@ namespace Titanium.Core.Components
 			Number leftNumber;
 			Number rightNumber;
 
-			if ((IsConstant(left, out leftNumber) && Common.IsFloat(right, out rightNumber)) ||
-				(Common.IsFloat(left, out leftNumber) && IsConstant(right, out rightNumber)) ||
+			if ((Common.IsConstant(left, out leftNumber) && Common.IsFloat(right, out rightNumber)) ||
+				(Common.IsFloat(left, out leftNumber) && Common.IsConstant(right, out rightNumber)) ||
 				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
 			{
 				return Evaluate(leftNumber, rightNumber);
@@ -63,12 +63,12 @@ namespace Titanium.Core.Components
 			ExpressionList leftList;
 			ExpressionList rightList;
 
-			if (IsList(left, out leftList))
+			if (Common.IsList(left, out leftList))
 			{
 				return Evaluate(leftList, right, ComponentType);
 			}
 
-			if (IsList(right, out rightList))
+			if (Common.IsList(right, out rightList))
 			{
 				return Evaluate(rightList, left, ComponentType);
 			}
@@ -159,19 +159,6 @@ namespace Titanium.Core.Components
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), type).Evaluate()).ToList()));
 		}
 
-		private static bool IsList(IEvaluatable input, out ExpressionList output)
-		{
-			var factor = Factorizer.ToFactor(input);
-			if (factor is ExpressionList)
-			{
-				output = (ExpressionList)factor;
-				return true;
-			}
-
-			output = null;
-			return false;
-		}
-
 		private Expression Evaluate(Number leftNumber, Number rightNumber)
 		{
 			if (ComponentType == ComponentType.Divide)
@@ -185,24 +172,6 @@ namespace Titanium.Core.Components
 			return Expressionizer.ToExpression(new NumericFactor(ComponentType == ComponentType.Multiply
 				? leftNumber * rightNumber
 				: leftNumber ^ rightNumber));
-		}
-
-		private static bool IsConstant(IEvaluatable expression, out Number value)
-		{
-			var factor = Factorizer.ToFactor(expression);
-			if (factor is AlphabeticFactor)
-			{
-				var name = ((AlphabeticFactor)factor).Value;
-
-				if (Constants.IsNamedConstant(name))
-				{
-					value = new Float(Constants.Get(name));
-					return true;
-				}
-			}
-
-			value = Integer.Zero;
-			return false;
 		}
 
 		private static string ToString(IEvaluatable factor, bool isDenominator = false)

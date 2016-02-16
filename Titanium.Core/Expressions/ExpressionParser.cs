@@ -206,7 +206,7 @@ namespace Titanium.Core.Expressions
 				(left.Type.IsOperand() && right.Type == TokenType.OpenParenthesis) ||
 				(left.Type == TokenType.CloseParenthesis && right.Type.IsOperand()) ||
 				(left.Type == TokenType.CloseParenthesis && right.Type == TokenType.OpenParenthesis) ||
-				(left.Type.IsOperand() && right.Type == TokenType.Function && !FunctionRepository.Get(right.Value).IsPostFix) ||
+				(left.Type.IsOperand() && right.Type == TokenType.Function && FunctionRepository.Get(right.Value).FixType == FixType.PostFix) ||
 				(left.Type.IsOperand() && right.Type.IsOperand());
 		}
 
@@ -235,6 +235,7 @@ namespace Titanium.Core.Expressions
 						operands.Add(Expressionizer.ToExpression(stack.Pop()));
 					}
 
+					operands.Reverse();
 					stack.Push(new FunctionComponent(token.Value, operands));
 				}
 				else if (token.Type.IsOperator())
@@ -264,13 +265,10 @@ namespace Titanium.Core.Expressions
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
-							case TokenType.Exponent:
 								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right),
 									token.Type == TokenType.Multiply
 										? ComponentType.Multiply
-										: token.Type == TokenType.Divide
-											? ComponentType.Divide
-											: ComponentType.Exponent);
+										: ComponentType.Divide);
 								break;
 							default:
 								throw new SyntaxErrorException("Token {0} not expected", token.Value);

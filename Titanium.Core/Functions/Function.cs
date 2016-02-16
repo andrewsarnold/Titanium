@@ -10,11 +10,11 @@ namespace Titanium.Core.Functions
 	{
 		internal readonly string Name;
 		internal readonly int ArgumentCount;
-		internal readonly bool IsPostFix;
+		internal readonly FixType FixType;
 
-		protected Function(string name, int argumentCount, bool isPostFix = false)
+		protected Function(string name, int argumentCount, FixType fixType = FixType.PreFix)
 		{
-			IsPostFix = isPostFix;
+			FixType = fixType;
 			Name = name;
 			ArgumentCount = argumentCount;
 		}
@@ -36,5 +36,12 @@ namespace Titanium.Core.Functions
 
 		protected abstract Expression InnerEvaluate(List<Expression> parameters);
 		public abstract string ToString(List<Expression> parameters);
+	}
+
+	internal enum FixType
+	{
+		PreFix,
+		MidFix,
+		PostFix
 	}
 }

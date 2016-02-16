@@ -7,9 +7,9 @@ namespace Titanium.Core.Expressions
 	{
 		public static Expression ParseExpression(string input)
 		{
+			return ExpressionParser.Parse(input);
 			try
 			{
-				return ExpressionParser.Parse(input);
 			}
 			catch (Exception e)
 			{
