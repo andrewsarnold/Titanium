@@ -10,7 +10,7 @@ namespace Titanium.Core.Functions.Implementations
 	internal class Factorial : Function
 	{
 		public Factorial()
-			: base("!", 1, FixType.PostFix)
+			: base("!", 1, FixType.PreFix)
 		{
 		}
 

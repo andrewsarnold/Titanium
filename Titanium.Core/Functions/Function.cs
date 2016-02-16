@@ -12,7 +12,7 @@ namespace Titanium.Core.Functions
 		internal readonly int ArgumentCount;
 		internal readonly FixType FixType;
 
-		protected Function(string name, int argumentCount, FixType fixType = FixType.PreFix)
+		protected Function(string name, int argumentCount, FixType fixType = FixType.PostFix)
 		{
 			FixType = fixType;
 			Name = name;

@@ -40,7 +40,14 @@ namespace Titanium.Core.Expressions
 				// If the token is a function token, then push it onto the stack.
 				else if (currentToken.Type == TokenType.Function)
 				{
-					stack.Push(currentToken);
+					if (FunctionRepository.Get(currentToken.Value).FixType == FixType.PreFix)
+					{
+						outputQueue.Add(currentToken);
+					}
+					else
+					{
+						stack.Push(currentToken);
+					}
 				}
 
 				// If the token is a function argument separator (e.g., a comma):
