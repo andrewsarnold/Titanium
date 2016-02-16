@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
@@ -18,6 +19,10 @@ namespace Titanium.Core.Functions.Implementations
 		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
 			var parameter = parameters[0].Evaluate();
+
+			var exponent = new DualFactorComponent(Factorizer.ToFactor(parameter), Factorizer.ToFactor(new IntegerFraction(1, 2)), ComponentType.Exponent);
+			return exponent.Evaluate();
+
 			var factor = Factorizer.ToFactor(parameter);
 			if (factor is NumericFactor)
 			{

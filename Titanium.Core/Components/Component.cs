@@ -2,7 +2,7 @@
 
 namespace Titanium.Core.Components
 {
-	internal abstract class Component : IEvaluatable
+	public abstract class Component : IEvaluatable
 	{
 		public abstract Expression Evaluate();
 	}

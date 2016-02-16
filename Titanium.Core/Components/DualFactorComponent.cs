@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
@@ -21,6 +22,20 @@ namespace Titanium.Core.Components
 
 		public override string ToString()
 		{
+			// Special case for square root
+			if (ComponentType == ComponentType.Exponent)
+			{
+				var powerAsComponent = Componentizer.ToComponent(RightFactor);
+				if (powerAsComponent is IntegerFraction)
+				{
+					var frac = (IntegerFraction)powerAsComponent;
+					if (frac.Numerator == 1 && frac.Denominator == 2)
+					{
+						return string.Format("√({0})", ToString(LeftFactor));
+					}
+				}
+			}
+
 			return string.Format("{0}{1}{2}", ToString(LeftFactor),
 				ComponentType == ComponentType.Multiply
 					? "*"
@@ -61,8 +76,44 @@ namespace Titanium.Core.Components
 			IntegerFraction leftFraction;
 			IntegerFraction rightFraction;
 
+			if (Common.IsNumber(left, out leftNumber) && Common.IsIntegerFraction(right, out rightFraction))
+			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftNumber.IsNegative && rightFraction.Denominator > 1)
+				{
+					throw new NonRealResultException();
+				}
+
+				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
+					? leftNumber * rightFraction
+					: ComponentType == ComponentType.Divide
+						? leftNumber / rightFraction
+						: leftNumber ^ rightFraction);
+			}
+
+			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
+			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftFraction.IsNegative && !Number.IsWholeNumber(rightNumber))
+				{
+					throw new NonRealResultException();
+				}
+
+				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
+					? leftFraction * rightNumber
+					: ComponentType == ComponentType.Divide
+						? leftFraction / rightNumber
+						: leftFraction ^ rightNumber);
+			}
+
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftFraction.IsNegative && rightFraction.Denominator > 1)
+				{
+					throw new NonRealResultException();
+				}
+
 				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
 					? leftFraction * rightFraction
 					: ComponentType == ComponentType.Divide
@@ -72,6 +123,12 @@ namespace Titanium.Core.Components
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
 			{
+				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
+				if (leftFraction.IsNegative && !Number.IsWholeNumber(rightNumber))
+				{
+					throw new NonRealResultException();
+				}
+
 				if (rightNumber is Integer)
 				{
 					var rightInteger = (Integer)rightNumber;

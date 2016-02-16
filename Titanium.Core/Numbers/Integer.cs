@@ -1,6 +1,6 @@
 ﻿namespace Titanium.Core.Numbers
 {
-	internal class Integer : Number
+	public class Integer : Number
 	{
 		public readonly int Value;
 
