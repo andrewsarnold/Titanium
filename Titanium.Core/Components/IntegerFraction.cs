@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
@@ -95,7 +97,7 @@ namespace Titanium.Core.Components
 		public static Component operator ^(IntegerFraction left, IntegerFraction right)
 		{
 			if (left.Numerator == 0) return new IntegerFraction(0);
-			return new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), ComponentType.Exponent);
+			return Componentizer.ToComponent(new Exponent().Evaluate(new List<Expression> { Expressionizer.ToExpression(left), Expressionizer.ToExpression(right) }));
 		}
 
 		public static IntegerFraction operator +(IntegerFraction left, Integer right)
@@ -157,7 +159,7 @@ namespace Titanium.Core.Components
 				return new IntegerFraction((int)rawResult);
 			}
 
-			return new DualFactorComponent(new NumericFactor(left), Factorizer.ToFactor(right), ComponentType.Exponent);
+			return Componentizer.ToComponent(new Exponent().Evaluate(new List<Expression>{ Expressionizer.ToExpression(new NumericFactor(left)), Expressionizer.ToExpression(right) }));
 		}
 
 		public static Number operator +(IntegerFraction left, Float right)

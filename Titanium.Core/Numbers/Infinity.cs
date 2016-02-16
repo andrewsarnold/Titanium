@@ -9,7 +9,7 @@
 			_isNegative = isNegative;
 		}
 
-		protected override double ValueAsFloat()
+		internal override double ValueAsFloat()
 		{
 			return IsNegative
 				? double.NegativeInfinity

@@ -19,9 +19,7 @@ namespace Titanium.Core.Functions.Implementations
 		protected override Expression InnerEvaluate(List<Expression> parameters)
 		{
 			var parameter = parameters[0].Evaluate();
-
-			var exponent = new DualFactorComponent(Factorizer.ToFactor(parameter), Factorizer.ToFactor(new IntegerFraction(1, 2)), ComponentType.Exponent);
-			return exponent.Evaluate();
+			return new Exponent().Evaluate(new List<Expression> { parameter, Expressionizer.ToExpression(new IntegerFraction(1, 2)) });
 
 			var factor = Factorizer.ToFactor(parameter);
 			if (factor is NumericFactor)

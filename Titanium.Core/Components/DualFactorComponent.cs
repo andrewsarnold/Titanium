@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
@@ -11,11 +10,11 @@ namespace Titanium.Core.Components
 	{
 		internal readonly Factor LeftFactor;
 		internal readonly Factor RightFactor;
-		internal readonly ComponentType ComponentType;
+		internal readonly bool IsMultiply;
 
-		public DualFactorComponent(Factor leftFactor, Factor rightFactor, ComponentType componentType)
+		public DualFactorComponent(Factor leftFactor, Factor rightFactor, bool isMultiply)
 		{
-			ComponentType = componentType;
+			IsMultiply = isMultiply;
 			LeftFactor = leftFactor;
 			RightFactor = rightFactor;
 		}
@@ -23,12 +22,8 @@ namespace Titanium.Core.Components
 		public override string ToString()
 		{
 			return string.Format("{0}{1}{2}", ToString(LeftFactor),
-				ComponentType == ComponentType.Multiply
-					? "*"
-					: ComponentType == ComponentType.Divide
-						? "/"
-						: "^",
-				ToString(RightFactor, ComponentType == ComponentType.Divide));
+				IsMultiply ? "*" : "/",
+				ToString(RightFactor, !IsMultiply));
 		}
 
 		public override Expression Evaluate()
@@ -51,12 +46,12 @@ namespace Titanium.Core.Components
 
 			if (Common.IsList(left, out leftList))
 			{
-				return Evaluate(leftList, right, ComponentType);
+				return Evaluate(leftList, right, IsMultiply);
 			}
 
 			if (Common.IsList(right, out rightList))
 			{
-				return Evaluate(rightList, left, ComponentType);
+				return Evaluate(rightList, left, IsMultiply);
 			}
 
 			IntegerFraction leftFraction;
@@ -64,100 +59,64 @@ namespace Titanium.Core.Components
 
 			if (Common.IsNumber(left, out leftNumber) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
-				if (leftNumber.IsNegative && rightFraction.Denominator > 1)
-				{
-					throw new NonRealResultException();
-				}
-
-				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(IsMultiply
 					? leftNumber * rightFraction
-					: ComponentType == ComponentType.Divide
-						? leftNumber / rightFraction
-						: leftNumber ^ rightFraction);
+					: leftNumber / rightFraction);
 			}
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
 			{
-				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
-				if (leftFraction.IsNegative && !Number.IsWholeNumber(rightNumber))
-				{
-					throw new NonRealResultException();
-				}
-
-				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(IsMultiply
 					? leftFraction * rightNumber
-					: ComponentType == ComponentType.Divide
-						? leftFraction / rightNumber
-						: leftFraction ^ rightNumber);
+					: leftFraction / rightNumber);
 			}
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
-				if (leftFraction.IsNegative && rightFraction.Denominator > 1)
-				{
-					throw new NonRealResultException();
-				}
-
-				return Expressionizer.ToExpression(ComponentType == ComponentType.Multiply
+				return Expressionizer.ToExpression(IsMultiply
 					? leftFraction * rightFraction
-					: ComponentType == ComponentType.Divide
-						? leftFraction / rightFraction
-						: leftFraction ^ rightFraction);
+					: leftFraction / rightFraction);
 			}
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
 			{
-				// Special case: negative left ^ fractional right (any number with a decimal portion) is non-real
-				if (leftFraction.IsNegative && !Number.IsWholeNumber(rightNumber))
-				{
-					throw new NonRealResultException();
-				}
-
 				if (rightNumber is Integer)
 				{
 					var rightInteger = (Integer)rightNumber;
-					var result = ComponentType == ComponentType.Multiply
+					var result = IsMultiply
 						? leftFraction * rightInteger
-						: ComponentType == ComponentType.Divide
-							? leftFraction / rightInteger
-							: leftFraction ^ rightInteger;
+						: leftFraction / rightInteger;
 					return Expressionizer.ToExpression(result);
 				}
 				else
 				{
 					var rightDouble = (Float)rightNumber;
-					var result = ComponentType == ComponentType.Multiply
+					var result = IsMultiply
 						? leftFraction * rightDouble
-						: ComponentType == ComponentType.Divide
-							? leftFraction / rightDouble
-							: leftFraction ^ rightDouble;
+						: leftFraction / rightDouble;
 					return Expressionizer.ToExpression(new NumericFactor(result));
 				}
 			}
 
-			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), ComponentType));
+			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), IsMultiply));
 		}
 
-		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right, ComponentType type)
+		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right, bool isMultiply)
 		{
-			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), type).Evaluate()).ToList()));
+			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
 		}
 
 		private Expression Evaluate(Number leftNumber, Number rightNumber)
 		{
-			if (ComponentType == ComponentType.Divide)
+			if (IsMultiply)
 			{
-				var result = leftNumber / rightNumber;
-				return result is IntegerFraction
-					? Expressionizer.ToExpression((IntegerFraction)result)
-					: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
+				return Expressionizer.ToExpression(new NumericFactor(leftNumber * rightNumber));
 			}
 
-			return Expressionizer.ToExpression(new NumericFactor(ComponentType == ComponentType.Multiply
-				? leftNumber * rightNumber
-				: leftNumber ^ rightNumber));
+			var result = leftNumber / rightNumber;
+			return result is IntegerFraction
+				? Expressionizer.ToExpression((IntegerFraction)result)
+				: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
 		}
 
 		private static string ToString(IEvaluatable factor, bool isDenominator = false)

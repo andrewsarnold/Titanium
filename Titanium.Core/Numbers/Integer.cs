@@ -1,7 +1,4 @@
-﻿using System;
-using Titanium.Core.Factors;
-
-namespace Titanium.Core.Numbers
+﻿namespace Titanium.Core.Numbers
 {
 	public class Integer : Number
 	{
@@ -17,7 +14,7 @@ namespace Titanium.Core.Numbers
 			return Value.ToString().Replace("-", "⁻");
 		}
 
-		protected override double ValueAsFloat()
+		internal override double ValueAsFloat()
 		{
 			return Value;
 		}

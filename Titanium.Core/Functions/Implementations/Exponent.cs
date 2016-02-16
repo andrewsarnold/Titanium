@@ -55,6 +55,17 @@ namespace Titanium.Core.Functions.Implementations
 					throw new NonRealResultException();
 				}
 
+				if (leftNumber is Integer)
+				{
+					var result = new Float(leftNumber.ValueAsFloat()) ^ rightFraction;
+					if (Number.IsWholeNumber(result))
+					{
+						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result.ValueAsFloat())));
+					}
+
+					return AsExpression(left, right);
+				}
+
 				return Expressionizer.ToExpression(leftNumber ^ rightFraction);
 			}
 

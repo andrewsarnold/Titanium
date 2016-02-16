@@ -272,10 +272,7 @@ namespace Titanium.Core.Expressions
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
-								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right),
-									token.Type == TokenType.Multiply
-										? ComponentType.Multiply
-										: ComponentType.Divide);
+								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), token.Type == TokenType.Multiply);
 								break;
 							default:
 								throw new SyntaxErrorException("Token {0} not expected", token.Value);

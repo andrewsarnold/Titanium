@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\ComponentType.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
