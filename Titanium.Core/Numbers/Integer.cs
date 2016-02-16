@@ -1,4 +1,5 @@
 ﻿using System;
+using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
 {
@@ -33,28 +34,11 @@ namespace Titanium.Core.Numbers
 
 		internal static Integer Zero { get { return new Integer(0); } }
 
-		internal static Integer GreatestCommonDivisor(Integer a, Integer b)
-		{
-			return b.Value == 0
-				? a
-				: GreatestCommonDivisor(b, Mod(a, b));
-		}
-
 		internal static int GreatestCommonDivisor(int a, int b)
 		{
 			return b == 0
 				? a
 				: GreatestCommonDivisor(b, a % b);
-		}
-
-		private static Integer Mod(Integer a, Integer b)
-		{
-			return new Integer(a.Value % b.Value);
-		}
-
-		public static bool IsSquare(Integer integer)
-		{
-			return Float.IsWholeNumber(Math.Sqrt(integer.ValueAsFloat()));
 		}
 	}
 }

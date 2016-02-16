@@ -42,7 +42,7 @@ namespace Titanium.Core.Components
 					: ComponentType == ComponentType.Divide
 						? "/"
 						: "^",
-				ToString(RightFactor));
+				ToString(RightFactor, ComponentType == ComponentType.Divide));
 		}
 
 		public override Expression Evaluate()
@@ -205,7 +205,7 @@ namespace Titanium.Core.Components
 			return false;
 		}
 
-		private static string ToString(Factor factor)
+		private static string ToString(Factor factor, bool isDenominator = false)
 		{
 			if (factor is ExpressionFactor)
 			{
@@ -219,6 +219,15 @@ namespace Titanium.Core.Components
 				if (component is DualFactorComponent)
 				{
 					return string.Format("({0})", expression);
+				}
+
+				if (isDenominator && component is FunctionComponent)
+				{
+					var output = expression.ToString();
+					if (output.Contains("("))
+					{
+						return string.Format("({0})", expression);
+					}
 				}
 			}
 
