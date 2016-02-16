@@ -58,7 +58,7 @@ namespace Titanium.Core.Functions.Implementations
 					// For now just reduce if it's a square
 					if (Float.IsWholeNumber(Math.Sqrt(integer.Value)))
 					{
-						parameter = new Exponent().Evaluate(new List<Expression> { Expressionizer.ToExpression(new NumericFactor(new Integer((int)Math.Sqrt(integer.Value)))), Expressionizer.ToExpression(new NumericFactor(new Integer(2))) });
+						return EvaluateExponent(new NumericFactor(new Integer((int)Math.Sqrt(integer.Value))), new NumericFactor(new Integer(2)));
 					}
 				}
 			}
