@@ -205,22 +205,17 @@ namespace Titanium.Core.Components
 			return false;
 		}
 
-		private static string ToString(Factor factor, bool isDenominator = false)
+		private static string ToString(IEvaluatable factor, bool isDenominator = false)
 		{
 			if (factor is ExpressionFactor)
 			{
-				var expression = ((ExpressionFactor)factor).Expression;
+				var expression = Expressionizer.ToExpression(factor);
 				if (expression is DualComponentExpression)
 				{
 					return string.Format("({0})", expression);
 				}
-				
-				var component = ((SingleComponentExpression)expression).Component;
-				if (component is DualFactorComponent)
-				{
-					return string.Format("({0})", expression);
-				}
 
+				var component = Componentizer.ToComponent(factor);
 				if (isDenominator && component is FunctionComponent)
 				{
 					var output = expression.ToString();
