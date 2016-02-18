@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Reducer;
@@ -7,57 +8,45 @@ namespace Titanium.Core.Components
 {
 	internal class ComponentList : Component
 	{
-		private readonly List<ComponentListFactor> _factors;
+		internal readonly List<ComponentListFactor> Factors;
 
-		public ComponentList(SingleFactorComponent component)
+		public ComponentList(Component component)
 		{
-			_factors = new List<ComponentListFactor>
-			{
-				new ComponentListFactor(component.Factor)
-			};
+			Factors = GetComponents(component);
 		}
 
-		public ComponentList(DualFactorComponent dualFactorComponent)
+		private List<ComponentListFactor> GetComponents(Component component)
 		{
-			_factors = new List<ComponentListFactor>();
-
-			GetComponents(dualFactorComponent.LeftFactor);
-			GetComponents(dualFactorComponent.RightFactor);
-		}
-
-		private void GetComponents(Factor factor)
-		{
-			if (!(factor is ExpressionFactor))
+			if (component is SingleFactorComponent)
 			{
-				_factors.Add(new ComponentListFactor(factor));
+				return new List<ComponentListFactor> { new ComponentListFactor(((SingleFactorComponent)component).Factor) };
 			}
-			else
-			{
-				var leftComp = Componentizer.ToComponent(factor);
-				if (leftComp is DualFactorComponent)
-				{
-					var dfc = (DualFactorComponent)leftComp;
-					_factors.Add(new ComponentListFactor(dfc.LeftFactor));
-					_factors.Add(new ComponentListFactor(dfc.RightFactor));
-				}
-			}
-		}
 
-		public ComponentList(List<ComponentListFactor> factors)
-		{
-			_factors = factors;
+			var dfc = (DualFactorComponent)component;
+			var leftComponent = Componentizer.ToComponent(dfc.LeftFactor);
+			var rightComponent = Componentizer.ToComponent(dfc.RightFactor);
+
+			var leftList = GetComponents(leftComponent);
+			var rightList = GetComponents(rightComponent);
+
+			return leftList.Union(rightList).ToList();
 		}
 
 		internal override Expression Evaluate()
 		{
 			throw new System.NotImplementedException();
 		}
+
+		public override string ToString()
+		{
+			return string.Join("*", Factors.Select(f => f.Factor));
+		}
 	}
 
 	internal class ComponentListFactor
 	{
-		internal Factor Factor;
-		internal bool IsMultiply;
+		internal readonly Factor Factor;
+		internal readonly bool IsMultiply;
 
 		public ComponentListFactor(Factor factor, bool isMultiply = true)
 		{
