@@ -1,4 +1,6 @@
-﻿namespace Titanium.Core.Numbers
+﻿using System;
+
+namespace Titanium.Core.Numbers
 {
 	public class Integer : Number
 	{
@@ -30,6 +32,11 @@
 		}
 
 		internal static Integer Zero { get { return new Integer(0); } }
+
+		internal static int LeastCommonMultiple(int a, int b)
+		{
+			return Math.Abs(a * b) / GreatestCommonDivisor(a, b);
+		}
 
 		internal static int GreatestCommonDivisor(int a, int b)
 		{

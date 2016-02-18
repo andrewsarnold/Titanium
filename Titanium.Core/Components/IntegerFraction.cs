@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
@@ -57,7 +56,7 @@ namespace Titanium.Core.Components
 
 		public static IntegerFraction operator +(IntegerFraction left, IntegerFraction right)
 		{
-			var lcm = Math.Abs(left.Denominator * right.Denominator) / Integer.GreatestCommonDivisor(left.Denominator, right.Denominator);
+			var lcm = Integer.LeastCommonMultiple(left.Denominator, right.Denominator);
 
 			// calculate new left
 			var leftFactor = lcm / left.Denominator;

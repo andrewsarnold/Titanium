@@ -78,26 +78,6 @@ namespace Titanium.Core.Components
 					: leftFraction / rightFraction);
 			}
 
-			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
-			{
-				if (rightNumber is Integer)
-				{
-					var rightInteger = (Integer)rightNumber;
-					var result = IsMultiply
-						? leftFraction * rightInteger
-						: leftFraction / rightInteger;
-					return Expressionizer.ToExpression(result);
-				}
-				else
-				{
-					var rightDouble = (Float)rightNumber;
-					var result = IsMultiply
-						? leftFraction * rightDouble
-						: leftFraction / rightDouble;
-					return Expressionizer.ToExpression(new NumericFactor(result));
-				}
-			}
-
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), IsMultiply));
 		}
 
