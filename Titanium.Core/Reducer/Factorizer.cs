@@ -24,6 +24,11 @@ namespace Titanium.Core.Reducer
 				return ToFactor((Factor)thing);
 			}
 
+			if (thing is ComponentListFactor)
+			{
+				return ((ComponentListFactor)thing).Factor;
+			}
+
 			throw new UnexpectedTypeException(thing.GetType());
 		}
 

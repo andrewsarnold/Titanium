@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using Titanium.Core.Expressions;
+﻿using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
-using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
@@ -28,75 +26,7 @@ namespace Titanium.Core.Components
 
 		internal override Expression Evaluate()
 		{
-			var left = LeftFactor.Evaluate();
-			var right = RightFactor.Evaluate();
-
-			Number leftNumber;
-			Number rightNumber;
-
-			if ((Common.IsConstant(left, out leftNumber) && Common.IsFloat(right, out rightNumber)) ||
-				(Common.IsFloat(left, out leftNumber) && Common.IsConstant(right, out rightNumber)) ||
-				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
-			{
-				return Evaluate(leftNumber, rightNumber);
-			}
-
-			ExpressionList leftList;
-			ExpressionList rightList;
-
-			if (Common.IsList(left, out leftList))
-			{
-				return Evaluate(leftList, right, IsMultiply);
-			}
-
-			if (Common.IsList(right, out rightList))
-			{
-				return Evaluate(rightList, left, IsMultiply);
-			}
-
-			IntegerFraction leftFraction;
-			IntegerFraction rightFraction;
-
-			if (Common.IsNumber(left, out leftNumber) && Common.IsIntegerFraction(right, out rightFraction))
-			{
-				return Expressionizer.ToExpression(IsMultiply
-					? leftNumber * rightFraction
-					: leftNumber / rightFraction);
-			}
-
-			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
-			{
-				return Expressionizer.ToExpression(IsMultiply
-					? leftFraction * rightNumber
-					: leftFraction / rightNumber);
-			}
-
-			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
-			{
-				return Expressionizer.ToExpression(IsMultiply
-					? leftFraction * rightFraction
-					: leftFraction / rightFraction);
-			}
-
-			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), IsMultiply));
-		}
-
-		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right, bool isMultiply)
-		{
-			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
-		}
-
-		private Expression Evaluate(Number leftNumber, Number rightNumber)
-		{
-			if (IsMultiply)
-			{
-				return Expressionizer.ToExpression(new NumericFactor(leftNumber * rightNumber));
-			}
-
-			var result = leftNumber / rightNumber;
-			return result is IntegerFraction
-				? Expressionizer.ToExpression((IntegerFraction)result)
-				: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
+			return new ComponentList(this).Evaluate();
 		}
 
 		private static string ToString(Evaluatable factor, bool isDenominator = false)
