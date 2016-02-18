@@ -145,7 +145,7 @@ namespace Titanium.Core.Functions.Implementations
 			}
 
 			var component = Componentizer.ToComponent(expression);
-			if (component is DualFactorComponent)
+			if (component is DualFactorComponent || component is ComponentList)
 			{
 				var output = expression.ToString();
 				if (output.Contains("("))

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
@@ -93,6 +94,19 @@ namespace Titanium.Core.Components
 
 			if (!reducedAny)
 			{
+				output.RemoveAll(o =>
+				{
+					// Remove anything where we're just multiplying or dividing by one
+					var numericFactor = o.Factor as NumericFactor;
+					return numericFactor != null && numericFactor.Number is Integer && Math.Abs(numericFactor.Number.ValueAsFloat() - 1.0) < Constants.Tolerance;
+				});
+
+				// We removed too many ones
+				if (output.Count == 0)
+				{
+					return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
+				}
+
 				return output.Count == 1
 					? Expressionizer.ToExpression(output[0])
 					: Expressionizer.ToExpression(new ComponentList(output));
@@ -103,8 +117,8 @@ namespace Titanium.Core.Components
 
 		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
 		{
-			var left = leftFactor.Evaluate();
-			var right = rightFactor.Evaluate();
+			var left = Expressionizer.ToExpression(leftFactor.Factor);
+			var right = Expressionizer.ToExpression(rightFactor.Factor);
 
 			Number leftNumber;
 			Number rightNumber;
@@ -251,7 +265,30 @@ namespace Titanium.Core.Components
 
 		public override string ToString()
 		{
-			return string.Join("*", Factors.Select(f => f.Factor));
+			var numerators = Factors.Where(f => f.IsInNumerator).ToList();
+			var denominators = Factors.Where(f => !f.IsInNumerator).ToList();
+
+			var numString = string.Join("*", numerators.Select(f => f.Factor));
+			var denomString = string.Join("*", denominators.Select(f => f.Factor));
+
+			if (numerators.Any() && denominators.Any())
+			{
+				return string.Format("{0}/{1}",
+					numerators.Count == 1 ? numString : string.Format("({0})", numString),
+					denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
+			}
+
+			if (numerators.Any())
+			{
+				return numString;
+			}
+
+			if (denominators.Any())
+			{
+				return string.Format("1/({0})", denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
+			}
+
+			throw new Exception("No components");
 		}
 	}
 }

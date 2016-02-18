@@ -40,7 +40,10 @@ namespace Titanium.Core.Components
 				}
 
 				var component = Componentizer.ToComponent(expression);
-				if (component is DualFactorComponent || component is ComponentList || component is IntegerFraction || (isDenominator && component is FunctionComponent))
+				if (component is DualFactorComponent ||
+					component is ComponentList ||
+					component is IntegerFraction ||
+					(component is FunctionComponent && isDenominator))
 				{
 					return string.Format("({0})", component);
 				}
