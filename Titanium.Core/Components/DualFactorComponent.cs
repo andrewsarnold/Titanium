@@ -39,14 +39,10 @@ namespace Titanium.Core.Components
 					return string.Format("({0})", expression);
 				}
 
-				var component = Componentizer.ToComponent(factor);
-				if (component is DualFactorComponent || (isDenominator && component is FunctionComponent))
+				var component = Componentizer.ToComponent(expression);
+				if (component is DualFactorComponent || component is ComponentList || component is IntegerFraction || (isDenominator && component is FunctionComponent))
 				{
-					var output = expression.ToString();
-					if (output.Contains("("))
-					{
-						return string.Format("({0})", expression);
-					}
+					return string.Format("({0})", component);
 				}
 			}
 

@@ -18,11 +18,11 @@ namespace Titanium.Test
 
 			Assert.AreEqual(3, componentList.Factors.Count);
 			Assert.IsTrue(componentList.Factors[0].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[0].IsMultiply);
+			Assert.IsTrue(componentList.Factors[0].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[1].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[1].IsMultiply);
+			Assert.IsTrue(componentList.Factors[1].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[2].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[2].IsMultiply);
+			Assert.IsTrue(componentList.Factors[2].IsInNumerator);
 
 			Assert.AreEqual("x*y*z", componentList.ToString());
 		}
@@ -37,11 +37,11 @@ namespace Titanium.Test
 
 			Assert.AreEqual(3, componentList.Factors.Count);
 			Assert.IsTrue(componentList.Factors[0].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[0].IsMultiply);
+			Assert.IsTrue(componentList.Factors[0].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[1].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[1].IsMultiply);
+			Assert.IsTrue(componentList.Factors[1].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[2].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[2].IsMultiply);
+			Assert.IsTrue(componentList.Factors[2].IsInNumerator);
 
 			Assert.AreEqual("x*y*z", componentList.ToString());
 		}
@@ -57,13 +57,13 @@ namespace Titanium.Test
 
 			Assert.AreEqual(4, componentList.Factors.Count);
 			Assert.IsTrue(componentList.Factors[0].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[0].IsMultiply);
+			Assert.IsTrue(componentList.Factors[0].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[1].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[1].IsMultiply);
+			Assert.IsTrue(componentList.Factors[1].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[2].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[2].IsMultiply);
+			Assert.IsTrue(componentList.Factors[2].IsInNumerator);
 			Assert.IsTrue(componentList.Factors[3].Factor is AlphabeticFactor);
-			Assert.IsTrue(componentList.Factors[3].IsMultiply);
+			Assert.IsTrue(componentList.Factors[3].IsInNumerator);
 
 			Assert.AreEqual("w*x*y*z", componentList.ToString());
 		}

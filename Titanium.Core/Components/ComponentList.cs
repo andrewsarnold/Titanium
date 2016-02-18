@@ -29,8 +29,8 @@ namespace Titanium.Core.Components
 				var leftComponent = Componentizer.ToComponent(dfc.LeftFactor);
 				var rightComponent = Componentizer.ToComponent(dfc.RightFactor);
 
-				var leftList = GetComponents(leftComponent);
-				var rightList = GetComponents(rightComponent, dfc.IsMultiply);
+				var leftList = GetComponents(leftComponent, isMultiply);
+				var rightList = GetComponents(rightComponent, isMultiply == dfc.IsMultiply);
 
 				return leftList.Union(rightList).ToList();
 			}
@@ -45,7 +45,7 @@ namespace Titanium.Core.Components
 
 		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
 		{
-			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsMultiply)).ToList();
+			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
 
 			// Loop through all combinations of two factors
 			// If two factors can reduce, add to output list and remove from input list
@@ -71,8 +71,7 @@ namespace Titanium.Core.Components
 					Expression e;
 					if (CanReduce(evaluated[0], evaluated[i], out e))
 					{
-						var isMultiply = evaluated[0].IsMultiply == evaluated[i].IsMultiply;
-						output.Add(new ComponentListFactor(Factorizer.ToFactor(e), isMultiply));
+						output.Add(new ComponentListFactor(Factorizer.ToFactor(e)));
 						evaluated.RemoveAt(i);
 						evaluated.RemoveAt(0);
 						i = 1;
@@ -96,7 +95,7 @@ namespace Titanium.Core.Components
 			{
 				return output.Count == 1
 					? Expressionizer.ToExpression(output[0])
-					: Expressionizer.ToExpression(new ComponentList(output.Select(o => new ComponentListFactor(Factorizer.ToFactor(o))).ToList()));
+					: Expressionizer.ToExpression(new ComponentList(output));
 			}
 			
 			return Reduce(output);
@@ -107,8 +106,6 @@ namespace Titanium.Core.Components
 			var left = leftFactor.Evaluate();
 			var right = rightFactor.Evaluate();
 
-			var isMultiply = leftFactor.IsMultiply == rightFactor.IsMultiply;
-
 			Number leftNumber;
 			Number rightNumber;
 
@@ -116,7 +113,7 @@ namespace Titanium.Core.Components
 				(Common.IsFloat(left, out leftNumber) && Common.IsConstant(right, out rightNumber)) ||
 				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
 			{
-				expression = Evaluate(leftNumber, rightNumber, isMultiply);
+				expression = Evaluate(leftNumber, rightNumber, leftFactor.IsInNumerator, rightFactor.IsInNumerator);
 				return true;
 			}
 
@@ -125,13 +122,13 @@ namespace Titanium.Core.Components
 
 			if (Common.IsList(left, out leftList))
 			{
-				expression = Evaluate(leftList, right, isMultiply);
+				expression = Evaluate(leftList, right, leftFactor.IsInNumerator == rightFactor.IsInNumerator);
 				return true;
 			}
 
 			if (Common.IsList(right, out rightList))
 			{
-				expression = Evaluate(rightList, left, isMultiply);
+				expression = Evaluate(rightList, left, leftFactor.IsInNumerator == rightFactor.IsInNumerator);
 				return true;
 			}
 
@@ -140,25 +137,19 @@ namespace Titanium.Core.Components
 
 			if (Common.IsNumber(left, out leftNumber) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				expression = Expressionizer.ToExpression(isMultiply
-					? leftNumber * rightFraction
-					: leftNumber / rightFraction);
+				expression = Expressionizer.ToExpression(Evaluate(leftNumber, rightFraction, leftFactor.IsInNumerator, rightFactor.IsInNumerator));
 				return true;
 			}
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
 			{
-				expression = Expressionizer.ToExpression(isMultiply
-					? leftFraction * rightNumber
-					: leftFraction / rightNumber);
+				expression = Expressionizer.ToExpression(Evaluate(leftFraction, rightNumber, leftFactor.IsInNumerator, rightFactor.IsInNumerator));
 				return true;
 			}
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				expression = Expressionizer.ToExpression(isMultiply
-					? leftFraction * rightFraction
-					: leftFraction / rightFraction);
+				expression = Expressionizer.ToExpression(Evaluate(leftFraction, rightFraction, leftFactor.IsInNumerator, rightFactor.IsInNumerator));
 				return true;
 			}
 
@@ -171,14 +162,88 @@ namespace Titanium.Core.Components
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
 		}
 
-		private static Expression Evaluate(Number leftNumber, Number rightNumber, bool isMultiply)
+		private static Expression Evaluate(Number leftNumber, Number rightNumber, bool leftIsNumerator, bool rightIsNumerator)
 		{
-			if (isMultiply)
+			if (leftIsNumerator && rightIsNumerator)
 			{
 				return Expressionizer.ToExpression(new NumericFactor(leftNumber * rightNumber));
 			}
 
-			var result = leftNumber / rightNumber;
+			if (leftIsNumerator)
+			{
+				return NumberToExpression(leftNumber / rightNumber);
+			}
+
+			if (rightIsNumerator)
+			{
+				return NumberToExpression(rightNumber / leftNumber);
+			}
+
+			return NumberToExpression(new Integer(1) / (leftNumber * rightNumber));
+		}
+
+		private static Expression Evaluate(Number leftNumber, IntegerFraction rightFraction, bool leftIsNumerator, bool rightIsNumerator)
+		{
+			if (leftIsNumerator && rightIsNumerator)
+			{
+				return Expressionizer.ToExpression(leftNumber * rightFraction);
+			}
+
+			if (leftIsNumerator)
+			{
+				return NumberToExpression(leftNumber / rightFraction);
+			}
+
+			if (rightIsNumerator)
+			{
+				return NumberToExpression(rightFraction / leftNumber);
+			}
+
+			return NumberToExpression(rightFraction.Inverse / leftNumber);
+		}
+
+		private static Expression Evaluate(IntegerFraction leftFraction, Number rightNumber, bool leftIsNumerator, bool rightIsNumerator)
+		{
+			if (leftIsNumerator && rightIsNumerator)
+			{
+				return Expressionizer.ToExpression(leftFraction * rightNumber);
+			}
+
+			if (leftIsNumerator)
+			{
+				return NumberToExpression(leftFraction / rightNumber);
+			}
+
+			if (rightIsNumerator)
+			{
+				return NumberToExpression(rightNumber / leftFraction);
+			}
+
+			return NumberToExpression(leftFraction.Inverse / rightNumber);
+		}
+
+		private static Expression Evaluate(IntegerFraction leftFraction, IntegerFraction rightFraction, bool leftIsNumerator, bool rightIsNumerator)
+		{
+			if (leftIsNumerator && rightIsNumerator)
+			{
+				return Expressionizer.ToExpression(leftFraction * rightFraction);
+			}
+
+			if (leftIsNumerator)
+			{
+				return NumberToExpression(leftFraction / rightFraction);
+			}
+
+			if (rightIsNumerator)
+			{
+				return NumberToExpression(rightFraction / leftFraction);
+			}
+
+			return NumberToExpression(leftFraction.Inverse * rightFraction.Inverse);
+		}
+
+		private static Expression NumberToExpression(object result)
+		{
 			return result is IntegerFraction
 				? Expressionizer.ToExpression((IntegerFraction)result)
 				: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));

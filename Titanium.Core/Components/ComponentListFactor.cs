@@ -6,12 +6,12 @@ namespace Titanium.Core.Components
 	internal class ComponentListFactor : Evaluatable
 	{
 		internal Factor Factor;
-		internal bool IsMultiply;
+		internal bool IsInNumerator;
 
-		public ComponentListFactor(Factor factor, bool isMultiply = true)
+		public ComponentListFactor(Factor factor, bool isInNumerator = true)
 		{
 			Factor = factor;
-			IsMultiply = isMultiply;
+			IsInNumerator = isInNumerator;
 		}
 
 		internal override Expression Evaluate()
