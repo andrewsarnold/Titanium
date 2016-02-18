@@ -34,7 +34,7 @@ namespace Titanium.Core.Components
 
 		internal override Expression Evaluate()
 		{
-			throw new System.NotImplementedException();
+			return Expressionizer.ToExpression(this);
 		}
 
 		public override string ToString()
