@@ -94,19 +94,6 @@ namespace Titanium.Core.Components
 
 			if (!reducedAny)
 			{
-				output.RemoveAll(o =>
-				{
-					// Remove anything where we're just multiplying or dividing by one
-					var numericFactor = o.Factor as NumericFactor;
-					return numericFactor != null && numericFactor.Number is Integer && Math.Abs(numericFactor.Number.ValueAsFloat() - 1.0) < Constants.Tolerance;
-				});
-
-				// We removed too many ones
-				if (output.Count == 0)
-				{
-					return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
-				}
-
 				return output.Count == 1
 					? Expressionizer.ToExpression(output[0])
 					: Expressionizer.ToExpression(new ComponentList(output));
