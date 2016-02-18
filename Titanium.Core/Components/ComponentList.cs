@@ -21,7 +21,7 @@ namespace Titanium.Core.Components
 			Factors = factors;
 		}
 
-		private static List<ComponentListFactor> GetComponents(Component component)
+		private static List<ComponentListFactor> GetComponents(Component component, bool isMultiply = true)
 		{
 			if (component is DualFactorComponent)
 			{
@@ -30,17 +30,22 @@ namespace Titanium.Core.Components
 				var rightComponent = Componentizer.ToComponent(dfc.RightFactor);
 
 				var leftList = GetComponents(leftComponent);
-				var rightList = GetComponents(rightComponent);
+				var rightList = GetComponents(rightComponent, dfc.IsMultiply);
 
 				return leftList.Union(rightList).ToList();
 			}
 
-			return new List<ComponentListFactor> { new ComponentListFactor(Factorizer.ToFactor(component)) };
+			return new List<ComponentListFactor> { new ComponentListFactor(Factorizer.ToFactor(component), isMultiply) };
 		}
 
 		internal override Expression Evaluate()
 		{
-			var evaluated = Factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()))).ToList();
+			return Reduce(Factors);
+		}
+
+		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
+		{
+			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsMultiply)).ToList();
 
 			// Loop through all combinations of two factors
 			// If two factors can reduce, add to output list and remove from input list
@@ -55,28 +60,31 @@ namespace Titanium.Core.Components
 			// - Append factor to output list
 			// - Remove it from input list
 
-			var output = new List<Expression>();
+			var output = new List<ComponentListFactor>();
+			var reducedAny = false;
 
 			while (evaluated.Any())
 			{
-				var matched = false;
+				var reduced = false;
 				for (var i = 1; i < evaluated.Count; i++)
 				{
 					Expression e;
 					if (CanReduce(evaluated[0], evaluated[i], out e))
 					{
-						output.Add(e);
+						var isMultiply = evaluated[0].IsMultiply == evaluated[i].IsMultiply;
+						output.Add(new ComponentListFactor(Factorizer.ToFactor(e), isMultiply));
 						evaluated.RemoveAt(i);
 						evaluated.RemoveAt(0);
 						i = 1;
 
-						matched = true;
+						reduced = true;
+						reducedAny = true;
 					}
 				}
 
-				if (!matched && evaluated.Any())
+				if (!reduced && evaluated.Any())
 				{
-					output.Add(Expressionizer.ToExpression(evaluated[0].Factor));
+					output.Add(evaluated[0]);
 					evaluated.RemoveAt(0);
 				}
 			}
@@ -84,13 +92,22 @@ namespace Titanium.Core.Components
 			// If no factors could be reduced, return as expression
 			// Otherwise, repeat the whole process on the new list
 
-			return Expressionizer.ToExpression(new ComponentList(output.Select(o => new ComponentListFactor(Factorizer.ToFactor(o))).ToList()));
+			if (!reducedAny)
+			{
+				return output.Count == 1
+					? Expressionizer.ToExpression(output[0])
+					: Expressionizer.ToExpression(new ComponentList(output.Select(o => new ComponentListFactor(Factorizer.ToFactor(o))).ToList()));
+			}
+			
+			return Reduce(output);
 		}
 
-		private bool CanReduce(Evaluatable leftFactor, Evaluatable rightFactor, out Expression expression)
+		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
 		{
 			var left = leftFactor.Evaluate();
 			var right = rightFactor.Evaluate();
+
+			var isMultiply = leftFactor.IsMultiply == rightFactor.IsMultiply;
 
 			Number leftNumber;
 			Number rightNumber;
@@ -99,7 +116,7 @@ namespace Titanium.Core.Components
 				(Common.IsFloat(left, out leftNumber) && Common.IsConstant(right, out rightNumber)) ||
 				(Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber)))
 			{
-				expression = Evaluate(leftNumber, rightNumber, true);
+				expression = Evaluate(leftNumber, rightNumber, isMultiply);
 				return true;
 			}
 
@@ -108,13 +125,13 @@ namespace Titanium.Core.Components
 
 			if (Common.IsList(left, out leftList))
 			{
-				expression = Evaluate(leftList, right, true);
+				expression = Evaluate(leftList, right, isMultiply);
 				return true;
 			}
 
 			if (Common.IsList(right, out rightList))
 			{
-				expression = Evaluate(rightList, left, true);
+				expression = Evaluate(rightList, left, isMultiply);
 				return true;
 			}
 
@@ -123,7 +140,7 @@ namespace Titanium.Core.Components
 
 			if (Common.IsNumber(left, out leftNumber) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				expression = Expressionizer.ToExpression(true
+				expression = Expressionizer.ToExpression(isMultiply
 					? leftNumber * rightFraction
 					: leftNumber / rightFraction);
 				return true;
@@ -131,7 +148,7 @@ namespace Titanium.Core.Components
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsNumber(right, out rightNumber))
 			{
-				expression = Expressionizer.ToExpression(true
+				expression = Expressionizer.ToExpression(isMultiply
 					? leftFraction * rightNumber
 					: leftFraction / rightNumber);
 				return true;
@@ -139,7 +156,7 @@ namespace Titanium.Core.Components
 
 			if (Common.IsIntegerFraction(left, out leftFraction) && Common.IsIntegerFraction(right, out rightFraction))
 			{
-				expression = Expressionizer.ToExpression(true
+				expression = Expressionizer.ToExpression(isMultiply
 					? leftFraction * rightFraction
 					: leftFraction / rightFraction);
 				return true;
@@ -154,7 +171,7 @@ namespace Titanium.Core.Components
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
 		}
 
-		private Expression Evaluate(Number leftNumber, Number rightNumber, bool isMultiply)
+		private static Expression Evaluate(Number leftNumber, Number rightNumber, bool isMultiply)
 		{
 			if (isMultiply)
 			{
