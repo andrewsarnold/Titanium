@@ -7,7 +7,7 @@ namespace Titanium.Core.Reducer
 {
 	internal static class Factorizer
 	{
-		internal static Factor ToFactor(IEvaluatable thing)
+		internal static Factor ToFactor(Evaluatable thing)
 		{
 			if (thing is Expression)
 			{

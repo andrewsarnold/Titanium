@@ -17,7 +17,7 @@ namespace Titanium.Core.Factors
 			return Value;
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			return Expressionizer.ToExpression(this);
 		}

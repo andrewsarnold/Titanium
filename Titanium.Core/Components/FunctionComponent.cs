@@ -9,19 +9,19 @@ namespace Titanium.Core.Components
 		internal readonly Function Function;
 		internal readonly List<Expression> Operands;
 
-		public FunctionComponent(string name, List<Expression> operands)
+		internal FunctionComponent(string name, List<Expression> operands)
 		{
 			Function = FunctionRepository.Get(name);
 			Operands = operands;
 		}
 
-		public FunctionComponent(Function function, List<Expression> operands)
+		internal FunctionComponent(Function function, List<Expression> operands)
 		{
 			Function = function;
 			Operands = operands;
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			return Function.Evaluate(Operands.ToArray());
 		}

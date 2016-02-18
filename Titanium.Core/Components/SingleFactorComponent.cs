@@ -5,9 +5,9 @@ namespace Titanium.Core.Components
 {
 	internal class SingleFactorComponent : Component
 	{
-		public readonly Factor Factor;
+		internal readonly Factor Factor;
 
-		public SingleFactorComponent(Factor factor)
+		internal SingleFactorComponent(Factor factor)
 		{
 			Factor = factor;
 		}
@@ -17,7 +17,7 @@ namespace Titanium.Core.Components
 			return Factor.ToString();
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			return Factor.Evaluate();
 		}

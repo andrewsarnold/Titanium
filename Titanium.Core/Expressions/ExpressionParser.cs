@@ -219,7 +219,7 @@ namespace Titanium.Core.Expressions
 
 		private static Expression ParsePostfix(IEnumerable<Token> tokens)
 		{
-			var stack = new Stack<IEvaluatable>();
+			var stack = new Stack<Evaluatable>();
 			foreach (var token in tokens)
 			{
 				if (token.Type.IsOperand())
@@ -247,7 +247,7 @@ namespace Titanium.Core.Expressions
 				}
 				else if (token.Type.IsOperator())
 				{
-					IEvaluatable parent;
+					Evaluatable parent;
 
 					if (token.Type == TokenType.Factorial || token.Type == TokenType.Negate)
 					{

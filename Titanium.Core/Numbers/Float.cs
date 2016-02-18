@@ -4,11 +4,11 @@ using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
 {
-	public class Float : Number
+	internal class Float : Number
 	{
-		public readonly double Value;
+		internal readonly double Value;
 
-		public Float(double value)
+		internal Float(double value)
 		{
 			Value = value;
 		}

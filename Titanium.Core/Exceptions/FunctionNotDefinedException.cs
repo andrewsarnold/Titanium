@@ -4,7 +4,7 @@ namespace Titanium.Core.Exceptions
 {
 	internal class FunctionNotDefinedException : Exception
 	{
-		public FunctionNotDefinedException(string functionName)
+		internal FunctionNotDefinedException(string functionName)
 			: base(string.Format("Function {0} not defined", functionName))
 		{
 		}

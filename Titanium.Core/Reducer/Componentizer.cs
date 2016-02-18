@@ -7,7 +7,7 @@ namespace Titanium.Core.Reducer
 {
 	internal static class Componentizer
 	{
-		internal static Component ToComponent(IEvaluatable thing)
+		internal static Component ToComponent(Evaluatable thing)
 		{
 			if (thing is Expression)
 			{

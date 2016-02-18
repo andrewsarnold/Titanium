@@ -11,7 +11,7 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class NaturalLog : Function
 	{
-		public NaturalLog()
+		internal NaturalLog()
 			: base("ln", 1)
 		{
 		}
@@ -115,7 +115,7 @@ namespace Titanium.Core.Functions.Implementations
 				false).Evaluate();
 		}
 
-		private Expression EvaluateExponent(IEvaluatable left, IEvaluatable right)
+		private Expression EvaluateExponent(Evaluatable left, Evaluatable right)
 		{
 			// ln(a ^ b) = b * ln(a)
 			return new DualFactorComponent(
@@ -124,7 +124,7 @@ namespace Titanium.Core.Functions.Implementations
 				true).Evaluate();
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("{0}({1})", Name, parameters[0]);
 		}

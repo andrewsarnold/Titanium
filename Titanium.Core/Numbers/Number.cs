@@ -5,7 +5,7 @@ using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
 {
-	public abstract class Number
+	internal abstract class Number
 	{
 		public static Number operator +(Number left, Number right)
 		{

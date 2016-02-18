@@ -13,7 +13,7 @@ namespace Titanium.Core.Expressions
 		private readonly Component _rightComponent;
 		private readonly bool _isAdd;
 
-		public DualComponentExpression(Component leftComponent, Component rightComponent, bool isAdd)
+		internal DualComponentExpression(Component leftComponent, Component rightComponent, bool isAdd)
 		{
 			_isAdd = isAdd;
 			_leftComponent = leftComponent;
@@ -25,7 +25,7 @@ namespace Titanium.Core.Expressions
 			return string.Format("{0}{1}{2}", _leftComponent, _isAdd ? "+" : "-", _rightComponent);
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			// Combine natural log functions
 			FunctionComponent leftFunction;

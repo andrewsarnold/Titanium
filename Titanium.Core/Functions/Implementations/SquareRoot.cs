@@ -7,7 +7,7 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class SquareRoot : Function
 	{
-		public SquareRoot()
+		internal SquareRoot()
 			: base("√", 1)
 		{
 		}
@@ -18,7 +18,7 @@ namespace Titanium.Core.Functions.Implementations
 			return new Exponent().Evaluate(parameter, Expressionizer.ToExpression(new IntegerFraction(1, 2)));
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("√({0})", parameters[0]);
 		}

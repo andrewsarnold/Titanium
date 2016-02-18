@@ -17,7 +17,7 @@ namespace Titanium.Core.Factors
 			return Expression.ToString();
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			var result = Expression.Evaluate();
 			var singleComponentExpression = result as SingleComponentExpression;

@@ -12,7 +12,7 @@ namespace Titanium.Core.Components
 		internal readonly Factor RightFactor;
 		internal readonly bool IsMultiply;
 
-		public DualFactorComponent(Factor leftFactor, Factor rightFactor, bool isMultiply)
+		internal DualFactorComponent(Factor leftFactor, Factor rightFactor, bool isMultiply)
 		{
 			IsMultiply = isMultiply;
 			LeftFactor = leftFactor;
@@ -26,7 +26,7 @@ namespace Titanium.Core.Components
 				ToString(RightFactor, !IsMultiply));
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			var left = LeftFactor.Evaluate();
 			var right = RightFactor.Evaluate();
@@ -81,7 +81,7 @@ namespace Titanium.Core.Components
 			return Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), IsMultiply));
 		}
 
-		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right, bool isMultiply)
+		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right, bool isMultiply)
 		{
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
 		}
@@ -99,7 +99,7 @@ namespace Titanium.Core.Components
 				: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
 		}
 
-		private static string ToString(IEvaluatable factor, bool isDenominator = false)
+		private static string ToString(Evaluatable factor, bool isDenominator = false)
 		{
 			if (factor is ExpressionFactor)
 			{

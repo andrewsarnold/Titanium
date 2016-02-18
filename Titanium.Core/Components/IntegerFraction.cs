@@ -8,7 +8,7 @@ using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
-	public class IntegerFraction : Component
+	internal class IntegerFraction : Component
 	{
 		internal bool IsNegative { get; private set; }
 		internal int Numerator { get; private set; }
@@ -245,7 +245,7 @@ namespace Titanium.Core.Components
 			return string.Format("{0}{1}{2}", IsNegative ? "⁻" : string.Empty, Math.Abs(Numerator), Denominator == 1 ? string.Empty : string.Format("/{0}", Denominator));
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			return Denominator == 1
 				? Expressionizer.ToExpression(new NumericFactor(new Integer(Numerator)))

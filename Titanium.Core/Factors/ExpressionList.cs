@@ -9,12 +9,12 @@ namespace Titanium.Core.Factors
 	{
 		internal List<Expression> Expressions;
 
-		public ExpressionList(List<Expression> expressions)
+		internal ExpressionList(List<Expression> expressions)
 		{
 			Expressions = expressions;
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			Expressions = Expressions.Select(e => e.Evaluate()).ToList();
 			return Expressionizer.ToExpression(this);

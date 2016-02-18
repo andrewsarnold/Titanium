@@ -10,7 +10,7 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class BaseTenLogarithm : Function
 	{
-		public BaseTenLogarithm()
+		internal BaseTenLogarithm()
 			: base("log", 1)
 		{
 		}
@@ -41,7 +41,7 @@ namespace Titanium.Core.Functions.Implementations
 			return new DualFactorComponent(numerator, denominator, false).Evaluate();
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			throw new NotImplementedException();
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Titanium.Core.Expressions;
+using Titanium.Core;
 
 namespace Titanium.WinConsole
 {
@@ -28,7 +28,7 @@ namespace Titanium.WinConsole
 
 				try
 				{
-					Console.WriteLine(CleanOutput(Expression.ParseExpression(input).Evaluate().ToString()).PadLeft(24, ' '));
+					Console.WriteLine(CleanOutput(Evaluator.Evaluate(input)).PadLeft(24, ' '));
 				}
 				catch (Exception ex)
 				{

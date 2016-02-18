@@ -6,7 +6,7 @@ namespace Titanium.Core.Tokens
 	{
 		internal readonly ExpressionList List;
 
-		public ExpressionListToken(ExpressionList list)
+		internal ExpressionListToken(ExpressionList list)
 			: base(TokenType.ExpressionList, string.Empty)
 		{
 			List = list;

@@ -2,9 +2,9 @@
 
 namespace Titanium.Core.Numbers
 {
-	public class Integer : Number
+	internal class Integer : Number
 	{
-		public readonly int Value;
+		internal readonly int Value;
 
 		internal Integer(int value)
 		{

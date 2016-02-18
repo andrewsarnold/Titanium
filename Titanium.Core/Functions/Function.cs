@@ -19,7 +19,7 @@ namespace Titanium.Core.Functions
 			ArgumentCount = argumentCount;
 		}
 
-		public Expression Evaluate(params Expression[] parameters)
+		internal Expression Evaluate(params Expression[] parameters)
 		{
 			if (parameters.Length != ArgumentCount)
 			{
@@ -35,6 +35,6 @@ namespace Titanium.Core.Functions
 		}
 
 		protected abstract Expression InnerEvaluate(params Expression[] parameters);
-		public abstract string ToString(List<Expression> parameters);
+		internal abstract string ToString(List<Expression> parameters);
 	}
 }

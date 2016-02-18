@@ -7,7 +7,7 @@ namespace Titanium.Core.Reducer
 {
 	internal static class Expressionizer
 	{
-		internal static Expression ToExpression(IEvaluatable thing)
+		internal static Expression ToExpression(Evaluatable thing)
 		{
 			if (thing is Expression)
 			{

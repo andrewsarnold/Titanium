@@ -11,7 +11,7 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class Exponent : Function
 	{
-		public Exponent()
+		internal Exponent()
 			: base("^", 2, FixType.MidFix)
 		{
 		}
@@ -116,7 +116,7 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(left, right);
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			// Special case for square root
 			var powerAsComponent = Componentizer.ToComponent(parameters[1]);
@@ -132,12 +132,12 @@ namespace Titanium.Core.Functions.Implementations
 			return string.Format("{0}^{1}", ToString(parameters[0]), ToString(parameters[1]));
 		}
 
-		private static Expression Evaluate(ExpressionList leftNumber, IEvaluatable right)
+		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right)
 		{
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(e, Expressionizer.ToExpression(right)).Evaluate()).ToList()));
 		}
 
-		private static string ToString(IEvaluatable expression)
+		private static string ToString(Evaluatable expression)
 		{
 			if (expression is DualComponentExpression)
 			{

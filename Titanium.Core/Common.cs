@@ -7,7 +7,7 @@ namespace Titanium.Core
 {
 	internal static class Common
 	{
-		public static bool IsFunction(IEvaluatable evaluatable, out FunctionComponent function)
+		internal static bool IsFunction(Evaluatable evaluatable, out FunctionComponent function)
 		{
 			var component = Componentizer.ToComponent(evaluatable);
 			if (component is FunctionComponent)
@@ -20,12 +20,12 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsNumber(IEvaluatable evaluatable, out Number number)
+		internal static bool IsNumber(Evaluatable evaluatable, out Number number)
 		{
 			return IsNumber(Componentizer.ToComponent(evaluatable), out number);
 		}
 
-		internal static bool IsIntegerFraction(IEvaluatable evaluatable, out IntegerFraction fraction)
+		internal static bool IsIntegerFraction(Evaluatable evaluatable, out IntegerFraction fraction)
 		{
 			var component = Componentizer.ToComponent(evaluatable);
 			if (component is IntegerFraction)
@@ -49,12 +49,12 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsFloat(IEvaluatable evaluatable, out Number number)
+		internal static bool IsFloat(Evaluatable evaluatable, out Number number)
 		{
 			return IsNumber(evaluatable, out number) && number is Float;
 		}
 
-		internal static bool IsConstant(IEvaluatable expression, out Number value)
+		internal static bool IsConstant(Evaluatable expression, out Number value)
 		{
 			var factor = Factorizer.ToFactor(expression);
 			if (factor is AlphabeticFactor)
@@ -72,7 +72,7 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsList(IEvaluatable input, out ExpressionList output)
+		internal static bool IsList(Evaluatable input, out ExpressionList output)
 		{
 			var factor = Factorizer.ToFactor(input);
 			if (factor is ExpressionList)

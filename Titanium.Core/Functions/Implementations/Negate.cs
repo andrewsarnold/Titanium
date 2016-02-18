@@ -9,7 +9,7 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class Negate : Function
 	{
-		public Negate()
+		internal Negate()
 			: base("⁻", 1)
 		{
 		}
@@ -39,7 +39,7 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("⁻{0}",
 				parameters[0] is DualComponentExpression

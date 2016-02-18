@@ -47,7 +47,7 @@
     <Compile Include="Functions\Implementations\NaturalLog.cs" />
     <Compile Include="Functions\Implementations\Negate.cs" />
     <Compile Include="Functions\Implementations\SquareRoot.cs" />
-    <Compile Include="IEvaluatable.cs" />
+    <Compile Include="Evaluatable.cs" />
     <Compile Include="Functions\Implementations\Factorial.cs" />
     <Compile Include="Functions\Function.cs" />
     <Compile Include="Components\FunctionComponent.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Reducer\Componentizer.cs" />
     <Compile Include="Reducer\Expressionizer.cs" />
     <Compile Include="Reducer\Factorizer.cs" />
+    <Compile Include="Evaluator.cs" />
     <Compile Include="Tokens\ExpressionListToken.cs" />
     <Compile Include="Tokens\OperatorAssociativity.cs" />
     <Compile Include="Tokens\OperatorExtensions.cs" />

@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Titanium.Core;
 using Titanium.Core.Functions;
 using Titanium.Wpf.Symbols;
-using Expression = Titanium.Core.Expressions.Expression;
 
 namespace Titanium.Wpf
 {
@@ -86,7 +86,7 @@ namespace Titanium.Wpf
 				string result;
 				try
 				{
-					result = Expression.ParseExpression(InputBox.Text).Evaluate().ToString();
+					result = Evaluator.Evaluate(InputBox.Text);
 				}
 				catch (Exception ex)
 				{

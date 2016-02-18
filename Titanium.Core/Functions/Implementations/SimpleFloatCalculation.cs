@@ -12,7 +12,7 @@ namespace Titanium.Core.Functions.Implementations
 	{
 		private readonly Func<double, double> _function;
 
-		public SimpleFloatCalculation(string name, Func<double, double> function)
+		internal SimpleFloatCalculation(string name, Func<double, double> function)
 			: base(name, 1)
 		{
 			_function = function;
@@ -59,7 +59,7 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("{0}({1})", Name, string.Join(",", parameters));
 		}
