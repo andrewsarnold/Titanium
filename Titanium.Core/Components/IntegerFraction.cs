@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Resources;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
@@ -250,6 +251,11 @@ namespace Titanium.Core.Components
 			return Denominator == 1
 				? Expressionizer.ToExpression(new NumericFactor(new Integer(Numerator)))
 				: Expressionizer.ToExpression(this);
+		}
+
+		internal IntegerFraction Inverse
+		{
+			get { return new IntegerFraction(Denominator, Numerator); }
 		}
 
 		private Float ValueAsFloat()

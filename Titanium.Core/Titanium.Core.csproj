@@ -36,6 +36,8 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\ComponentList.cs" />
+    <Compile Include="Components\ComponentListFactor.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Functions\FixType.cs" />
