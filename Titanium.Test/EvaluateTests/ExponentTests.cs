@@ -52,5 +52,17 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("3.5 ^ 0", "1.");
 		}
+
+		[TestMethod]
+		public void ConstantRaisedToZeroIsOne()
+		{
+			Common.EvaluateAndAssert("e ^ 0", "1");
+		}
+
+		[TestMethod]
+		public void ConstantRaisedToOneIsItself()
+		{
+			Common.EvaluateAndAssert("e ^ 1", "e");
+		}
 	}
 }
