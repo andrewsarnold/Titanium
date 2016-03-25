@@ -48,6 +48,8 @@ namespace Titanium.Core.Components
 		{
 			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
 
+			// TODO: If any components are a two-factor component, split it out and put the factors into the main list
+
 			// Loop through all combinations of two factors
 			// If two factors can reduce, add to output list and remove from input list
 			// Continue until no reductions are possible
@@ -104,6 +106,26 @@ namespace Titanium.Core.Components
 
 		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
 		{
+			// If any alphabetic factors are identical, convert to exponent
+			if (leftFactor.Factor is AlphabeticFactor && rightFactor.Factor is AlphabeticFactor)
+			{
+				var leftAlpha = (AlphabeticFactor)leftFactor.Factor;
+				var rightAlpha = (AlphabeticFactor)rightFactor.Factor;
+
+				if (leftAlpha.Value.Equals(rightAlpha.Value))
+				{
+					var shouldPower = leftFactor.IsInNumerator && rightFactor.IsInNumerator;
+					if (shouldPower)
+					{
+						expression = new SingleComponentExpression(new FunctionComponent("^", new List<Expression> { Expressionizer.ToExpression(leftAlpha), NumberToExpression(new Integer(2)) }));
+						return true;
+					}
+
+					expression = NumberToExpression(new Integer(1));
+					return true;
+				}
+			}
+
 			var left = Expressionizer.ToExpression(leftFactor.Factor);
 			var right = Expressionizer.ToExpression(rightFactor.Factor);
 

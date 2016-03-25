@@ -32,7 +32,7 @@ namespace Titanium.WinConsole
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ex.Message.PadLeft(24, ' '));
 				}
 			}
 		}
