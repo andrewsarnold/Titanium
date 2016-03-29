@@ -15,6 +15,6 @@
 		<ScrollViewer Grid.Row="1">
 			<StackPanel Orientation="Vertical" Name="History" />
 		</ScrollViewer>
-		<TextBox Grid.Row="2" Name="InputBox" KeyDown="InputKeyDown" />
+		<TextBox Grid.Row="2" Name="InputBox" KeyDown="InputKeyDown" Style="{StaticResource MonoFontStyle}" />
     </Grid>
 </Window>
