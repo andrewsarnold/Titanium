@@ -10,20 +10,20 @@ namespace Titanium.Core.Functions
 	{
 		internal readonly string Name;
 		internal readonly int ArgumentCount;
-		internal readonly bool IsPostFix;
+		internal readonly FixType FixType;
 
-		protected Function(string name, int argumentCount, bool isPostFix = false)
+		protected Function(string name, int argumentCount, FixType fixType = FixType.PostFix)
 		{
-			IsPostFix = isPostFix;
+			FixType = fixType;
 			Name = name;
 			ArgumentCount = argumentCount;
 		}
 
-		public Expression Evaluate(List<Expression> parameters)
+		internal Expression Evaluate(params Expression[] parameters)
 		{
-			if (parameters.Count != ArgumentCount)
+			if (parameters.Length != ArgumentCount)
 			{
-				throw new WrongArgumentCountException(Name, ArgumentCount, parameters.Count);
+				throw new WrongArgumentCountException(Name, ArgumentCount, parameters.Length);
 			}
 
 			return InnerEvaluate(parameters);
@@ -34,7 +34,7 @@ namespace Titanium.Core.Functions
 			return Expressionizer.ToExpression(new FunctionComponent(this, new List<Expression>(parameters)));
 		}
 
-		protected abstract Expression InnerEvaluate(List<Expression> parameters);
-		public abstract string ToString(List<Expression> parameters);
+		protected abstract Expression InnerEvaluate(params Expression[] parameters);
+		internal abstract string ToString(List<Expression> parameters);
 	}
 }

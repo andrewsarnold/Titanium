@@ -1,5 +1,7 @@
-﻿using Titanium.Core.Components;
+﻿using System.Collections.Generic;
+using Titanium.Core.Components;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
@@ -11,7 +13,7 @@ namespace Titanium.Core.Expressions
 		private readonly Component _rightComponent;
 		private readonly bool _isAdd;
 
-		public DualComponentExpression(Component leftComponent, Component rightComponent, bool isAdd)
+		internal DualComponentExpression(Component leftComponent, Component rightComponent, bool isAdd)
 		{
 			_isAdd = isAdd;
 			_leftComponent = leftComponent;
@@ -23,8 +25,21 @@ namespace Titanium.Core.Expressions
 			return string.Format("{0}{1}{2}", _leftComponent, _isAdd ? "+" : "-", _rightComponent);
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
+			// Combine natural log functions
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+
+			if (Common.IsFunction(_leftComponent, out leftFunction) && Common.IsFunction(_rightComponent, out rightFunction))
+			{
+				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
+				{
+					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd));
+					return new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
+				}
+			}
+
 			var left = _leftComponent.Evaluate();
 			var right = _rightComponent.Evaluate();
 
@@ -60,6 +75,18 @@ namespace Titanium.Core.Expressions
 				return new SingleComponentExpression(_isAdd
 					? leftNumber + rightFraction
 					: leftNumber - rightFraction);
+			}
+
+			if (Common.IsNumber(left, out leftNumber) && leftNumber.IsZero)
+			{
+				return _isAdd
+					? Expressionizer.ToExpression(right)
+					: new Negate().Evaluate(Expressionizer.ToExpression(right));
+			}
+
+			if (Common.IsNumber(right, out rightNumber) && rightNumber.IsZero)
+			{
+				return Expressionizer.ToExpression(right);
 			}
 
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);

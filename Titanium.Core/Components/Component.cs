@@ -1,9 +1,6 @@
-﻿using Titanium.Core.Expressions;
-
-namespace Titanium.Core.Components
+﻿namespace Titanium.Core.Components
 {
-	internal abstract class Component : IEvaluatable
+	internal abstract class Component : Evaluatable
 	{
-		public abstract Expression Evaluate();
 	}
 }

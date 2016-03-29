@@ -7,42 +7,50 @@ namespace Titanium.Test.EvaluateTests
 	public class LogarithmTests
 	{
 		[TestMethod]
-		public void NaturalLogTest()
+		public void LogTenOfTenIsOne()
 		{
-			Common.EvaluateAndAssert("ln(1)", "0");
-			Common.EvaluateAndAssert("ln(e)", "1");
-			Common.EvaluateAndAssert("ln(e^2)", "2");
-			Common.EvaluateAndAssert("ln(e^⁻5)", "⁻5");
-			Common.EvaluateAndAssert("ln(0)", "⁻∞");
-			Common.AssertThrows<NonRealResultException>("ln(⁻1)");
-			Common.EvaluateAndAssert("ln(1.3)", "0.262364");
-			Common.EvaluateAndAssert("ln(1/2)", "⁻ln(2)");
-			Common.EvaluateAndAssert("ln(√(2))", "ln(2)/2");
-			Common.EvaluateAndAssert("ln(e/2)", "1-ln(2)");
-			Common.EvaluateAndAssert("ln(e/5)", "1-ln(5)");
-			Common.EvaluateAndAssert("ln(3e/5)", "ln(3/5)+1");
-			Common.EvaluateAndAssert("ln(6)-ln(4)", "ln(3/2)");
-			Common.EvaluateAndAssert("ln(6)+ln(4)", "ln(24)");
-			Common.EvaluateAndAssert("ln(6)*ln(4)", "2*ln(6)*ln(2)");
-			Common.EvaluateAndAssert("ln(6)/ln(4)", "ln(6)/(2*ln(2))");
-			Common.EvaluateAndAssert("ln(6)^ln(4)", "ln(6)^(2*ln(2))");
+			Common.EvaluateAndAssert("log(10)", "1");
 		}
 
 		[TestMethod]
-		public void LogTenTest()
+		public void LogTenOfOneHundredIsTwo()
 		{
-			Common.EvaluateAndAssert("log(10)", "1");
 			Common.EvaluateAndAssert("log(100)", "2");
-			Common.EvaluateAndAssert("log(3)", "ln(3)/ln(10)");
+		}
+
+		[TestMethod]
+		public void LogTenOfIntegerReducesByLn()
+		{
+			Common.EvaluateAndAssert("log(3)", "ln(3)/(ln(10))");
+		}
+
+		[TestMethod]
+		public void LogTenOfNegativeIntegerIsNonReal()
+		{
 			Common.AssertThrows<NonRealResultException>("log(⁻1)");
+		}
+
+		[TestMethod]
+		public void LogTenOfIntegerFractionExpands()
+		{
 			Common.EvaluateAndAssert("log(2/5)", "⁻ln(5/2)/(ln(10))");
+		}
+
+		[TestMethod]
+		public void LogTenDivisionExpands()
+		{
 			Common.EvaluateAndAssert("log(6)/log(4)", "ln(6)/(2*ln(2))");
 		}
 
 		[TestMethod]
-		public void MixedLogTest()
+		public void NaturalLogOverLogTen()
 		{
 			Common.EvaluateAndAssert("ln(6)/log(4)", "ln(10)*ln(6)/(2*ln(2))");
+		}
+
+		[TestMethod]
+		public void NaturalLogMinusLogTen()
+		{
 			Common.EvaluateAndAssert("ln(6)-log(4)", "ln(6)-2*ln(2)/(ln(10))");
 		}
 	}

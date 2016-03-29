@@ -9,12 +9,12 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class Factorial : Function
 	{
-		public Factorial()
-			: base("!", 1, true)
+		internal Factorial()
+			: base("!", 1, FixType.PreFix)
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
 
@@ -60,7 +60,7 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			var parameterAsFactor = Factorizer.ToFactor(parameters[0]);
 			var shouldWrap = parameterAsFactor is ExpressionFactor ||

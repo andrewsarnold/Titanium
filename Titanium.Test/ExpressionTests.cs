@@ -48,12 +48,12 @@ namespace Titanium.Test
 		[TestMethod]
 		public void IntegerFractionTest()
 		{
-			var f1 = new IntegerFraction(new Integer(1), new Integer(2));
-			var f2 = new IntegerFraction(new Integer(3), new Integer(5));
-			var f3 = new IntegerFraction(new Integer(4), new Integer(8));
-			var f4 = new IntegerFraction(new Integer(4), new Integer(2));
-			var f5 = new IntegerFraction(new Integer(-2), new Integer(3));
-			var f6 = new IntegerFraction(new Integer(-1), new Integer(6));
+			var f1 = new IntegerFraction(1, 2);
+			var f2 = new IntegerFraction(3, 5);
+			var f3 = new IntegerFraction(4, 8);
+			var f4 = new IntegerFraction(4, 2);
+			var f5 = new IntegerFraction(-2, 3);
+			var f6 = new IntegerFraction(-1, 6);
 
 			Assert.AreEqual("1/2", f1.ToString());
 			Assert.AreEqual("3/5", f2.ToString());

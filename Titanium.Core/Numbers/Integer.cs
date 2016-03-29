@@ -1,8 +1,10 @@
-﻿namespace Titanium.Core.Numbers
+﻿using System;
+
+namespace Titanium.Core.Numbers
 {
 	internal class Integer : Number
 	{
-		public readonly int Value;
+		internal readonly int Value;
 
 		internal Integer(int value)
 		{
@@ -14,7 +16,7 @@
 			return Value.ToString().Replace("-", "⁻");
 		}
 
-		protected override double ValueAsFloat()
+		internal override double ValueAsFloat()
 		{
 			return Value;
 		}
@@ -24,13 +26,16 @@
 			get { return Value < 0; }
 		}
 
+		internal override bool IsZero
+		{
+			get { return Value == 0; }
+		}
+
 		internal static Integer Zero { get { return new Integer(0); } }
 
-		internal static Integer GreatestCommonDivisor(Integer a, Integer b)
+		internal static int LeastCommonMultiple(int a, int b)
 		{
-			return b.Value == 0
-				? a
-				: GreatestCommonDivisor(b, Mod(a, b));
+			return Math.Abs(a * b) / GreatestCommonDivisor(a, b);
 		}
 
 		internal static int GreatestCommonDivisor(int a, int b)
@@ -38,11 +43,6 @@
 			return b == 0
 				? a
 				: GreatestCommonDivisor(b, a % b);
-		}
-
-		private static Integer Mod(Integer a, Integer b)
-		{
-			return new Integer(a.Value % b.Value);
 		}
 	}
 }

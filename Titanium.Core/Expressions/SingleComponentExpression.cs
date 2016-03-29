@@ -6,7 +6,7 @@ namespace Titanium.Core.Expressions
 	{
 		internal readonly Component Component;
 
-		public SingleComponentExpression(Component component)
+		internal SingleComponentExpression(Component component)
 		{
 			Component = component;
 		}
@@ -16,7 +16,7 @@ namespace Titanium.Core.Expressions
 			return Component.ToString();
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			return Component.Evaluate();
 		}

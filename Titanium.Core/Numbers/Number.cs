@@ -1,10 +1,11 @@
 ﻿using System;
 using Titanium.Core.Components;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
 {
-	public abstract class Number
+	internal abstract class Number
 	{
 		public static Number operator +(Number left, Number right)
 		{
@@ -18,6 +19,11 @@ namespace Titanium.Core.Numbers
 
 		public static Number operator ^(Number left, Number right)
 		{
+			if (right.IsNegative)
+			{
+				throw new NonRealResultException();
+			}
+
 			return Evaluate(left, right, Math.Pow);
 		}
 
@@ -38,6 +44,82 @@ namespace Titanium.Core.Numbers
 			return Evaluate(left, right, (x, y) => x / y);
 		}
 
+		public static Component operator *(IntegerFraction left, Number right)
+		{
+			if (right is Float)
+			{
+				return new SingleFactorComponent(new NumericFactor(left * (Float)right));
+			}
+
+			return left * (Integer)right;
+		}
+
+		public static Component operator /(IntegerFraction left, Number right)
+		{
+			if (right is Float)
+			{
+				return new SingleFactorComponent(new NumericFactor(left / (Float)right));
+			}
+
+			return left / (Integer)right;
+		}
+
+		public static Component operator ^(IntegerFraction left, Number right)
+		{
+			if (right.IsNegative)
+			{
+				throw new NonRealResultException();
+			}
+
+			if (right is Float)
+			{
+				return new SingleFactorComponent(new NumericFactor(left ^ (Float)right));
+			}
+
+			return left ^ (Integer)right;
+		}
+
+		public static Component operator *(Number left, IntegerFraction right)
+		{
+			if (left is Float)
+			{
+				return new SingleFactorComponent(new NumericFactor((Float)left * right));
+			}
+
+			return (Integer)left * right;
+		}
+
+		public static Component operator /(Number left, IntegerFraction right)
+		{
+			if (left is Float)
+			{
+				return new SingleFactorComponent(new NumericFactor((Float)left / right));
+			}
+
+			return (Integer)left / right;
+		}
+
+		public static Component operator ^(Number left, IntegerFraction right)
+		{
+			if (right.IsNegative)
+			{
+				throw new NonRealResultException();
+			}
+
+			if (left is Float)
+			{
+				return new SingleFactorComponent(new NumericFactor((Float)left ^ right));
+			}
+
+			return ((Integer)left) ^ right;
+		}
+
+		internal static bool IsWholeNumber(Number n)
+		{
+			if (n is Integer) return true;
+			return Float.IsWholeNumber((Float)n);
+		}
+
 		private static Number Evaluate(Number left, Number right, Func<double, double, double> operation)
 		{
 			var leftInteger = left as Integer;
@@ -51,7 +133,8 @@ namespace Titanium.Core.Numbers
 			return new Float(operation(left.ValueAsFloat(), right.ValueAsFloat()));
 		}
 
-		protected abstract double ValueAsFloat();
+		internal abstract double ValueAsFloat();
 		internal abstract bool IsNegative { get; }
+		internal abstract bool IsZero { get; }
 	}
 }

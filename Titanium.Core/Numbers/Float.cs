@@ -6,9 +6,9 @@ namespace Titanium.Core.Numbers
 {
 	internal class Float : Number
 	{
-		public readonly double Value;
+		internal readonly double Value;
 
-		public Float(double value)
+		internal Float(double value)
 		{
 			Value = value;
 		}
@@ -21,7 +21,7 @@ namespace Titanium.Core.Numbers
 				: string.Format("{0}.",value);
 		}
 
-		protected override double ValueAsFloat()
+		internal override double ValueAsFloat()
 		{
 			// Coerce to 0
 			return Math.Abs(Value) < Constants.Tolerance ? 0 : Value;
@@ -30,6 +30,11 @@ namespace Titanium.Core.Numbers
 		internal override bool IsNegative
 		{
 			get { return Value < 0; }
+		}
+
+		internal override bool IsZero
+		{
+			get { return Math.Abs(Value) < Constants.Tolerance; }
 		}
 
 		internal static bool IsWholeNumber(double f)

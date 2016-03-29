@@ -10,12 +10,12 @@ namespace Titanium.Core.Functions.Implementations
 {
 	internal class AbsoluteValue : Function
 	{
-		public AbsoluteValue()
+		internal AbsoluteValue()
 			: base("abs", 1)
 		{
 		}
 
-		protected override Expression InnerEvaluate(List<Expression> parameters)
+		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
 			var component = Componentizer.ToComponent(parameter);
@@ -60,7 +60,7 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
-		public override string ToString(List<Expression> parameters)
+		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("abs({0})", parameters[0]);
 		}

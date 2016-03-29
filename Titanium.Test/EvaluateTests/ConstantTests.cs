@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Titanium.Test.EvaluateTests
 {
+	[TestClass]
 	public class ConstantTests
 	{
 		[TestMethod]
@@ -40,6 +41,18 @@ namespace Titanium.Test.EvaluateTests
 		public void ETimesFloatIsExpanded()
 		{
 			Common.EvaluateAndAssert("e*1.", Math.E.ToString(CultureInfo.InvariantCulture));
+		}
+
+		[TestMethod]
+		public void ConstantTimesItselfIsSquared()
+		{
+			Common.EvaluateAndAssert("e*e", "e^2");
+		}
+
+		[TestMethod]
+		public void ConstantTimesItselfThreeTimesIsCubed()
+		{
+			Common.EvaluateAndAssert("e*e*e", "e^3");
 		}
 	}
 }

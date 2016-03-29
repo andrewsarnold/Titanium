@@ -1,6 +1,6 @@
 ﻿namespace Titanium.Core.Tokens
 {
-	public enum TokenType
+	internal enum TokenType
 	{
 		None,
 		Integer,

@@ -7,7 +7,7 @@ namespace Titanium.Core.Reducer
 {
 	internal static class Componentizer
 	{
-		internal static Component ToComponent(IEvaluatable thing)
+		internal static Component ToComponent(Evaluatable thing)
 		{
 			if (thing is Expression)
 			{
@@ -22,6 +22,11 @@ namespace Titanium.Core.Reducer
 			if (thing is Factor)
 			{
 				return ToComponent((Factor)thing);
+			}
+
+			if (thing is ComponentListFactor)
+			{
+				return ToComponent(((ComponentListFactor)thing).Factor);
 			}
 
 			throw new UnexpectedTypeException(thing.GetType());

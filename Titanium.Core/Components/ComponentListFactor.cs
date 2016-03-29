@@ -3,18 +3,15 @@ using Titanium.Core.Factors;
 
 namespace Titanium.Core.Components
 {
-	internal class SingleFactorComponent : Component
+	internal class ComponentListFactor : Evaluatable
 	{
-		internal readonly Factor Factor;
+		internal Factor Factor;
+		internal bool IsInNumerator;
 
-		internal SingleFactorComponent(Factor factor)
+		public ComponentListFactor(Factor factor, bool isInNumerator = true)
 		{
 			Factor = factor;
-		}
-
-		public override string ToString()
-		{
-			return Factor.ToString();
+			IsInNumerator = isInNumerator;
 		}
 
 		internal override Expression Evaluate()

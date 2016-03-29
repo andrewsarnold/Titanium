@@ -2,9 +2,9 @@
 
 namespace Titanium.Core.Tokens
 {
-	public static class OperatorExtensions
+	internal static class OperatorExtensions
 	{
-		public static int Precedence(this TokenType type)
+		internal static int Precedence(this TokenType type)
 		{
 			switch (type)
 			{
@@ -25,7 +25,7 @@ namespace Titanium.Core.Tokens
 			throw new UnexpectedTokenTypeException(type);
 		}
 
-		public static OperatorAssociativity Associativity(this TokenType type)
+		internal static OperatorAssociativity Associativity(this TokenType type)
 		{
 			switch (type)
 			{
@@ -44,7 +44,7 @@ namespace Titanium.Core.Tokens
 			throw new UnexpectedTokenTypeException(type);
 		}
 
-		public static bool IsOperator(this TokenType type)
+		internal static bool IsOperator(this TokenType type)
 		{
 			switch (type)
 			{
@@ -62,7 +62,7 @@ namespace Titanium.Core.Tokens
 			return false;
 		}
 
-		public static bool IsOperand(this TokenType type)
+		internal static bool IsOperand(this TokenType type)
 		{
 			switch (type)
 			{

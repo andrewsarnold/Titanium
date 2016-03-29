@@ -6,29 +6,29 @@ namespace Titanium.Core.Components
 {
 	internal class FunctionComponent : Component
 	{
-		private readonly Function _function;
-		private readonly List<Expression> _operands;
+		internal readonly Function Function;
+		internal readonly List<Expression> Operands;
 
-		public FunctionComponent(string name, List<Expression> operands)
+		internal FunctionComponent(string name, List<Expression> operands)
 		{
-			_function = FunctionRepository.Get(name);
-			_operands = operands;
+			Function = FunctionRepository.Get(name);
+			Operands = operands;
 		}
 
-		public FunctionComponent(Function function, List<Expression> operands)
+		internal FunctionComponent(Function function, List<Expression> operands)
 		{
-			_function = function;
-			_operands = operands;
+			Function = function;
+			Operands = operands;
 		}
 
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
-			return _function.Evaluate(_operands);
+			return Function.Evaluate(Operands.ToArray());
 		}
 		
 		public override string ToString()
 		{
-			return _function.ToString(_operands);
+			return Function.ToString(Operands);
 		}
 	}
 }

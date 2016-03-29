@@ -69,7 +69,13 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void SquareRootAlternativeName()
 		{
-			Common.EvaluateAndAssert("4/sqrt(2)", "4/√(2)");
+			Common.EvaluateAndAssert("sqrt(2)", "√(2)");
+		}
+
+		[TestMethod]
+		public void ExponentResolvesAsSqrt()
+		{
+			Common.EvaluateAndAssert("3^(1/2)", "√(3)");
 		}
 	}
 }

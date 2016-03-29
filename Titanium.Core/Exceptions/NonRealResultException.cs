@@ -4,7 +4,7 @@ namespace Titanium.Core.Exceptions
 {
 	internal class NonRealResultException : Exception
 	{
-		public NonRealResultException()
+		internal NonRealResultException()
 			: base("Non-real result")
 		{
 		}
