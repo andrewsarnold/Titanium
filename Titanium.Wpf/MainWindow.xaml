@@ -10,6 +10,7 @@
 		</Grid.RowDefinitions>
 		
 		<Menu Grid.Row="0">
+			<MenuItem Header="Common" Name="MenuCommon" />
 			<MenuItem Header="Insert" Name="MenuInsert" />
 		</Menu>
 		<ScrollViewer Grid.Row="1">

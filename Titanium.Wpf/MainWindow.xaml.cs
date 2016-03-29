@@ -20,8 +20,14 @@ namespace Titanium.Wpf
 
 		private void FillInsertMenu()
 		{
+			FillCommonMenu();
 			FillFunctionMenu();
 			FillSymbolMenu();
+		}
+
+		private void FillCommonMenu()
+		{
+			MenuCommon.Items.Add(SymbolMenuItem("⁻", "negative"));
 		}
 
 		private void FillFunctionMenu()
