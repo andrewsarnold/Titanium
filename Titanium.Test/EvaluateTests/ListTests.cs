@@ -58,5 +58,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("{}*3", "{}");
 		}
+
+		[TestMethod]
+		public void SquareRootOfList()
+		{
+			Common.EvaluateAndAssert("√({9,16,25})", "{3,4,5}");
+		}
 	}
 }

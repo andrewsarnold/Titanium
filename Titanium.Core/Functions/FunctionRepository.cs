@@ -17,7 +17,7 @@ namespace Titanium.Core.Functions
 			{ "cos", new SimpleFloatCalculation("cos", Math.Cos) },
 			{ "tan", new SimpleFloatCalculation("tan", Math.Tan) },
 			{ "√", new SquareRoot() },
-			{ "sqrt", new SimpleFloatCalculation("√", Math.Sqrt) },
+			{ "sqrt", new SquareRoot() },
 			{ "ceiling", new SimpleFloatCalculation("ceiling", Math.Ceiling) },
 			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
 			{ "abs", new AbsoluteValue() },
