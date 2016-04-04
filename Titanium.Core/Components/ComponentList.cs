@@ -36,6 +36,16 @@ namespace Titanium.Core.Components
 				return leftList.Union(rightList).ToList();
 			}
 
+			if (component is IntegerFraction)
+			{
+				var frac = (IntegerFraction)component;
+				return new List<ComponentListFactor>
+				{
+					new ComponentListFactor(new NumericFactor(new Integer(frac.Numerator))),
+					new ComponentListFactor(new NumericFactor(new Integer(frac.Denominator)), false)
+				};
+			}
+
 			return new List<ComponentListFactor> { new ComponentListFactor(Factorizer.ToFactor(component), isMultiply) };
 		}
 
@@ -191,6 +201,33 @@ namespace Titanium.Core.Components
 			{
 				expression = Expressionizer.ToExpression(Evaluate(leftFraction, rightFraction, leftFactor.IsInNumerator, rightFactor.IsInNumerator));
 				return true;
+			}
+
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+			// If there are two functions with the same operands that should cancel out, cancel them out
+			if (Common.IsFunction(left, out leftFunction) && Common.IsFunction(right, out rightFunction))
+			{
+				if (leftFunction.Function.Name == rightFunction.Function.Name &&
+					leftFunction.Operands.Count == rightFunction.Operands.Count)
+				{
+					for (var i = 0; i < leftFunction.Operands.Count; i++)
+					{
+						var leftOperand = leftFunction.Operands[i];
+						var rightOperand = rightFunction.Operands[i];
+
+						if (!leftOperand.ToString().Equals(rightOperand.ToString()))
+						{
+							break;
+						}
+
+						if (leftFactor.IsInNumerator != rightFactor.IsInNumerator)
+						{
+							expression = Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
+							return true;
+						}
+					}
+				}
 			}
 
 			expression = null;
