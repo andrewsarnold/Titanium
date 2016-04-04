@@ -46,9 +46,26 @@ namespace Titanium.Core.Components
 
 		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
 		{
-			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
+			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator));
 
-			// TODO: If any components are a two-factor component, split it out and put the factors into the main list
+			// If any components are a two-factor component, split it out and put the factors into the main list
+			var reducedEvaluated = new List<ComponentListFactor>();
+			foreach (var componentListFactor in evaluated)
+			{
+				if (Componentizer.ToComponent(componentListFactor.Factor) is ComponentList)
+				{
+					var list = (ComponentList)Componentizer.ToComponent(componentListFactor);
+					foreach (var listFactor in list.Factors)
+					{
+						listFactor.IsInNumerator = componentListFactor.IsInNumerator == listFactor.IsInNumerator;
+					}
+					reducedEvaluated.AddRange(list.Factors);
+				}
+				else
+				{
+					reducedEvaluated.Add(componentListFactor);
+				}
+			}
 
 			// Loop through all combinations of two factors
 			// If two factors can reduce, add to output list and remove from input list
@@ -66,17 +83,17 @@ namespace Titanium.Core.Components
 			var output = new List<ComponentListFactor>();
 			var reducedAny = false;
 
-			while (evaluated.Any())
+			while (reducedEvaluated.Any())
 			{
 				var reduced = false;
-				for (var i = 1; i < evaluated.Count; i++)
+				for (var i = 1; i < reducedEvaluated.Count; i++)
 				{
 					Expression e;
-					if (CanReduce(evaluated[0], evaluated[i], out e))
+					if (CanReduce(reducedEvaluated[0], reducedEvaluated[i], out e))
 					{
 						output.Add(new ComponentListFactor(Factorizer.ToFactor(e)));
-						evaluated.RemoveAt(i);
-						evaluated.RemoveAt(0);
+						reducedEvaluated.RemoveAt(i);
+						reducedEvaluated.RemoveAt(0);
 						i = 1;
 
 						reduced = true;
@@ -84,10 +101,10 @@ namespace Titanium.Core.Components
 					}
 				}
 
-				if (!reduced && evaluated.Any())
+				if (!reduced && reducedEvaluated.Any())
 				{
-					output.Add(evaluated[0]);
-					evaluated.RemoveAt(0);
+					output.Add(reducedEvaluated[0]);
+					reducedEvaluated.RemoveAt(0);
 				}
 			}
 
