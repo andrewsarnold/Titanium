@@ -1,5 +1,4 @@
-﻿using Titanium.Core.Components;
-using Titanium.Core.Expressions;
+﻿using Titanium.Core.Expressions;
 
 namespace Titanium.Core.Factors
 {
@@ -14,7 +13,9 @@ namespace Titanium.Core.Factors
 
 		public override string ToString()
 		{
-			return Expression.ToString();
+			return Expression is DualComponentExpression
+				? string.Format("({0})", Expression)
+				: Expression.ToString();
 		}
 
 		internal override Expression Evaluate()

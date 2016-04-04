@@ -1,6 +1,5 @@
 ﻿using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
-using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
@@ -19,37 +18,14 @@ namespace Titanium.Core.Components
 
 		public override string ToString()
 		{
-			return string.Format("{0}{1}{2}", ToString(LeftFactor),
+			return string.Format("{0}{1}{2}", LeftFactor,
 				IsMultiply ? "*" : "/",
-				ToString(RightFactor, !IsMultiply));
+				RightFactor);
 		}
 
 		internal override Expression Evaluate()
 		{
 			return new ComponentList(this).Evaluate();
-		}
-
-		private static string ToString(Evaluatable factor, bool isDenominator = false)
-		{
-			if (factor is ExpressionFactor)
-			{
-				var expression = Expressionizer.ToExpression(factor);
-				if (expression is DualComponentExpression)
-				{
-					return string.Format("({0})", expression);
-				}
-
-				var component = Componentizer.ToComponent(expression);
-				if (component is DualFactorComponent ||
-					component is ComponentList ||
-					component is IntegerFraction ||
-					(component is FunctionComponent && isDenominator))
-				{
-					return string.Format("({0})", component);
-				}
-			}
-
-			return factor.ToString();
 		}
 	}
 }

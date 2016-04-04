@@ -340,13 +340,14 @@ namespace Titanium.Core.Components
 			var numerators = Factors.Where(f => f.IsInNumerator).ToList();
 			var denominators = Factors.Where(f => !f.IsInNumerator).ToList();
 
+			// TODO: Sort each list
 			var numString = string.Join("*", numerators.Select(f => f.Factor));
 			var denomString = string.Join("*", denominators.Select(f => f.Factor));
 
 			if (numerators.Any() && denominators.Any())
 			{
 				return string.Format("{0}/{1}",
-					numerators.Count == 1 ? numString : string.Format("({0})", numString),
+					numString,
 					denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
 			}
 
@@ -357,7 +358,7 @@ namespace Titanium.Core.Components
 
 			if (denominators.Any())
 			{
-				return string.Format("1/({0})", denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
+				return string.Format("1/{0}", denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
 			}
 
 			throw new Exception("No components");

@@ -28,6 +28,7 @@ namespace Titanium.Core.Expressions
 		internal override Expression Evaluate()
 		{
 			// Combine natural log functions
+			// TODO: Move somewhere else
 			FunctionComponent leftFunction;
 			FunctionComponent rightFunction;
 
