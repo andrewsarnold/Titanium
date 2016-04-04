@@ -22,5 +22,15 @@ namespace Titanium.Core.Factors
 		{
 			return Expression.Evaluate();
 		}
+
+		public override int CompareTo(object obj)
+		{
+			if (obj is Expression)
+			{
+				return -1;
+			}
+
+			return 0;
+		}
 	}
 }

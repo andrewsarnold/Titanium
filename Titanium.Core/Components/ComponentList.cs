@@ -352,10 +352,9 @@ namespace Titanium.Core.Components
 
 		public override string ToString()
 		{
-			var numerators = Factors.Where(f => f.IsInNumerator).ToList();
-			var denominators = Factors.Where(f => !f.IsInNumerator).ToList();
+			var numerators = Factors.Where(f => f.IsInNumerator).OrderBy(f => f).ToList();
+			var denominators = Factors.Where(f => !f.IsInNumerator).OrderBy(f => f).ToList();
 
-			// TODO: Sort each list
 			var numString = string.Join("*", numerators.Select(f => f.Factor));
 			var denomString = string.Join("*", denominators.Select(f => f.Factor));
 
