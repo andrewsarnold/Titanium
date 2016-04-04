@@ -57,7 +57,7 @@ namespace Titanium.Core.Components
 		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
 		{
 			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
-			RemoveRedundantOnes(evaluated);
+			RemoveRedundantOnes(evaluated, true);
 
 			// If any components are a two-factor component, split it out and put the factors into the main list
 			var reducedEvaluated = new List<ComponentListFactor>();
@@ -129,20 +129,30 @@ namespace Titanium.Core.Components
 					: Expressionizer.ToExpression(new ComponentList(output));
 			}
 
-			RemoveRedundantOnes(output);
+			RemoveRedundantOnes(output, false);
 			return Reduce(output);
 		}
 
-		private static void RemoveRedundantOnes(List<ComponentListFactor> output)
+		private static void RemoveRedundantOnes(List<ComponentListFactor> output, bool integerOnly)
 		{
 			// Remove redundant 1s in numerator
 			if (output.Count(o => o.IsInNumerator) > 1)
 			{
-				output.RemoveAll(o => o.IsInNumerator && o.Factor is NumericFactor && ((NumericFactor)o.Factor).Number.IsOne);
+				output.RemoveAll(o =>
+					o.IsInNumerator &&
+					o.Factor is NumericFactor &&
+					(!integerOnly || ((NumericFactor)o.Factor).Number is Integer) &&
+					((NumericFactor)o.Factor).Number.IsOne
+				);
 			}
 
 			// Remove redundant 1s in denominator
-			output.RemoveAll(o => !o.IsInNumerator && o.Factor is NumericFactor && ((NumericFactor)o.Factor).Number.IsOne);
+			output.RemoveAll(o =>
+				!o.IsInNumerator &&
+				o.Factor is NumericFactor &&
+				(!integerOnly || ((NumericFactor)o.Factor).Number is Integer) &&
+				((NumericFactor)o.Factor).Number.IsOne
+			);
 		}
 
 		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
