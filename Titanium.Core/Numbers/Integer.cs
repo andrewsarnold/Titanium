@@ -31,6 +31,11 @@ namespace Titanium.Core.Numbers
 			get { return Value == 0; }
 		}
 
+		internal override bool IsOne
+		{
+			get { return Value == 1; }
+		}
+
 		internal static Integer Zero { get { return new Integer(0); } }
 
 		internal static int LeastCommonMultiple(int a, int b)

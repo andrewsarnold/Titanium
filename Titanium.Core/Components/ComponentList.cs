@@ -127,6 +127,15 @@ namespace Titanium.Core.Components
 					? Expressionizer.ToExpression(output[0])
 					: Expressionizer.ToExpression(new ComponentList(output));
 			}
+
+			// Remove redundant 1s in numerator
+			if (output.Count(o => o.IsInNumerator) > 1)
+			{
+				output.RemoveAll(o => o.IsInNumerator && o.Factor is NumericFactor && ((NumericFactor)o.Factor).Number.IsOne);
+			}
+
+			// Remove redundant 1s in denominator
+			output.RemoveAll(o => !o.IsInNumerator && o.Factor is NumericFactor && ((NumericFactor)o.Factor).Number.IsOne);
 			
 			return Reduce(output);
 		}

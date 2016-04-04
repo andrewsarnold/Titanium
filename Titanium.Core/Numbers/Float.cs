@@ -37,6 +37,11 @@ namespace Titanium.Core.Numbers
 			get { return Math.Abs(Value) < Constants.Tolerance; }
 		}
 
+		internal override bool IsOne
+		{
+			get { return Math.Abs(Value - 1) < Constants.Tolerance; }
+		}
+
 		internal static bool IsWholeNumber(double f)
 		{
 			return Math.Abs(f % 1) < Constants.Tolerance ||

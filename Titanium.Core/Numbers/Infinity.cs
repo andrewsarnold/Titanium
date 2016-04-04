@@ -26,6 +26,11 @@
 			get { return false; }
 		}
 
+		internal override bool IsOne
+		{
+			get { return false; }
+		}
+
 		public override string ToString()
 		{
 			return _isNegative ? "⁻∞" : "∞";
