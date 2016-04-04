@@ -56,7 +56,8 @@ namespace Titanium.Core.Components
 
 		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
 		{
-			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator));
+			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
+			RemoveRedundantOnes(evaluated);
 
 			// If any components are a two-factor component, split it out and put the factors into the main list
 			var reducedEvaluated = new List<ComponentListFactor>();
@@ -128,6 +129,12 @@ namespace Titanium.Core.Components
 					: Expressionizer.ToExpression(new ComponentList(output));
 			}
 
+			RemoveRedundantOnes(output);
+			return Reduce(output);
+		}
+
+		private static void RemoveRedundantOnes(List<ComponentListFactor> output)
+		{
 			// Remove redundant 1s in numerator
 			if (output.Count(o => o.IsInNumerator) > 1)
 			{
@@ -136,8 +143,6 @@ namespace Titanium.Core.Components
 
 			// Remove redundant 1s in denominator
 			output.RemoveAll(o => !o.IsInNumerator && o.Factor is NumericFactor && ((NumericFactor)o.Factor).Number.IsOne);
-			
-			return Reduce(output);
 		}
 
 		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
