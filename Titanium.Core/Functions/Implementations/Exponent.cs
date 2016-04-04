@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
@@ -31,6 +32,18 @@ namespace Titanium.Core.Functions.Implementations
 				return Expressionizer.ToExpression(new NumericFactor(leftNumber ^ rightNumber));
 			}
 
+			// Anything raised to 1 is itself
+			if (Common.IsNumber(right, out rightNumber) && Math.Abs(rightNumber.ValueAsFloat() - 1) < Constants.Tolerance)
+			{
+				return left;
+			}
+
+			// Anything raised to 0 is 1
+			if (Common.IsNumber(right, out rightNumber) && Math.Abs(rightNumber.ValueAsFloat()) < Constants.Tolerance)
+			{
+				return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
+			}
+			
 			ExpressionList leftList;
 			ExpressionList rightList;
 
