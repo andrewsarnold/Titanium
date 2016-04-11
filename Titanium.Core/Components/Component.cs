@@ -1,7 +1,6 @@
 ﻿namespace Titanium.Core.Components
 {
-	internal abstract class Component
+	internal abstract class Component : Evaluatable
 	{
-		internal abstract Component Evaluate();
 	}
 }

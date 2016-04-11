@@ -3,9 +3,9 @@ using Titanium.Core.Exceptions;
 
 namespace Titanium.Core.Expressions
 {
-	public abstract class Expression
+	internal abstract class Expression : Evaluatable
 	{
-		public static Expression ParseExpression(string input)
+		internal static Expression ParseExpression(string input)
 		{
 			try
 			{
@@ -16,7 +16,5 @@ namespace Titanium.Core.Expressions
 				throw new SyntaxErrorException(e);
 			}
 		}
-
-		public abstract Expression Evaluate();
 	}
 }

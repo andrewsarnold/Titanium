@@ -1,40 +1,63 @@
 ﻿using System;
+using System.Resources;
 using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Components
 {
 	internal class IntegerFraction : Component
 	{
-		internal readonly bool IsNegative;
-		internal readonly int Numerator;
-		internal readonly int Denominator;
+		internal bool IsNegative { get; private set; }
+		internal int Numerator { get; private set; }
+		internal int Denominator { get; private set; }
 
 		internal IntegerFraction(Integer value)
 		{
-			Numerator = value.Value;
-			Denominator = 1;
+			Ctor(value.Value, 1);
+		}
+
+		internal IntegerFraction(int numerator, int denominator)
+		{
+			Ctor(numerator, denominator);
 		}
 
 		internal IntegerFraction(Integer numerator, Integer denominator)
 		{
-			if (denominator.Value == 0)
+			Ctor(numerator.Value, denominator.Value);
+		}
+
+		private IntegerFraction(int value)
+		{
+			Ctor(value, 1);
+		}
+
+		private IntegerFraction(Integer numerator, int denominator)
+		{
+			Ctor(numerator.Value, denominator);
+		}
+
+		private void Ctor(int numerator, int denominator)
+		{
+			if (denominator == 0)
 			{
 				throw new DivideByZeroException();
 			}
 
 			var gcd = Integer.GreatestCommonDivisor(numerator, denominator);
 
-			IsNegative = Math.Sign(numerator.Value) * Math.Sign(denominator.Value) < 0;
+			IsNegative = Math.Sign(numerator) * Math.Sign(denominator) < 0;
 
-			Numerator = Math.Abs(numerator.Value / gcd.Value) * (IsNegative ? -1 : 1);
-			Denominator = Math.Abs(denominator.Value / gcd.Value);
+			Numerator = Math.Abs(numerator / gcd) * (IsNegative ? -1 : 1);
+			Denominator = Math.Abs(denominator / gcd);
 		}
 
 		public static IntegerFraction operator +(IntegerFraction left, IntegerFraction right)
 		{
-			var lcm = Math.Abs(left.Denominator * right.Denominator) / Integer.GreatestCommonDivisor(left.Denominator, right.Denominator);
+			var lcm = Integer.LeastCommonMultiple(left.Denominator, right.Denominator);
 
 			// calculate new left
 			var leftFactor = lcm / left.Denominator;
@@ -66,54 +89,73 @@ namespace Titanium.Core.Components
 			return new IntegerFraction(new Integer(left.Numerator * right.Denominator), new Integer(left.Denominator * right.Numerator));
 		}
 
-		public static IntegerFraction operator ^(IntegerFraction left, IntegerFraction right)
+		public static Component operator ^(IntegerFraction left, IntegerFraction right)
 		{
-			throw new NotImplementedException();
+			return left.Numerator == 0
+				? new IntegerFraction(0)
+				: Componentizer.ToComponent(new Exponent().Evaluate(Expressionizer.ToExpression(left), Expressionizer.ToExpression(right)));
 		}
 
 		public static IntegerFraction operator +(IntegerFraction left, Integer right)
 		{
-			return left + new IntegerFraction(right, new Integer(1));
+			return left + new IntegerFraction(right, 1);
 		}
 
 		public static IntegerFraction operator -(IntegerFraction left, Integer right)
 		{
-			return left - new IntegerFraction(right, new Integer(1));
+			return left - new IntegerFraction(right, 1);
 		}
 
 		public static IntegerFraction operator *(IntegerFraction left, Integer right)
 		{
-			return left * new IntegerFraction(right, new Integer(1));
+			return left * new IntegerFraction(right, 1);
 		}
 
 		public static IntegerFraction operator /(IntegerFraction left, Integer right)
 		{
-			return left / new IntegerFraction(right, new Integer(1));
+			return left / new IntegerFraction(right, 1);
 		}
 
-		public static IntegerFraction operator ^(IntegerFraction left, Integer right)
+		public static Component operator ^(IntegerFraction left, Integer right)
 		{
-			throw new NotImplementedException();
+			return new IntegerFraction(left.Numerator ^ right.Value, left.Denominator ^ right.Value);
 		}
 
 		public static IntegerFraction operator +(Integer left, IntegerFraction right)
 		{
-			return new IntegerFraction(left, new Integer(1)) + right;
+			return new IntegerFraction(left, 1) + right;
 		}
 
 		public static IntegerFraction operator -(Integer left, IntegerFraction right)
 		{
-			return new IntegerFraction(left, new Integer(1)) - right;
+			return new IntegerFraction(left, 1) - right;
 		}
 
 		public static IntegerFraction operator *(Integer left, IntegerFraction right)
 		{
-			return new IntegerFraction(left, new Integer(1)) * right;
+			return new IntegerFraction(left, 1) * right;
 		}
 
 		public static IntegerFraction operator /(Integer left, IntegerFraction right)
 		{
-			return new IntegerFraction(left, new Integer(1)) / right;
+			return new IntegerFraction(left, 1) / right;
+		}
+
+		public static Component operator ^(Integer left, IntegerFraction right)
+		{
+			if (right.IsNegative)
+			{
+				throw new NonRealResultException();
+			}
+
+			var rawResult = Math.Pow(left.Value, right.ValueAsFloat().Value);
+
+			if (Float.IsWholeNumber(rawResult))
+			{
+				return new IntegerFraction((int)rawResult);
+			}
+
+			return Componentizer.ToComponent(new Exponent().Evaluate(Expressionizer.ToExpression(new NumericFactor(left)), Expressionizer.ToExpression(right)));
 		}
 
 		public static Number operator +(IntegerFraction left, Float right)
@@ -138,6 +180,11 @@ namespace Titanium.Core.Components
 
 		public static Number operator ^(IntegerFraction left, Float right)
 		{
+			if (right.IsNegative)
+			{
+				throw new NonRealResultException();
+			}
+
 			return left.ValueAsFloat() ^ right;
 		}
 
@@ -161,6 +208,11 @@ namespace Titanium.Core.Components
 			return (Number)(left / right.ValueAsFloat());
 		}
 
+		public static Number operator ^(Float left, IntegerFraction right)
+		{
+			return left ^ right.ValueAsFloat();
+		}
+
 		public static Component operator +(IntegerFraction left, Number right)
 		{
 			return right is Integer
@@ -175,16 +227,35 @@ namespace Titanium.Core.Components
 				: new SingleFactorComponent(new NumericFactor(left - (Float)right));
 		}
 
+		public static Component operator +(Number left, IntegerFraction right)
+		{
+			return left is Integer
+				? (Component)((Integer)left + right)
+				: new SingleFactorComponent(new NumericFactor((Float)left + right));
+		}
+
+		public static Component operator -(Number left, IntegerFraction right)
+		{
+			return left is Integer
+				? (Component)(((Integer)left) - right)
+				: new SingleFactorComponent(new NumericFactor((Float)left - right));
+		}
+
 		public override string ToString()
 		{
 			return string.Format("{0}{1}{2}", IsNegative ? "⁻" : string.Empty, Math.Abs(Numerator), Denominator == 1 ? string.Empty : string.Format("/{0}", Denominator));
 		}
 
-		internal override Component Evaluate()
+		internal override Expression Evaluate()
 		{
 			return Denominator == 1
-				? new SingleFactorComponent(new NumericFactor(new Integer(Numerator)))
-				: (Component)this;
+				? Expressionizer.ToExpression(new NumericFactor(new Integer(Numerator)))
+				: Expressionizer.ToExpression(this);
+		}
+
+		internal IntegerFraction Inverse
+		{
+			get { return new IntegerFraction(Denominator, Numerator); }
 		}
 
 		private Float ValueAsFloat()

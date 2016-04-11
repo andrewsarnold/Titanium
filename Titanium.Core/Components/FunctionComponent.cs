@@ -1,36 +1,34 @@
 ﻿using System.Collections.Generic;
-using Titanium.Core.Exceptions;
-using Titanium.Core.Factors;
+using Titanium.Core.Expressions;
 using Titanium.Core.Functions;
-using Titanium.Core.Numbers;
 
 namespace Titanium.Core.Components
 {
 	internal class FunctionComponent : Component
 	{
-		private readonly string _functionName;
-		private readonly List<object> _operands;
+		internal readonly Function Function;
+		internal readonly List<Expression> Operands;
 
-		public FunctionComponent(string functionName, List<object> operands)
+		internal FunctionComponent(string name, List<Expression> operands)
 		{
-			_functionName = functionName;
-			_operands = operands;
+			Function = FunctionRepository.Get(name);
+			Operands = operands;
 		}
 
-		internal override Component Evaluate()
+		internal FunctionComponent(Function function, List<Expression> operands)
 		{
-			return FunctionRepository.Evaluate(_functionName, _operands);
+			Function = function;
+			Operands = operands;
+		}
+
+		internal override Expression Evaluate()
+		{
+			return Function.Evaluate(Operands.ToArray());
 		}
 		
 		public override string ToString()
 		{
-			// Special formats
-			if (_functionName == "!")
-			{
-				return string.Format("({0})!", _operands[0]);
-			}
-
-			return string.Format("{0}({1})", _functionName, string.Join(",", _operands));
+			return Function.ToString(Operands);
 		}
 	}
 }

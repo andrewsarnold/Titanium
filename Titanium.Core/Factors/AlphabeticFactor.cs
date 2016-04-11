@@ -1,4 +1,6 @@
-﻿using Titanium.Core.Numbers;
+﻿using System;
+using Titanium.Core.Expressions;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Factors
 {
@@ -16,11 +18,19 @@ namespace Titanium.Core.Factors
 			return Value;
 		}
 
-		internal override Factor Evaluate()
+		internal override Expression Evaluate()
 		{
-			return Constants.IsNamedConstant(Value)
-				? (Factor)new NumericFactor(new Float(Constants.Get(Value)))
-				: this;
+			return Expressionizer.ToExpression(this);
+		}
+
+		public override int CompareTo(object obj)
+		{
+			if (obj is AlphabeticFactor)
+			{
+				return String.Compare(Value, ((AlphabeticFactor)obj).Value, StringComparison.Ordinal);
+			}
+
+			return 0;
 		}
 	}
 }

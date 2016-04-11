@@ -1,7 +1,8 @@
 ﻿namespace Titanium.Core.Tokens
 {
-	public enum OperatorAssociativity
+	internal enum OperatorAssociativity
 	{
+		Irrelevant,
 		Left,
 		Right
 	}

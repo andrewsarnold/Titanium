@@ -2,7 +2,7 @@
 {
 	internal sealed class UndefinedExpression : Expression
 	{
-		public override Expression Evaluate()
+		internal override Expression Evaluate()
 		{
 			return this;
 		}

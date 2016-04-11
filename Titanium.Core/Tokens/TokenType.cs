@@ -1,21 +1,27 @@
 ﻿namespace Titanium.Core.Tokens
 {
-	public enum TokenType
+	internal enum TokenType
 	{
 		None,
-		Number,
+		Integer,
+		Float,
 		Function,
 		Letter,
+		Negate,
 		OpenParenthesis,
 		CloseParenthesis,
+		OpenBrace,
+		CloseBrace,
 		Period,
 		Comma,
 		Plus,
 		Minus,
-		Negative,
 		Multiply,
 		Divide,
 		Exponent,
-		Factorial
+		Factorial,
+		Root,
+		Space,
+		ExpressionList
 	}
 }

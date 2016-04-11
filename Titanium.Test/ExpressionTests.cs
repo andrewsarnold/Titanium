@@ -32,7 +32,7 @@ namespace Titanium.Test
 		[TestMethod]
 		public void FactorDoubleTest()
 		{
-			var factor = Factor.GetNumericFactor(new Token(TokenType.Number, "2.03"));
+			var factor = Factor.GetFloatFactor(new Token(TokenType.Float, "2.03"));
 			Assert.IsTrue(factor.Number is Float);
 			Assert.AreEqual(2.03, ((Float)factor.Number).Value);
 		}
@@ -40,7 +40,7 @@ namespace Titanium.Test
 		[TestMethod]
 		public void FactorIntegerTest()
 		{
-			var factor = Factor.GetNumericFactor(new Token(TokenType.Number, "⁻44"));
+			var factor = Factor.GetIntegerFactor(new Token(TokenType.Integer, "⁻44"));
 			Assert.IsTrue(factor.Number is Integer);
 			Assert.AreEqual(-44, ((Integer)factor.Number).Value);
 		}
@@ -48,12 +48,12 @@ namespace Titanium.Test
 		[TestMethod]
 		public void IntegerFractionTest()
 		{
-			var f1 = new IntegerFraction(new Integer(1), new Integer(2));
-			var f2 = new IntegerFraction(new Integer(3), new Integer(5));
-			var f3 = new IntegerFraction(new Integer(4), new Integer(8));
-			var f4 = new IntegerFraction(new Integer(4), new Integer(2));
-			var f5 = new IntegerFraction(new Integer(-2), new Integer(3));
-			var f6 = new IntegerFraction(new Integer(-1), new Integer(6));
+			var f1 = new IntegerFraction(1, 2);
+			var f2 = new IntegerFraction(3, 5);
+			var f3 = new IntegerFraction(4, 8);
+			var f4 = new IntegerFraction(4, 2);
+			var f5 = new IntegerFraction(-2, 3);
+			var f6 = new IntegerFraction(-1, 6);
 
 			Assert.AreEqual("1/2", f1.ToString());
 			Assert.AreEqual("3/5", f2.ToString());

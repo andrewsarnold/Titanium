@@ -2,19 +2,19 @@
 
 namespace Titanium.Core.Exceptions
 {
-	public class SyntaxErrorException : Exception
+	internal class SyntaxErrorException : Exception
 	{
-		public SyntaxErrorException(Exception innerException)
+		internal SyntaxErrorException(Exception innerException)
 			: base("Syntax error", innerException)
 		{
 		}
 
-		public SyntaxErrorException(string message)
+		internal SyntaxErrorException(string message)
 			: base(message)
 		{
 		}
 
-		public SyntaxErrorException(string message, params object[] args)
+		internal SyntaxErrorException(string message, params object[] args)
 			: base(string.Format(message, args))
 		{
 		}

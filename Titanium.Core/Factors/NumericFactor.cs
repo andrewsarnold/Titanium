@@ -1,4 +1,7 @@
-﻿using Titanium.Core.Numbers;
+﻿using Titanium.Core.Components;
+using Titanium.Core.Expressions;
+using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Factors
 {
@@ -16,9 +19,19 @@ namespace Titanium.Core.Factors
 			return Number.ToString();
 		}
 
-		internal override Factor Evaluate()
+		internal override Expression Evaluate()
 		{
-			return new NumericFactor(Number);
+			return Expressionizer.ToExpression(new NumericFactor(Number));
+		}
+
+		public override int CompareTo(object obj)
+		{
+			if (obj is Expression || obj is Component || obj is ExpressionFactor)
+			{
+				return -1;
+			}
+
+			return 0;
 		}
 	}
 }

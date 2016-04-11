@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions;
+using Titanium.Core.Reducer;
 using Titanium.Core.Tokens;
 
 namespace Titanium.Core.Expressions
@@ -17,17 +18,21 @@ namespace Titanium.Core.Expressions
 			return ParsePostfix(postfix);
 		}
 
-		private static IEnumerable<Token> CreatePostfixTokenList(IEnumerable<Token> tokens)
+		private static IEnumerable<Token> CreatePostfixTokenList(List<Token> tokens)
 		{
+			tokens = InsertImpliedMultiplication(tokens);
+
 			// https://en.wikipedia.org/wiki/Shunting-yard_algorithm
 
 			var outputQueue = new List<Token>();
 			var stack = new Stack<Token>();
 
-			foreach (var currentToken in tokens)
+			for (var index = 0; index < tokens.Count; index++)
 			{
+				var currentToken = tokens[index];
+
 				// If the token is a number, then add it to the output queue.
-				if (currentToken.Type == TokenType.Number || currentToken.Type == TokenType.Letter)
+				if (currentToken.Type.IsOperand())
 				{
 					outputQueue.Add(currentToken);
 				}
@@ -35,7 +40,14 @@ namespace Titanium.Core.Expressions
 				// If the token is a function token, then push it onto the stack.
 				else if (currentToken.Type == TokenType.Function)
 				{
-					stack.Push(currentToken);
+					if (FunctionRepository.Get(currentToken.Value).FixType == FixType.PreFix)
+					{
+						outputQueue.Add(currentToken);
+					}
+					else
+					{
+						stack.Push(currentToken);
+					}
 				}
 
 				// If the token is a function argument separator (e.g., a comma):
@@ -83,7 +95,7 @@ namespace Titanium.Core.Expressions
 								var o2Precedence = topType.Precedence();
 
 								if ((o1Associativity == OperatorAssociativity.Left && o1Precedence <= o2Precedence) ||
-									(o1Associativity == OperatorAssociativity.Right && o1Precedence < o2Precedence))
+								    (o1Associativity == OperatorAssociativity.Right && o1Precedence < o2Precedence))
 								{
 									outputQueue.Add(stack.Pop());
 									somethingChanged = true;
@@ -118,13 +130,42 @@ namespace Titanium.Core.Expressions
 					stack.Pop();
 
 					// If the token at the top of the stack is a function token, pop it onto the output queue.
-					if (stack.Any() && stack.Peek().Type == TokenType.Letter)
+					if (stack.Any() && stack.Peek().Type == TokenType.Function)
 					{
 						outputQueue.Add(stack.Pop());
 					}
 
 					// If the stack runs out without finding a left parenthesis,
 					// then there are mismatched parentheses.
+				}
+
+				else if (currentToken.Type == TokenType.OpenBrace)
+				{
+					var indexOfCloseBrace = tokens.FindLastIndex(t => t.Type == TokenType.CloseBrace);
+					var tokenSubstring = tokens.Skip(index + 1).Take(indexOfCloseBrace - index - 1).ToList();
+
+					if (tokenSubstring.Count > 0)
+					{
+						var operands = ParseCommaSeparatedList(tokenSubstring).ToList();
+						var list = new ExpressionListToken(new ExpressionList(operands));
+						outputQueue.Add(list);
+					}
+					else
+					{	// Special case for empty lists
+						outputQueue.Add(new ExpressionListToken(new ExpressionList(new List<Expression>())));
+					}
+
+					index = indexOfCloseBrace;
+				}
+
+				else if (currentToken.Type == TokenType.CloseBrace)
+				{
+					throw new SyntaxErrorException("Mismatched braces");
+				}
+
+				else
+				{
+					throw new SyntaxErrorException("Unexpected token", currentToken.Value);
 				}
 			}
 
@@ -146,29 +187,77 @@ namespace Titanium.Core.Expressions
 			return outputQueue;
 		}
 
+		private static List<Token> InsertImpliedMultiplication(List<Token> tokens)
+		{
+			var insertPoints = new List<int>();
+			for (var i = 0; i < tokens.Count - 1; i++)
+			{
+				if (IsImpliedMultiplication(tokens[i], tokens[i + 1]))
+				{
+					insertPoints.Add(i + 1);
+				}
+			}
+
+			insertPoints.Reverse();
+			foreach (var point in insertPoints)
+			{
+				tokens.Insert(point, new Token(TokenType.Multiply, "*"));
+			}
+
+			return tokens;
+		}
+
+		private static bool IsImpliedMultiplication(Token left, Token right)
+		{
+			return
+				(left.Type.IsOperand() && right.Type == TokenType.OpenParenthesis) ||
+				(left.Type == TokenType.CloseParenthesis && right.Type.IsOperand()) ||
+				(left.Type == TokenType.CloseParenthesis && right.Type == TokenType.OpenParenthesis) ||
+				(left.Type.IsOperand() && right.Type == TokenType.Function && FunctionRepository.Get(right.Value).FixType == FixType.PostFix) ||
+				(left.Type.IsOperand() && right.Type.IsOperand());
+		}
+
 		private static Expression ParsePostfix(IEnumerable<Token> tokens)
 		{
-			var stack = new Stack<object>();
+			var stack = new Stack<Evaluatable>();
 			foreach (var token in tokens)
 			{
 				if (token.Type.IsOperand())
 				{
-					stack.Push(ParseOperand(token));
+					if (token is ExpressionListToken)
+					{
+						stack.Push(((ExpressionListToken)token).List);
+					}
+					else
+					{
+						stack.Push(new SingleFactorComponent(ParseOperand(token)));
+					}
 				}
 				else if (token.Type == TokenType.Function)
 				{
-					var operands = stack.Reverse().ToList();
-					stack.Clear();
+					var operands = new List<Expression>();
+					var operatorCount = FunctionRepository.Get(token.Value).ArgumentCount;
+					for (var i = 0; i < operatorCount; i++)
+					{
+						operands.Add(Expressionizer.ToExpression(stack.Pop()));
+					}
+
+					operands.Reverse();
 					stack.Push(new FunctionComponent(token.Value, operands));
 				}
 				else if (token.Type.IsOperator())
 				{
-					object parent;
+					Evaluatable parent;
 
-					if (token.Type == TokenType.Factorial)
+					if (token.Type == TokenType.Factorial || token.Type == TokenType.Negate)
 					{
 						var argument = stack.Pop();
-						parent = new FunctionComponent("!", new List<object> { argument });
+						parent = new FunctionComponent(token.Value, new List<Expression> { Expressionizer.ToExpression(argument) });
+					}
+					else if (token.Type == TokenType.Root)
+					{
+						var argument = stack.Pop();
+						parent = new FunctionComponent("√", new List<Expression> { Expressionizer.ToExpression(argument) });
 					}
 					else
 					{
@@ -179,17 +268,11 @@ namespace Titanium.Core.Expressions
 						{
 							case TokenType.Plus:
 							case TokenType.Minus:
-								parent = new DualComponentExpression(Reducer.GetComponent(left), Reducer.GetComponent(right), token.Type == TokenType.Plus);
+								parent = new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), token.Type == TokenType.Plus);
 								break;
 							case TokenType.Multiply:
 							case TokenType.Divide:
-							case TokenType.Exponent:
-								parent = new DualFactorComponent(Reducer.GetFactor(left), Reducer.GetFactor(right),
-									token.Type == TokenType.Multiply
-										? ComponentType.Multiply
-										: token.Type == TokenType.Divide
-											? ComponentType.Divide
-											: ComponentType.Exponent);
+								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), token.Type == TokenType.Multiply);
 								break;
 							default:
 								throw new SyntaxErrorException("Token {0} not expected", token.Value);
@@ -229,14 +312,84 @@ namespace Titanium.Core.Expressions
 		{
 			switch (token.Type)
 			{
-				case TokenType.Number:
-					return Factor.GetNumericFactor(token);
+				case TokenType.Integer:
+					return Factor.GetIntegerFactor(token);
+
+				case TokenType.Float:
+					return Factor.GetFloatFactor(token);
 
 				case TokenType.Letter:
 					return new AlphabeticFactor(token.Value);
 			}
 
 			throw new SyntaxErrorException("Couldn't parse operand {0}", token.Value);
+		}
+
+		private static IEnumerable<Expression> ParseCommaSeparatedList(IReadOnlyList<Token> tokens)
+		{
+			var currentElement = new List<Token>();
+			var tokenGroups = new List<List<Token>>();
+
+			for (var i = 0; i < tokens.Count; i++)
+			{
+				var token = tokens[i];
+				if (token.Type == TokenType.Comma)
+				{
+					tokenGroups.Add(currentElement.Select(e => e).ToList()); // move a copy of the list, not a reference
+					currentElement.Clear();
+				}
+
+				else if (token.Type == TokenType.OpenBrace)
+				{
+					var indexOfMatchingBrace = IndexOfMatchingBrace(tokens, i);
+					var tokenSubList = tokens.Skip(i + 1).Take(indexOfMatchingBrace - i - 1).ToList();
+					var innerList = ParseCommaSeparatedList(tokenSubList).ToList();
+					var list = new ExpressionListToken(new ExpressionList(innerList));
+					currentElement.Add(list);
+					i = indexOfMatchingBrace;
+				}
+
+				else if (token.Type == TokenType.CloseBrace)
+				{
+					throw new SyntaxErrorException("Mismatched braces");
+				}
+
+				else
+				{
+					currentElement.Add(token);
+				}
+			}
+
+			tokenGroups.Add(currentElement.Select(e => e).ToList()); // move a copy of the list
+			currentElement.Clear();
+
+			return tokenGroups.Select(tokenGroup => ParsePostfix(CreatePostfixTokenList(tokenGroup)));
+		}
+
+		private static int IndexOfMatchingBrace(IReadOnlyList<Token> tokens, int indexOfOpeningBrace)
+		{
+			var depth = 0;
+			for (var i = indexOfOpeningBrace + 1; i < tokens.Count; i++)
+			{
+				if (tokens[i].Type == TokenType.OpenBrace)
+				{
+					depth++;
+				}
+
+				if (tokens[i].Type == TokenType.CloseBrace)
+				{
+					if (depth > 0)
+					{
+						depth--;
+					}
+					else
+					{
+						return i;
+					}
+				}
+			}
+
+			throw new SyntaxErrorException("Mismatched braces");
 		}
 	}
 }

@@ -1,35 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Titanium.Core.Numbers
 {
 	internal class Integer : Number
 	{
-		public readonly int Value;
+		internal readonly int Value;
 
 		internal Integer(int value)
 		{
 			Value = value;
 		}
-
+		
 		public override string ToString()
 		{
 			return Value.ToString().Replace("-", "⁻");
 		}
 
-		protected override double ValueAsFloat()
+		internal override double ValueAsFloat()
 		{
 			return Value;
 		}
 
-		internal static Integer GreatestCommonDivisor(Integer a, Integer b)
+		internal override bool IsNegative
 		{
-			return b.Value == 0
-				? a
-				: GreatestCommonDivisor(b, Mod(a, b));
+			get { return Value < 0; }
+		}
+
+		internal override bool IsZero
+		{
+			get { return Value == 0; }
+		}
+
+		internal override bool IsOne
+		{
+			get { return Value == 1; }
+		}
+
+		internal static Integer Zero { get { return new Integer(0); } }
+
+		internal static int LeastCommonMultiple(int a, int b)
+		{
+			return Math.Abs(a * b) / GreatestCommonDivisor(a, b);
 		}
 
 		internal static int GreatestCommonDivisor(int a, int b)
@@ -37,11 +48,6 @@ namespace Titanium.Core.Numbers
 			return b == 0
 				? a
 				: GreatestCommonDivisor(b, a % b);
-		}
-
-		private static Integer Mod(Integer a, Integer b)
-		{
-			return new Integer(a.Value % b.Value);
 		}
 	}
 }

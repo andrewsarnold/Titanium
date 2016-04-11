@@ -1,28 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using Titanium.Core.Components;
+using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Functions
 {
-	internal static class FunctionRepository
+	public static class FunctionRepository
 	{
 		private static readonly Dictionary<string, Function> Funcs = new Dictionary<string, Function>
 		{
+			{ "⁻", new Negate() },
+			{ "^", new Exponent() },
 			{ "!", new Factorial() },
 			{ "sin", new Trigonometric("sin", Math.Sin) },
 			{ "cos", new Trigonometric("cos", Math.Cos) },
-			{ "tan", new Trigonometric("tan", Math.Tan) }
+			{ "tan", new Trigonometric("tan", Math.Tan) },
+			{ "√", new SquareRoot() },
+			{ "sqrt", new SquareRoot() },
+			{ "ceiling", new SimpleFloatCalculation("ceiling", Math.Ceiling) },
+			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
+			{ "abs", new AbsoluteValue() },
+			{ "ln", new NaturalLog() },
+			{ "log", new BaseTenLogarithm() }
 		};
 
-		internal static Component Evaluate(string name, List<object> parameters)
+		public static IEnumerable<string> AllNames
 		{
-			if (Funcs.ContainsKey(name))
+			get { return Funcs.Select(f => f.Key); }
+		}
+
+		internal static bool Contains(string name)
+		{
+			return Funcs.Any(f => f.Key == name);
+		}
+
+		internal static Function Get(string name)
+		{
+			if (Contains(name))
 			{
-				return Funcs[name].Evaluate(parameters);
+				return Funcs[name];
 			}
 
-			throw new NotImplementedException(name);
+			throw new FunctionNotDefinedException(name);
 		}
 	}
 }

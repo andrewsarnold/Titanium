@@ -1,11 +1,11 @@
 ﻿namespace Titanium.Core.Tokens
 {
-	public class Token
+	internal class Token
 	{
-		public TokenType Type { get; private set; }
-		public string Value { get; private set; }
+		internal TokenType Type { get; private set; }
+		internal string Value { get; private set; }
 
-		public Token(TokenType type, string value)
+		internal Token(TokenType type, string value)
 		{
 			Type = type;
 			Value = value;

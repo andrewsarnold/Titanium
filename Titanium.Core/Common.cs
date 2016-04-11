@@ -1,25 +1,91 @@
 ﻿using Titanium.Core.Components;
-using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
+using Titanium.Core.Reducer;
 
 namespace Titanium.Core
 {
 	internal static class Common
 	{
-		internal static bool IsNumber(Factor factor, out Number number)
+		internal static bool IsFunction(Evaluatable evaluatable, out FunctionComponent function)
 		{
-			if (factor is NumericFactor)
+			var component = Componentizer.ToComponent(evaluatable);
+			if (component is FunctionComponent)
 			{
-				number = ((NumericFactor)factor).Number;
+				function = (FunctionComponent)component;
 				return true;
 			}
 
-			number = null;
+			function = null;
 			return false;
 		}
 
-		internal static bool IsNumber(Component component, out Number number)
+		internal static bool IsNumber(Evaluatable evaluatable, out Number number)
+		{
+			return IsNumber(Componentizer.ToComponent(evaluatable), out number);
+		}
+
+		internal static bool IsIntegerFraction(Evaluatable evaluatable, out IntegerFraction fraction)
+		{
+			var component = Componentizer.ToComponent(evaluatable);
+			if (component is IntegerFraction)
+			{
+				fraction = (IntegerFraction)component;
+				return true;
+			}
+
+			var factor = Factorizer.ToFactor(evaluatable);
+			if (factor is NumericFactor)
+			{
+				var number = ((NumericFactor)factor).Number;
+				if (number is Integer)
+				{
+					fraction = new IntegerFraction((Integer)number);
+					return true;
+				}
+			}
+
+			fraction = null;
+			return false;
+		}
+
+		internal static bool IsFloat(Evaluatable evaluatable, out Number number)
+		{
+			return IsNumber(evaluatable, out number) && number is Float;
+		}
+
+		internal static bool IsConstant(Evaluatable expression, out Number value)
+		{
+			var factor = Factorizer.ToFactor(expression);
+			if (factor is AlphabeticFactor)
+			{
+				var name = ((AlphabeticFactor)factor).Value;
+
+				if (Constants.IsNamedConstant(name))
+				{
+					value = new Float(Constants.Get(name));
+					return true;
+				}
+			}
+
+			value = Integer.Zero;
+			return false;
+		}
+
+		internal static bool IsList(Evaluatable input, out ExpressionList output)
+		{
+			var factor = Factorizer.ToFactor(input);
+			if (factor is ExpressionList)
+			{
+				output = (ExpressionList)factor;
+				return true;
+			}
+
+			output = null;
+			return false;
+		}
+
+		private static bool IsNumber(Component component, out Number number)
 		{
 			if (component is SingleFactorComponent)
 			{
@@ -43,35 +109,6 @@ namespace Titanium.Core
 			}
 
 			number = null;
-			return false;
-		}
-
-		internal static bool IsIntegerFraction(Factor factor, out IntegerFraction fraction)
-		{
-			if (factor is ExpressionFactor)
-			{
-				var ef = (ExpressionFactor)factor;
-				var ex = ef.Expression;
-				if (ex is SingleComponentExpression)
-				{
-					var sce = (SingleComponentExpression)ex;
-					return IsIntegerFraction(sce.Component, out fraction);
-				}
-			}
-
-			fraction = null;
-			return false;
-		}
-
-		internal static bool IsIntegerFraction(Component component, out IntegerFraction fraction)
-		{
-			if (component is IntegerFraction)
-			{
-				fraction = (IntegerFraction)component;
-				return true;
-			}
-
-			fraction = null;
 			return false;
 		}
 	}

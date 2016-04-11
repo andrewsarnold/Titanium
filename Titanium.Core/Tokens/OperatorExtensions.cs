@@ -2,9 +2,9 @@
 
 namespace Titanium.Core.Tokens
 {
-	public static class OperatorExtensions
+	internal static class OperatorExtensions
 	{
-		public static int Precedence(this TokenType type)
+		internal static int Precedence(this TokenType type)
 		{
 			switch (type)
 			{
@@ -14,16 +14,18 @@ namespace Titanium.Core.Tokens
 				case TokenType.Multiply:
 				case TokenType.Divide:
 					return 3;
-				case TokenType.Exponent:
+				case TokenType.Root:
 					return 4;
-				case TokenType.Factorial:
+				case TokenType.Exponent:
 					return 5;
+				case TokenType.Factorial:
+					return 6;
 			}
 
 			throw new UnexpectedTokenTypeException(type);
 		}
 
-		public static OperatorAssociativity Associativity(this TokenType type)
+		internal static OperatorAssociativity Associativity(this TokenType type)
 		{
 			switch (type)
 			{
@@ -33,14 +35,16 @@ namespace Titanium.Core.Tokens
 				case TokenType.Divide:
 					return OperatorAssociativity.Left;
 				case TokenType.Exponent:
-				case TokenType.Factorial: // ?
 					return OperatorAssociativity.Right;
+				case TokenType.Factorial:
+				case TokenType.Root:
+					return OperatorAssociativity.Irrelevant;
 			}
 
 			throw new UnexpectedTokenTypeException(type);
 		}
 
-		public static bool IsOperator(this TokenType type)
+		internal static bool IsOperator(this TokenType type)
 		{
 			switch (type)
 			{
@@ -51,18 +55,21 @@ namespace Titanium.Core.Tokens
 				case TokenType.Exponent:
 				case TokenType.Function:
 				case TokenType.Factorial:
+				case TokenType.Root:
 					return true;
 			}
 
 			return false;
 		}
 
-		public static bool IsOperand(this TokenType type)
+		internal static bool IsOperand(this TokenType type)
 		{
 			switch (type)
 			{
-				case TokenType.Number:
+				case TokenType.Integer:
+				case TokenType.Float:
 				case TokenType.Letter:
+				case TokenType.ExpressionList:
 					return true;
 			}
 

@@ -60,40 +60,5 @@ namespace Titanium.Test
 			Assert.AreEqual("2", tokens[3].Value);
 			Assert.AreEqual(")", tokens[4].Value);
 		}
-
-		[TestMethod]
-		public void ConsolidateNegativeTest()
-		{
-			ConsolidateSingle("⁻2");
-		}
-
-		[TestMethod]
-		public void ConsolidateDecimalTest()
-		{
-			ConsolidateSingle("1.5");
-		}
-
-		[TestMethod]
-		public void ConsolidateTwoValuesTest()
-		{
-			var tokens = Tokenizer.Tokenize("2.0+⁻2");
-			tokens = Tokenizer.ConsolidateNumerics(tokens);
-			Assert.AreEqual(3, tokens.Count);
-			Assert.AreEqual("2.0", tokens[0].Value);
-			Assert.AreEqual(TokenType.Number, tokens[0].Type);
-			Assert.AreEqual("+", tokens[1].Value);
-			Assert.AreEqual(TokenType.Plus, tokens[1].Type);
-			Assert.AreEqual("⁻2", tokens[2].Value);
-			Assert.AreEqual(TokenType.Number, tokens[2].Type);
-		}
-
-		private void ConsolidateSingle(string value)
-		{
-			var tokens = Tokenizer.Tokenize(value);
-			tokens = Tokenizer.ConsolidateNumerics(tokens);
-			Assert.AreEqual(1, tokens.Count);
-			Assert.AreEqual(value, tokens[0].Value);
-			Assert.AreEqual(TokenType.Number, tokens[0].Type);
-		}
 	}
 }
