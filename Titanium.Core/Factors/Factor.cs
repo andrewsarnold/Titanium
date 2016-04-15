@@ -1,12 +1,9 @@
-﻿using System;
-using Titanium.Core.Components;
-using Titanium.Core.Expressions;
-using Titanium.Core.Numbers;
+﻿using Titanium.Core.Numbers;
 using Titanium.Core.Tokens;
 
 namespace Titanium.Core.Factors
 {
-	internal abstract class Factor : Evaluatable, IComparable
+	internal abstract class Factor : Evaluatable
 	{
 		internal static NumericFactor GetIntegerFactor(Token token)
 		{
@@ -19,7 +16,5 @@ namespace Titanium.Core.Factors
 			var stringVal = token.Value.Replace("⁻", "-");
 			return new NumericFactor(new Float(double.Parse(stringVal)));
 		}
-
-		public abstract int CompareTo(object obj);
 	}
 }

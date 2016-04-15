@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Functions;
 
@@ -25,7 +27,30 @@ namespace Titanium.Core.Components
 		{
 			return Function.Evaluate(Operands.ToArray());
 		}
-		
+
+		public override int CompareTo(object obj)
+		{
+			var other = obj as FunctionComponent;
+			if (other != null)
+			{
+				
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var fc = other as FunctionComponent;
+			if (fc != null)
+			{
+				return Function.Name == fc.Function.Name &&
+					   !fc.Operands.Where((t, i) => !t.Equals(fc.Operands[i])).Any();
+			}
+
+			return false;
+		}
+
 		public override string ToString()
 		{
 			return Function.ToString(Operands);

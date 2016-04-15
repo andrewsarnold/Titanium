@@ -31,6 +31,12 @@
 			get { return false; }
 		}
 
+		public override bool Equals(Number other)
+		{
+			var inf = other as Infinity;
+			return inf != null && _isNegative == inf.IsNegative;
+		}
+
 		public override string ToString()
 		{
 			return _isNegative ? "⁻∞" : "∞";

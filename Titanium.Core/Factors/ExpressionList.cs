@@ -29,5 +29,10 @@ namespace Titanium.Core.Factors
 		{
 			throw new System.NotImplementedException();
 		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

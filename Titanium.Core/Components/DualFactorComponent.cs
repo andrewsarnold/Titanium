@@ -1,4 +1,5 @@
-﻿using Titanium.Core.Expressions;
+﻿using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 
 namespace Titanium.Core.Components
@@ -26,6 +27,30 @@ namespace Titanium.Core.Components
 		internal override Expression Evaluate()
 		{
 			return new ComponentList(this).Evaluate();
+		}
+
+		public override int CompareTo(object obj)
+		{
+			var other = obj as DualFactorComponent;
+			if (other != null)
+			{
+				
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var dfc = other as DualFactorComponent;
+			if (dfc != null)
+			{
+				return LeftFactor.Equals(dfc.LeftFactor) &&
+				       RightFactor.Equals(dfc.RightFactor) &&
+				       IsMultiply == dfc.IsMultiply;
+			}
+
+			return false;
 		}
 	}
 }

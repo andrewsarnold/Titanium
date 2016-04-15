@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Titanium.Core.Components;
 using Titanium.Core.Expressions;
@@ -39,6 +39,16 @@ namespace Titanium.Core.Functions.Implementations
 					}
 					return Expressionizer.ToExpression(new FunctionComponent(Name, new List<Expression> { parameter }));
 				}
+			}
+
+			var component = Componentizer.ToComponent(operand);
+			if (component.Equals(new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(new AlphabeticFactor("π")),
+				new ComponentListFactor(new NumericFactor(new Integer(2)), false)
+			})))
+			{
+				
 			}
 
 			if (operand is NumericFactor)

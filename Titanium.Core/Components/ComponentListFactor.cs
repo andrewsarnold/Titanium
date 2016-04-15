@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 
 namespace Titanium.Core.Components
 {
-	internal class ComponentListFactor : Evaluatable, IComparable
+	internal class ComponentListFactor : Evaluatable
 	{
 		internal readonly Factor Factor;
 		internal bool IsInNumerator;
@@ -20,7 +20,7 @@ namespace Titanium.Core.Components
 			return Factor.Evaluate();
 		}
 
-		public int CompareTo(object obj)
+		public override int CompareTo(object obj)
 		{
 			if (obj is Factor)
 			{
@@ -32,7 +32,18 @@ namespace Titanium.Core.Components
 				return Factor.CompareTo(((ComponentListFactor)obj).Factor);
 			}
 
-			return 1;
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var clf = other as ComponentListFactor;
+			if (clf != null)
+			{
+				return IsInNumerator == clf.IsInNumerator && Factor.Equals(clf.Factor);
+			}
+
+			return false;
 		}
 	}
 }
