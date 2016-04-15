@@ -138,7 +138,8 @@ namespace Titanium.Core.Functions.Implementations
 				var frac = (IntegerFraction)powerAsComponent;
 				if (frac.Numerator == 1 && frac.Denominator == 2)
 				{
-					return string.Format("√({0})", ToString(parameters[0]));
+					var middle = ToString(parameters[0]);
+					return string.Format("√{0}{1}{2}", middle.StartsWith("(") ? string.Empty : "(", middle, middle.EndsWith(")") ? string.Empty : ")");
 				}
 			}
 
