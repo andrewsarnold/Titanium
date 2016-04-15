@@ -96,6 +96,18 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void TangentOfOneHalfTest()
+		{
+			Common.EvaluateAndAssert("tan(1/2)", "tan(1/2)");
+		}
+
+		[TestMethod]
+		public void TangentOfOneHalfFloatTest()
+		{
+			Common.EvaluateAndAssert("tan(1/2.)", ".54630248984379");
+		}
+
+		[TestMethod]
 		public void TangentOfPiTest()
 		{
 			Common.EvaluateAndAssert("tan(π)", "0");
@@ -105,6 +117,12 @@ namespace Titanium.Test.EvaluateTests
 		public void TangentOfPiOverTwoTest()
 		{
 			Common.EvaluateAndAssert("tan(π/2)", "undef");
+		}
+
+		[TestMethod]
+		public void TangentOfNegativePiOverTwoTest()
+		{
+			Common.EvaluateAndAssert("tan(⁻π/2)", "undef");
 		}
 
 		[TestMethod]

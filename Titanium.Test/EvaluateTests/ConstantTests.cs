@@ -22,13 +22,13 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void PiTimesIntegerIsNotExpanded()
 		{
-			Common.EvaluateAndAssert("π*2", "π*2");
+			Common.EvaluateAndAssert("π*2", "2*π");
 		}
 
 		[TestMethod]
 		public void ETimesIntegerIsNotExpanded()
 		{
-			Common.EvaluateAndAssert("e*2", "e*2");
+			Common.EvaluateAndAssert("e*2", "2*e");
 		}
 
 		[TestMethod]

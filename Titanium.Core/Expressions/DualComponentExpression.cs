@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Titanium.Core.Components;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
 using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
@@ -91,6 +92,30 @@ namespace Titanium.Core.Expressions
 			}
 
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
+		}
+
+		public override int CompareTo(object obj)
+		{
+			var other = obj as DualFactorComponent;
+			if (other != null)
+			{
+
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var dce = other as DualComponentExpression;
+			if (dce != null)
+			{
+				return _leftComponent.Equals(dce._leftComponent) &&
+				       _rightComponent.Equals(dce._rightComponent) &&
+				       _isAdd == dce._isAdd;
+			}
+
+			return false;
 		}
 	}
 }

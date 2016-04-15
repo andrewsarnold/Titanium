@@ -1,4 +1,5 @@
 ﻿using System;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Reducer;
 
@@ -25,12 +26,25 @@ namespace Titanium.Core.Factors
 
 		public override int CompareTo(object obj)
 		{
-			if (obj is AlphabeticFactor)
+			var alphabeticFactor = obj as AlphabeticFactor;
+			if (alphabeticFactor != null)
 			{
-				return String.Compare(Value, ((AlphabeticFactor)obj).Value, StringComparison.Ordinal);
+				return String.Compare(Value, alphabeticFactor.Value, StringComparison.Ordinal);
 			}
 
-			return 0;
+			var numericFactor = obj as NumericFactor;
+			if (numericFactor != null)
+			{
+				return 1;
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var af = other as AlphabeticFactor;
+			return af != null && Value == af.Value;
 		}
 	}
 }

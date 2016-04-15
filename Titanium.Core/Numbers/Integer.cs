@@ -36,6 +36,12 @@ namespace Titanium.Core.Numbers
 			get { return Value == 1; }
 		}
 
+		public override bool Equals(Number other)
+		{
+			var integer = other as Integer;
+			return integer != null && Value == integer.Value;
+		}
+
 		internal static Integer Zero { get { return new Integer(0); } }
 
 		internal static int LeastCommonMultiple(int a, int b)

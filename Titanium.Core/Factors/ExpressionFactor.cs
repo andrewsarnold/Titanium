@@ -32,5 +32,11 @@ namespace Titanium.Core.Factors
 
 			return 0;
 		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var ef = other as ExpressionFactor;
+			return ef != null && Expression.Equals(ef.Expression);
+		}
 	}
 }

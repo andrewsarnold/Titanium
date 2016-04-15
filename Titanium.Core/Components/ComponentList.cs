@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
 using Titanium.Core.Numbers;
@@ -17,7 +18,7 @@ namespace Titanium.Core.Components
 			Factors = GetComponents(component);
 		}
 
-		private ComponentList(List<ComponentListFactor> factors)
+		internal ComponentList(List<ComponentListFactor> factors)
 		{
 			Factors = factors;
 		}
@@ -52,6 +53,31 @@ namespace Titanium.Core.Components
 		internal override Expression Evaluate()
 		{
 			return Reduce(Factors);
+		}
+
+		public override int CompareTo(object obj)
+		{
+			var other = obj as ComponentList;
+			if (other != null)
+			{
+				if (Factors.Count < other.Factors.Count) return -1;
+				if (Factors.Count > other.Factors.Count) return 1;
+				return Factors.Select((t, x) => t.CompareTo(other.Factors[x])).FirstOrDefault(compResult => compResult != 0);
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var componentList = other as ComponentList;
+			if (componentList != null)
+			{
+				if (Factors.Count < componentList.Factors.Count || Factors.Count > componentList.Factors.Count) return false;
+				return !Factors.Where((t, i) => !t.Equals(componentList.Factors[i])).Any();
+			}
+
+			return false;
 		}
 
 		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)

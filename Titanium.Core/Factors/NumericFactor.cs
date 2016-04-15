@@ -33,5 +33,11 @@ namespace Titanium.Core.Factors
 
 			return 0;
 		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var nf = other as NumericFactor;
+			return nf != null && Number.Equals(nf.Number);
+		}
 	}
 }

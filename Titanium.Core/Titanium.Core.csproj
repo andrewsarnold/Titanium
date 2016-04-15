@@ -39,11 +39,12 @@
     <Compile Include="Components\ComponentList.cs" />
     <Compile Include="Components\ComponentListFactor.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
+    <Compile Include="Exceptions\IncomparableTypeException.cs" />
+    <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Functions\FixType.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Factors\ExpressionList.cs" />
-    <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Functions\Implementations\BaseTenLogarithm.cs" />
     <Compile Include="Functions\Implementations\Exponent.cs" />
     <Compile Include="Functions\Implementations\NaturalLog.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Factors\Factor.cs" />
     <Compile Include="Factors\NumericFactor.cs" />
     <Compile Include="Functions\Implementations\SimpleFloatCalculation.cs" />
+    <Compile Include="Functions\Implementations\Trigonometric.cs" />
     <Compile Include="Numbers\Float.cs" />
     <Compile Include="Numbers\Infinity.cs" />
     <Compile Include="Numbers\Integer.cs" />
