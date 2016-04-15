@@ -41,29 +41,14 @@ namespace Titanium.Core.Functions.Implementations
 				}
 			}
 
-			var component = Componentizer.ToComponent(operand);
-			if (component.Equals(new ComponentList(new List<ComponentListFactor>
-			{
-				new ComponentListFactor(new AlphabeticFactor("π")),
-				new ComponentListFactor(new NumericFactor(new Integer(2)), false)
-			})))
-			{
-				return Expressionizer.ToExpression(new NumericFactor(new Integer(0)));
-			}
-
+			// See if our input is any of the basic trig identities
+			var identityResult = TrigonometricIdentities.Get(Name, operand);
+			if (identityResult != null) return Expressionizer.ToExpression(identityResult);
+			
 			if (operand is NumericFactor)
 			{
 				var factor = (NumericFactor)operand;
-				if (factor.Number is Integer)
-				{
-					var number = (Integer)factor.Number;
-					var result = _function(number.Value);
-					if (IsInteger(result))
-					{
-						return Expressionizer.ToExpression(new NumericFactor(new Integer((int)result)));
-					}
-				}
-				else
+				if (factor.Number is Float)
 				{
 					var number = (Float)factor.Number;
 
