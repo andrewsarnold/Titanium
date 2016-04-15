@@ -48,7 +48,7 @@ namespace Titanium.Core.Functions.Implementations
 				new ComponentListFactor(new NumericFactor(new Integer(2)), false)
 			})))
 			{
-				
+				return Expressionizer.ToExpression(new NumericFactor(new Integer(0)));
 			}
 
 			if (operand is NumericFactor)
