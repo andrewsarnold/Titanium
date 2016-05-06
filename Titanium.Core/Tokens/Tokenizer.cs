@@ -64,7 +64,7 @@ namespace Titanium.Core.Tokens
 			}
 
 			// If it isn't immediately preceded by a word symbol (0-9, a-z, _) or a closing parenthesis, it must be a negation
-			return Regex.Replace(input, @"[^\w\s\)](\-)", "$1⁻");
+			return Regex.Replace(input, @"([^\w\s\)])\-", "$1⁻");
 
 			// Anything else is a syntax error!
 		}

@@ -106,5 +106,23 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("-(1+1)", "⁻2");
 		}
+
+		[TestMethod]
+		public void AddNegativeWithHyphen()
+		{
+			Common.EvaluateAndAssert("3+-1", "2");
+		}
+
+		[TestMethod]
+		public void MultiplyNegativeWithHyphen()
+		{
+			Common.EvaluateAndAssert("3*-1", "⁻3");
+		}
+
+		[TestMethod]
+		public void DivideNegativeWithHyphen()
+		{
+			Common.EvaluateAndAssert("3/-1", "⁻3");
+		}
 	}
 }
