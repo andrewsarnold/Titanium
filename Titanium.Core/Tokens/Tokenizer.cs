@@ -34,7 +34,6 @@ namespace Titanium.Core.Tokens
 
 		internal static List<Token> Tokenize(string input)
 		{
-			input = CleanNegatives(input);
 			var tokens = new List<Token>();
 			var startIndex = 0;
 
@@ -53,16 +52,6 @@ namespace Titanium.Core.Tokens
 			}
 
 			return ConvertFunctions(tokens).Where(t => t.Type != TokenType.Space).ToList();
-		}
-
-		private static string CleanNegatives(string input)
-		{
-			while (input.Contains("⁻⁻"))
-			{
-				input = input.Replace("⁻⁻", "");
-			}
-
-			return input;
 		}
 
 		private static Token FindNextToken(string input)

@@ -70,5 +70,17 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("⁻(⁻(⁻3))", "⁻3");
 		}
+
+		[TestMethod]
+		public void SimpleNegativeWithHyphen()
+		{
+			Common.EvaluateAndAssert("-1", "⁻1");
+		}
+
+		[TestMethod]
+		public void SubtractNegativeWithHyphen()
+		{
+			Common.EvaluateAndAssert("3--1", "4");
+		}
 	}
 }
