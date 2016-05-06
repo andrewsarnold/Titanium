@@ -82,5 +82,29 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("3--1", "4");
 		}
+
+		[TestMethod]
+		public void NegativeAlphabeticFactorWithHyphen()
+		{
+			Common.EvaluateAndAssert("-a", "⁻a");
+		}
+
+		[TestMethod]
+		public void NegativeConstantWithHyphen()
+		{
+			Common.EvaluateAndAssert("-e", "⁻e");
+		}
+
+		[TestMethod]
+		public void NegativeFunctionWithHyphen()
+		{
+			Common.EvaluateAndAssert("-sin(1)", "⁻sin(1)");
+		}
+
+		[TestMethod]
+		public void NegationOfEvaluatableExpressionWithIntegersWithHyphen()
+		{
+			Common.EvaluateAndAssert("-(1+1)", "⁻2");
+		}
 	}
 }
