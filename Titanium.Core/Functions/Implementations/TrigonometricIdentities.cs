@@ -56,6 +56,26 @@ namespace Titanium.Core.Functions.Implementations
 				new ComponentListFactor(new AlphabeticFactor("π")),
 				new ComponentListFactor(new NumericFactor(new Integer(2)), false)
 			})), new NumericFactor(new Integer(0))), // cos(pi/2) = 0
+
+			// - pi / 2
+			new TrigonometricIdentity("sin", new ExpressionFactor(new SingleComponentExpression(new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(Factorizer.ToFactor(
+					new FunctionComponent("⁻", new List<Expression>
+					{
+						new AlphabeticFactor("π").Evaluate()
+					}))),
+				new ComponentListFactor(new NumericFactor(new Integer(2)), false)
+			}))), new NumericFactor(new Integer(-1))), // sin(-pi/2) = -1
+			new TrigonometricIdentity("cos", new ExpressionFactor(new SingleComponentExpression(new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(Factorizer.ToFactor(
+					new FunctionComponent("⁻", new List<Expression>
+					{
+						new AlphabeticFactor("π").Evaluate()
+					}))),
+				new ComponentListFactor(new NumericFactor(new Integer(2)), false)
+			}))), new NumericFactor(new Integer(0))), // cos(-pi/2) = 0
 		};
 
 		public static Factor Get(string function, Factor input)
