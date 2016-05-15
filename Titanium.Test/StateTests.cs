@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Titanium.Core;
+using Titanium.Core.Exceptions;
 
 namespace Titanium.Test
 {
@@ -12,14 +14,39 @@ namespace Titanium.Test
 			var ev = new Evaluator();
 			ev.Evaluate("3.14");
 
-			var history = ev.Evaluate("ans(1)");
-			Assert.AreEqual("3.14", history);
+			EvaluateAndAssert(ev, "ans(1)", "3.14");
 
 			ev.Evaluate("4.0");
 			ev.Evaluate("7.4");
 
-			history = ev.Evaluate("ans(2)");
-			Assert.AreEqual("4.", history);
+			EvaluateAndAssert(ev, "ans(2)", "4.");
+		}
+
+		[TestMethod]
+		public void HistoryOutOfBoundsTest()
+		{
+			var ev = new Evaluator();
+			ev.Evaluate("3.14");
+
+			AssertThrows<DomainException>(ev, "ans(2)");
+		}
+		
+		private static void EvaluateAndAssert(Evaluator e, string input, string output)
+		{
+			Assert.AreEqual(output, e.Evaluate(input));
+		}
+
+		private static void AssertThrows<T>(Evaluator e, string input)
+		{
+			try
+			{
+				EvaluateAndAssert(e, input, string.Empty);
+				Assert.Fail();
+			}
+			catch (Exception ex)
+			{
+				Assert.IsTrue(ex.GetType() == typeof(T));
+			}
 		}
 	}
 }

@@ -29,6 +29,9 @@ namespace Titanium.Core
 			foreach (var match in matches.Cast<Match>())
 			{
 				var index = int.Parse(match.Groups[1].Value) - 1;
+				if (index == -1) index = 0; // "ans(0)" returns last answer, just like ans(1)
+				if (index > _history.Count - 1) continue; // out of bounds
+				
 				var result = string.Format("({0})", _history[index]);
 				input = input.Replace(match.Value, result);
 			}
