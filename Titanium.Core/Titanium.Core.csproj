@@ -42,6 +42,7 @@
     <Compile Include="Exceptions\IncomparableTypeException.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
+    <Compile Include="Exceptions\DomainException.cs" />
     <Compile Include="Functions\FixType.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Factors\ExpressionList.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Functions\Implementations\Trigonometric.cs" />
     <Compile Include="Functions\Implementations\TrigonometricIdentities.cs" />
     <Compile Include="Functions\Implementations\TrigonometricIdentity.cs" />
+    <Compile Include="Functions\ThrowDomainExceptionFunction.cs" />
     <Compile Include="Numbers\Float.cs" />
     <Compile Include="Numbers\Infinity.cs" />
     <Compile Include="Numbers\Integer.cs" />

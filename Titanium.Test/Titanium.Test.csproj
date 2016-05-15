@@ -84,6 +84,7 @@
     <Compile Include="PrintingTests\ImpliedMultiplicationTests.cs" />
     <Compile Include="PrintingTests\ExponentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateTests.cs" />
     <Compile Include="TokenizeTests.cs" />
   </ItemGroup>
   <ItemGroup>

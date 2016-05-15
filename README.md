@@ -12,7 +12,13 @@ An exploration of TDD and something to exercise the math parts of my brain befor
 
 Currently there are three ways to use Titanium:
 
-1. Directly invoking it from a C# library, with the syntax `Titanium.Core.Evaluator.Evaluate("input");`
+1. Directly invoking it from a C# library, with the syntax:
+
+ ```c#
+ var evaluator = new Titanium.Core.Evaluator;
+ var result = evaluator.Evaluate("input");
+ ```
+ 
 2. Using the Windows console application (best option for casual use)
 3. Using the Windows desktop application
 
