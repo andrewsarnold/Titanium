@@ -6,6 +6,8 @@ namespace Titanium.WinConsole
 {
 	public static class Program
 	{
+		private static Evaluator _evaluator;
+
 		private static readonly Dictionary<string, Action> SpecialActions = new Dictionary<string, Action>
 		{
 			{ string.Empty, () => { } },
@@ -15,6 +17,8 @@ namespace Titanium.WinConsole
 
 		public static void Main()
 		{
+			_evaluator = new Evaluator();
+
 			while (true)
 			{
 				Console.Write("> ");
@@ -28,7 +32,7 @@ namespace Titanium.WinConsole
 
 				try
 				{
-					Console.WriteLine(CleanOutput(Evaluator.Evaluate(input)).PadLeft(24, ' '));
+					Console.WriteLine(CleanOutput(_evaluator.Evaluate(input)).PadLeft(24, ' '));
 				}
 				catch (Exception ex)
 				{
