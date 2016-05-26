@@ -373,7 +373,9 @@ namespace Titanium.Core.Components
 		{
 			return result is IntegerFraction
 				? Expressionizer.ToExpression((IntegerFraction)result)
-				: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
+				: (result is Number
+					? Expressionizer.ToExpression(Componentizer.ToComponent(new NumericFactor((Number)result)))
+					: Expressionizer.ToExpression((SingleFactorComponent)result));
 		}
 
 		public override string ToString()
