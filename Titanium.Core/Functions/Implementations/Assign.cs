@@ -27,7 +27,7 @@ namespace Titanium.Core.Functions.Implementations
 			var key = ((AlphabeticFactor)variable).Value;
 			if (_variableMap.ContainsKey(key))
 			{
-				_variableMap[key] = parameters[0];
+				_variableMap[key] = parameters[0].Evaluate();
 			}
 			else
 			{
