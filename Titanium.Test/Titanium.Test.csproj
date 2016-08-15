@@ -73,6 +73,7 @@
     <Compile Include="EvaluateTests\NestedParenthesesTests.cs" />
     <Compile Include="EvaluateTests\RootTests.cs" />
     <Compile Include="EvaluateTests\CeilingTests.cs" />
+    <Compile Include="EvaluateTests\ScientificNotationTests.cs" />
     <Compile Include="EvaluateTests\SubractionTests.cs" />
     <Compile Include="EvaluateTests\SyntaxErrorTests.cs" />
     <Compile Include="EvaluateTests\TrigonometryTests.cs" />
