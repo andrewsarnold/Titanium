@@ -73,5 +73,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.AssertThrows<SyntaxErrorException>("5→^");
 		}
+
+		[TestMethod]
+		public void AssignmentIsEvaluated()
+		{
+			Common.EvaluateAndAssert("2+3→x", "5");
+		}
 	}
 }
