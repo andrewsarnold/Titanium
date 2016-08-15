@@ -12,7 +12,7 @@ namespace Titanium.Core.Tokens
 		private static readonly Dictionary<TokenType, Regex> TokenDefinitions = new Dictionary<TokenType, Regex>
 		{
 			{ TokenType.Integer, new Regex(@"^\d+$") },
-			{ TokenType.Float, new Regex(@"^(\d*\.\d+|\d+\.\d*)$") },
+			{ TokenType.Float, new Regex(@"^((\d*\.\d+|\d+\.\d*)(E\d+|)|\d+E\d)$") },
 			{ TokenType.Letter, new Regex(@"^[a-zA-ZΑ-ώ_]+[a-zA-ZΑ-ώ_\d]*$") },
 			{ TokenType.String, new Regex(@"^""[^""]*""$") },
 			{ TokenType.Negate, new Regex(@"^⁻$") },
