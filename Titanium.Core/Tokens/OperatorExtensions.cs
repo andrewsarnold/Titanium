@@ -20,6 +20,8 @@ namespace Titanium.Core.Tokens
 					return 5;
 				case TokenType.Factorial:
 					return 6;
+				case TokenType.Assign:
+					return 7;
 			}
 
 			throw new UnexpectedTokenTypeException(type);
@@ -33,6 +35,7 @@ namespace Titanium.Core.Tokens
 				case TokenType.Minus:
 				case TokenType.Multiply:
 				case TokenType.Divide:
+				case TokenType.Assign:
 					return OperatorAssociativity.Left;
 				case TokenType.Exponent:
 					return OperatorAssociativity.Right;
@@ -56,6 +59,7 @@ namespace Titanium.Core.Tokens
 				case TokenType.Function:
 				case TokenType.Factorial:
 				case TokenType.Root:
+				case TokenType.Assign:
 					return true;
 			}
 

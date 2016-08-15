@@ -21,6 +21,7 @@
 		Divide,
 		Exponent,
 		Factorial,
+		Assign,
 		Root,
 		Space,
 		ExpressionList
