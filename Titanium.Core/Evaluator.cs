@@ -8,16 +8,18 @@ namespace Titanium.Core
 	public class Evaluator
 	{
 		private readonly List<Expression> _history;
+		private readonly Dictionary<string, Expression> _variableMap; 
 
 		public Evaluator()
 		{
 			_history = new List<Expression>();
+			_variableMap = new Dictionary<string, Expression>();
 		}
 
 		public string Evaluate(string input)
 		{
 			input = ReplaceResultHistory(input);
-			var result = Expression.ParseExpression(input).Evaluate();
+			var result = Expression.ParseExpression(input, _variableMap).Evaluate();
 			_history.Insert(0, result);
 			return result.ToString();
 		}

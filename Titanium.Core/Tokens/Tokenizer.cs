@@ -28,6 +28,7 @@ namespace Titanium.Core.Tokens
 			{ TokenType.Divide, new Regex(@"^\/$") },
 			{ TokenType.Exponent, new Regex(@"^\^$") },
 			{ TokenType.Factorial, new Regex(@"^!$") },
+			{ TokenType.Assign, new Regex(@"^→$") },
 			{ TokenType.Root, new Regex(@"^√$") },
 			{ TokenType.Space, new Regex(@"^\s+$") },
 			{ TokenType.None, new Regex("^$") }

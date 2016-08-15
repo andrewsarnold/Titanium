@@ -54,6 +54,7 @@
     <Compile Include="EvaluateTests\AbsoluteValueTests.cs" />
     <Compile Include="EvaluateTests\AdditionTests.cs" />
     <Compile Include="EvaluateTests\ArithmeticReductionTests.cs" />
+    <Compile Include="EvaluateTests\AssignTests.cs" />
     <Compile Include="EvaluateTests\ImpliedMultiplicationTests.cs" />
     <Compile Include="EvaluateTests\Common.cs" />
     <Compile Include="EvaluateTests\ComplexArithmeticTests.cs" />

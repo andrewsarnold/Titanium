@@ -56,6 +56,7 @@ namespace Titanium.Core.Tokens
 				case TokenType.Function:
 				case TokenType.Factorial:
 				case TokenType.Root:
+				case TokenType.Assign:
 					return true;
 			}
 

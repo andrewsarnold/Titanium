@@ -4,6 +4,7 @@ using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
 using Titanium.Core.Functions;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Reducer;
 using Titanium.Core.Tokens;
 
@@ -11,14 +12,14 @@ namespace Titanium.Core.Expressions
 {
 	internal static class ExpressionParser
 	{
-		internal static Expression Parse(string input)
+		internal static Expression Parse(string input, Dictionary<string, Expression> variableMap)
 		{
 			var tokens = Tokenizer.Tokenize(input);
-			var postfix = CreatePostfixTokenList(tokens);
-			return ParsePostfix(postfix);
+			var postfix = CreatePostfixTokenList(tokens, variableMap);
+			return ParsePostfix(postfix, variableMap);
 		}
 
-		private static IEnumerable<Token> CreatePostfixTokenList(List<Token> tokens)
+		private static IEnumerable<Token> CreatePostfixTokenList(List<Token> tokens, Dictionary<string, Expression> variableMap)
 		{
 			tokens = InsertImpliedMultiplication(tokens);
 
@@ -146,7 +147,7 @@ namespace Titanium.Core.Expressions
 
 					if (tokenSubstring.Count > 0)
 					{
-						var operands = ParseCommaSeparatedList(tokenSubstring).ToList();
+						var operands = ParseCommaSeparatedList(tokenSubstring, variableMap).ToList();
 						var list = new ExpressionListToken(new ExpressionList(operands));
 						outputQueue.Add(list);
 					}
@@ -217,7 +218,7 @@ namespace Titanium.Core.Expressions
 				(left.Type.IsOperand() && right.Type.IsOperand());
 		}
 
-		private static Expression ParsePostfix(IEnumerable<Token> tokens)
+		private static Expression ParsePostfix(IEnumerable<Token> tokens, Dictionary<string, Expression> variableMap)
 		{
 			var stack = new Stack<Evaluatable>();
 			foreach (var token in tokens)
@@ -274,6 +275,13 @@ namespace Titanium.Core.Expressions
 							case TokenType.Divide:
 								parent = new DualFactorComponent(Factorizer.ToFactor(left), Factorizer.ToFactor(right), token.Type == TokenType.Multiply);
 								break;
+							case TokenType.Assign:
+								parent = new FunctionComponent(new Assign(variableMap), new List<Expression>
+								{
+									Expressionizer.ToExpression(left),
+									Expressionizer.ToExpression(right)
+								});
+								break;
 							default:
 								throw new SyntaxErrorException("Token {0} not expected", token.Value);
 						}
@@ -325,7 +333,7 @@ namespace Titanium.Core.Expressions
 			throw new SyntaxErrorException("Couldn't parse operand {0}", token.Value);
 		}
 
-		private static IEnumerable<Expression> ParseCommaSeparatedList(IReadOnlyList<Token> tokens)
+		private static IEnumerable<Expression> ParseCommaSeparatedList(IReadOnlyList<Token> tokens, Dictionary<string, Expression> variableMap)
 		{
 			var currentElement = new List<Token>();
 			var tokenGroups = new List<List<Token>>();
@@ -343,7 +351,7 @@ namespace Titanium.Core.Expressions
 				{
 					var indexOfMatchingBrace = IndexOfMatchingBrace(tokens, i);
 					var tokenSubList = tokens.Skip(i + 1).Take(indexOfMatchingBrace - i - 1).ToList();
-					var innerList = ParseCommaSeparatedList(tokenSubList).ToList();
+					var innerList = ParseCommaSeparatedList(tokenSubList, variableMap).ToList();
 					var list = new ExpressionListToken(new ExpressionList(innerList));
 					currentElement.Add(list);
 					i = indexOfMatchingBrace;
@@ -363,7 +371,7 @@ namespace Titanium.Core.Expressions
 			tokenGroups.Add(currentElement.Select(e => e).ToList()); // move a copy of the list
 			currentElement.Clear();
 
-			return tokenGroups.Select(tokenGroup => ParsePostfix(CreatePostfixTokenList(tokenGroup)));
+			return tokenGroups.Select(tokenGroup => ParsePostfix(CreatePostfixTokenList(tokenGroup, variableMap), variableMap));
 		}
 
 		private static int IndexOfMatchingBrace(IReadOnlyList<Token> tokens, int indexOfOpeningBrace)
