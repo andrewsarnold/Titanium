@@ -314,12 +314,12 @@ namespace Titanium.Core.Expressions
 			{
 				case TokenType.Integer:
 					return Factor.GetIntegerFactor(token);
-
 				case TokenType.Float:
 					return Factor.GetFloatFactor(token);
-
 				case TokenType.Letter:
 					return new AlphabeticFactor(token.Value);
+				case TokenType.String:
+					return new StringFactor(token.Value);
 			}
 
 			throw new SyntaxErrorException("Couldn't parse operand {0}", token.Value);
