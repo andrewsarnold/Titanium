@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
@@ -94,10 +95,32 @@ namespace Titanium.Core.Functions.Implementations
 				return EvaluateDivision(new NumericFactor(new Integer(frac.Numerator)), new NumericFactor(new Integer(frac.Denominator)));
 			}
 
+			if (component is ComponentList)
+			{
+				var compList = (ComponentList) component;
+				var es = compList.Factors.Where(f => f.Factor.Equals(new AlphabeticFactor("e"))).ToList();
+
+				var integerValue = 0;
+				foreach (var e in es)
+				{
+					compList.Factors.Remove(e);
+					integerValue += e.IsInNumerator ? 1 : -1;
+				}
+
+				if (integerValue != 0)
+				{
+					var remainingFunc = AsExpression(Expressionizer.ToExpression(compList));
+					return new DualComponentExpression(
+						Componentizer.ToComponent(remainingFunc),
+						Componentizer.ToComponent(new NumericFactor(new Integer(integerValue))),
+						true);
+				}
+			}
+
 			return AsExpression(parameter);
 		}
 
-		private Expression EvaluateMultiplication(Factor left, Factor right)
+		private Expression EvaluateMultiplication(Evaluatable left, Evaluatable right)
 		{
 			// ln(a * b) = ln(a) + ln(b)
 			return new DualComponentExpression(
@@ -106,7 +129,7 @@ namespace Titanium.Core.Functions.Implementations
 				true).Evaluate();
 		}
 
-		private Expression EvaluateDivision(Factor left, Factor right)
+		private Expression EvaluateDivision(Evaluatable left, Evaluatable right)
 		{
 			// ln(a / b) = ln(a) - ln(b)
 			return new DualComponentExpression(
