@@ -16,5 +16,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("1.E4", "10000.");
 		}
+
+		[TestMethod]
+		public void LargeNumberIsNotExpanded()
+		{
+			Common.EvaluateAndAssert("1E8", "1.E8");
+		}
 	}
 }
