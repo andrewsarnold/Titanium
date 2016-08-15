@@ -66,6 +66,12 @@ namespace Titanium.Core.Components
 				return Factors.Select((t, x) => t.CompareTo(other.Factors[x])).FirstOrDefault(compResult => compResult != 0);
 			}
 
+			var sfc = obj as SingleFactorComponent;
+			if (sfc != null)
+			{
+				return -1;
+			}
+
 			throw new IncomparableTypeException(GetType(), obj.GetType());
 		}
 

@@ -31,6 +31,12 @@ namespace Titanium.Core.Components
 				return Factor.CompareTo(other.Factor);
 			}
 
+			var func = obj as FunctionComponent;
+			if (func != null)
+			{
+				return 1;
+			}
+
 			throw new IncomparableTypeException(GetType(), obj.GetType());
 		}
 

@@ -113,7 +113,7 @@ namespace Titanium.Core.Functions.Implementations
 					return new DualComponentExpression(
 						Componentizer.ToComponent(remainingFunc),
 						Componentizer.ToComponent(new NumericFactor(new Integer(integerValue))),
-						true);
+						true).Evaluate();
 				}
 			}
 
