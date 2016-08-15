@@ -7,6 +7,7 @@
 		Float,
 		Function,
 		Letter,
+		String,
 		Negate,
 		OpenParenthesis,
 		CloseParenthesis,

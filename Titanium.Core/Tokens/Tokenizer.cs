@@ -14,6 +14,7 @@ namespace Titanium.Core.Tokens
 			{ TokenType.Integer, new Regex(@"^\d+$") },
 			{ TokenType.Float, new Regex(@"^(\d*\.\d+|\d+\.\d*)$") },
 			{ TokenType.Letter, new Regex(@"^[a-zA-ZΑ-ώ_]+[a-zA-ZΑ-ώ_\d]*$") },
+			{ TokenType.String, new Regex(@"^""[^""]*""$") },
 			{ TokenType.Negate, new Regex(@"^⁻$") },
 			{ TokenType.OpenParenthesis, new Regex(@"^\($") },
 			{ TokenType.CloseParenthesis, new Regex(@"^\)$") },

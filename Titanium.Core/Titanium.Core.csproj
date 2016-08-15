@@ -43,6 +43,7 @@
     <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Exceptions\DomainException.cs" />
+    <Compile Include="Factors\StringFactor.cs" />
     <Compile Include="Functions\FixType.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
     <Compile Include="Factors\ExpressionList.cs" />
