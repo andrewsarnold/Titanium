@@ -3,6 +3,7 @@ using System.Linq;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Functions;
+using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Components
 {
@@ -30,10 +31,27 @@ namespace Titanium.Core.Components
 
 		public override int CompareTo(object obj)
 		{
+			if (Function is Negate)
+			{
+				return 1;
+			}
+
 			var other = obj as FunctionComponent;
 			if (other != null)
 			{
-				
+				return 0;
+			}
+
+			var sfc = obj as SingleFactorComponent;
+			if (sfc != null)
+			{
+				return -1;
+			}
+
+			var cl = obj as ComponentList;
+			if (cl != null)
+			{
+				return 0;
 			}
 
 			throw new IncomparableTypeException(GetType(), obj.GetType());

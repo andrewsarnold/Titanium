@@ -109,11 +109,11 @@ namespace Titanium.Core.Functions.Implementations
 
 				if (integerValue != 0)
 				{
-					var remainingFunc = AsExpression(Expressionizer.ToExpression(compList));
+					var remainingFunc = AsExpression(Expressionizer.ToExpression(compList)).Evaluate();
 					return new DualComponentExpression(
 						Componentizer.ToComponent(remainingFunc),
 						Componentizer.ToComponent(new NumericFactor(new Integer(integerValue))),
-						true);
+						true).Evaluate();
 				}
 			}
 
