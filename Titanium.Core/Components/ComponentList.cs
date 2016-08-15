@@ -184,24 +184,9 @@ namespace Titanium.Core.Components
 
 		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
 		{
-			// If any alphabetic factors are identical, convert to exponent
-			if (leftFactor.Factor is AlphabeticFactor && rightFactor.Factor is AlphabeticFactor)
+			if (ReduceMultipliedAlphabeticFactors(leftFactor, rightFactor, out expression))
 			{
-				var leftAlpha = (AlphabeticFactor)leftFactor.Factor;
-				var rightAlpha = (AlphabeticFactor)rightFactor.Factor;
-
-				if (leftAlpha.Value.Equals(rightAlpha.Value))
-				{
-					var shouldPower = leftFactor.IsInNumerator && rightFactor.IsInNumerator;
-					if (shouldPower)
-					{
-						expression = new SingleComponentExpression(new FunctionComponent("^", new List<Expression> { Expressionizer.ToExpression(leftAlpha), NumberToExpression(new Integer(2)) }));
-						return true;
-					}
-
-					expression = NumberToExpression(new Integer(1));
-					return true;
-				}
+				return true;
 			}
 
 			var left = Expressionizer.ToExpression(leftFactor.Factor);
@@ -254,13 +239,55 @@ namespace Titanium.Core.Components
 				return true;
 			}
 
+			if (ReduceFunctionsWithSameOperands(leftFactor, rightFactor, out expression, left, right))
+			{
+				return true;
+			}
+
+			if (ReduceExponents(out expression, left, right))
+			{
+				return true;
+			}
+
+			expression = null;
+			return false;
+		}
+
+		private static bool ReduceMultipliedAlphabeticFactors(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
+		{
+			// If any alphabetic factors are identical, convert to exponent
+			if (leftFactor.Factor is AlphabeticFactor && rightFactor.Factor is AlphabeticFactor)
+			{
+				var leftAlpha = (AlphabeticFactor) leftFactor.Factor;
+				var rightAlpha = (AlphabeticFactor) rightFactor.Factor;
+
+				if (leftAlpha.Value.Equals(rightAlpha.Value))
+				{
+					var shouldPower = leftFactor.IsInNumerator && rightFactor.IsInNumerator;
+					if (shouldPower)
+					{
+						expression = new SingleComponentExpression(new FunctionComponent("^", new List<Expression> { Expressionizer.ToExpression(leftAlpha), NumberToExpression(new Integer(2)) }));
+						return true;
+					}
+
+					expression = NumberToExpression(new Integer(1));
+					return true;
+				}
+			}
+
+			expression = null;
+			return false;
+		}
+
+		private static bool ReduceFunctionsWithSameOperands(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression, Expression left, Expression right)
+		{
 			FunctionComponent leftFunction;
 			FunctionComponent rightFunction;
 			// If there are two functions with the same operands that should cancel out, cancel them out
 			if (Common.IsFunction(left, out leftFunction) && Common.IsFunction(right, out rightFunction))
 			{
 				if (leftFunction.Function.Name == rightFunction.Function.Name &&
-					leftFunction.Operands.Count == rightFunction.Operands.Count)
+				    leftFunction.Operands.Count == rightFunction.Operands.Count)
 				{
 					for (var i = 0; i < leftFunction.Operands.Count; i++)
 					{
@@ -281,6 +308,14 @@ namespace Titanium.Core.Components
 				}
 			}
 
+			expression = null;
+			return false;
+		}
+
+		private static bool ReduceExponents(out Expression expression, Expression left, Expression right)
+		{
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
 			// If there is an exponent times another instance of that base, combine them
 			// e.g. x^2 * x = x^3
 			if (Common.IsFunction(left, out leftFunction) && leftFunction.Function is Exponent)
