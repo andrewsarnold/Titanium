@@ -54,6 +54,7 @@ namespace Titanium.Wpf
 			var menu = new MenuItem { Header = "Symbols" };
 			menu.Items.Add(SymbolMenuItem("⁻", "negative"));
 			menu.Items.Add(SymbolMenuItem("√", "square root"));
+			menu.Items.Add(SymbolMenuItem("→", "assignment"));
 			menu.Items.Add(GreekAlphabet());
 			MenuInsert.Items.Add(menu);
 		}
