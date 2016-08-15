@@ -44,6 +44,12 @@ namespace Titanium.Core.Factors
 				return 1;
 			}
 
+			var expressionFactor = obj as ExpressionFactor;
+			if (expressionFactor != null)
+			{
+				return 0;
+			}
+
 			throw new IncomparableTypeException(GetType(), obj.GetType());
 		}
 

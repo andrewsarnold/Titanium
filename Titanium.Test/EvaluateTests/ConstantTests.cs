@@ -54,5 +54,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("e*e*e", "e^3");
 		}
+
+		[TestMethod]
+		public void ConstantTimesItselfSquaredIsCubed()
+		{
+			Common.EvaluateAndAssert("e*e^2", "e^3");
+		}
 	}
 }

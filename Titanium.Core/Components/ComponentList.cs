@@ -4,6 +4,7 @@ using System.Linq;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
@@ -277,6 +278,37 @@ namespace Titanium.Core.Components
 							return true;
 						}
 					}
+				}
+			}
+
+			// If there is an exponent times another instance of that base, combine them
+			// e.g. x^2 * x = x^3
+			if (Common.IsFunction(left, out leftFunction) && leftFunction.Function is Exponent)
+			{
+				var baseExpression = leftFunction.Operands[0];
+				var power = Factorizer.ToFactor(leftFunction.Operands[1]);
+				if (power is NumericFactor && baseExpression.Equals(right))
+				{
+					expression = Expressionizer.ToExpression(new FunctionComponent(new Exponent(), new List<Expression>
+					{
+						baseExpression,
+						Expressionizer.ToExpression(new NumericFactor(((NumericFactor) power).Number + new Integer(1)))
+					}));
+					return true;
+				}
+			}
+			if (Common.IsFunction(right, out rightFunction) && rightFunction.Function is Exponent)
+			{
+				var baseExpression = rightFunction.Operands[0];
+				var power = Factorizer.ToFactor(rightFunction.Operands[1]);
+				if (power is NumericFactor && baseExpression.Equals(left))
+				{
+					expression = Expressionizer.ToExpression(new FunctionComponent(new Exponent(), new List<Expression>
+					{
+						baseExpression,
+						Expressionizer.ToExpression(new NumericFactor(((NumericFactor) power).Number + new Integer(1)))
+					}));
+					return true;
 				}
 			}
 
