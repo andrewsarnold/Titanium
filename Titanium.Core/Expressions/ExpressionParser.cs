@@ -231,7 +231,7 @@ namespace Titanium.Core.Expressions
 					}
 					else
 					{
-						stack.Push(new SingleFactorComponent(ParseOperand(token)));
+						stack.Push(new SingleFactorComponent(ParseOperand(token, variableMap)));
 					}
 				}
 				else if (token.Type == TokenType.Function)
@@ -316,7 +316,7 @@ namespace Titanium.Core.Expressions
 			throw new SyntaxErrorException("Expression tree not parseable");
 		}
 
-		private static Factor ParseOperand(Token token)
+		private static Factor ParseOperand(Token token, Dictionary<string, Expression> variableMap)
 		{
 			switch (token.Type)
 			{
@@ -325,7 +325,7 @@ namespace Titanium.Core.Expressions
 				case TokenType.Float:
 					return Factor.GetFloatFactor(token);
 				case TokenType.Letter:
-					return new AlphabeticFactor(token.Value);
+					return new AlphabeticFactor(token.Value, variableMap);
 				case TokenType.String:
 					return new StringFactor(token.Value);
 			}

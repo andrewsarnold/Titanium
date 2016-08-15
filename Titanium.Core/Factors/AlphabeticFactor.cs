@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Reducer;
@@ -9,9 +10,12 @@ namespace Titanium.Core.Factors
 	{
 		internal readonly string Value;
 
-		internal AlphabeticFactor(string value)
+		private readonly Dictionary<string, Expression> _variableMap;
+
+		internal AlphabeticFactor(string value, Dictionary<string, Expression> variableMap = null)
 		{
 			Value = value;
+			_variableMap = variableMap;
 		}
 
 		public override string ToString()
@@ -21,7 +25,9 @@ namespace Titanium.Core.Factors
 
 		internal override Expression Evaluate()
 		{
-			return Expressionizer.ToExpression(this);
+			return _variableMap != null && _variableMap.ContainsKey(Value)
+				? _variableMap[Value]
+				: Expressionizer.ToExpression(this);
 		}
 
 		public override int CompareTo(object obj)

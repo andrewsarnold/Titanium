@@ -40,6 +40,7 @@
     <Compile Include="Components\ComponentListFactor.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
     <Compile Include="Exceptions\IncomparableTypeException.cs" />
+    <Compile Include="Exceptions\InvalidVariableOrFunctionNameException.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
     <Compile Include="Exceptions\NonRealResultException.cs" />
     <Compile Include="Exceptions\DomainException.cs" />
