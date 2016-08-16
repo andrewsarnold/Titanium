@@ -39,6 +39,7 @@
     <Compile Include="Components\ComponentList.cs" />
     <Compile Include="Components\ComponentListFactor.cs" />
     <Compile Include="Components\DualFactorComponent.cs" />
+    <Compile Include="Exceptions\ArgumentMustBeAVariableNameException.cs" />
     <Compile Include="Exceptions\IncomparableTypeException.cs" />
     <Compile Include="Exceptions\InvalidVariableOrFunctionNameException.cs" />
     <Compile Include="Expressions\UndefinedExpression.cs" />
@@ -90,7 +91,7 @@
     <Compile Include="Reducer\Componentizer.cs" />
     <Compile Include="Reducer\Expressionizer.cs" />
     <Compile Include="Reducer\Factorizer.cs" />
-    <Compile Include="Evaluator.cs" />
+    <Compile Include="Evaluator\Evaluator.cs" />
     <Compile Include="Tokens\ExpressionListToken.cs" />
     <Compile Include="Tokens\OperatorAssociativity.cs" />
     <Compile Include="Tokens\OperatorExtensions.cs" />

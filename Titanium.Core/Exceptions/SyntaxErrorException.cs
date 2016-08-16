@@ -9,6 +9,11 @@ namespace Titanium.Core.Exceptions
 		{
 		}
 
+		internal SyntaxErrorException()
+			: base("Syntax error")
+		{
+		}
+
 		internal SyntaxErrorException(string message)
 			: base(message)
 		{
