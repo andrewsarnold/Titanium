@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Titanium.Core;
+using Titanium.Core.Evaluator;
 using Titanium.Core.Functions;
 using Titanium.Wpf.Symbols;
 

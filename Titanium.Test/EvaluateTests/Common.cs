@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Titanium.Core;
+using Titanium.Core.Evaluator;
 
 namespace Titanium.Test.EvaluateTests
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Titanium.Core;
+using Titanium.Core.Evaluator;
 using Titanium.Core.Exceptions;
 
 namespace Titanium.Test.EvaluateTests
@@ -78,6 +78,39 @@ namespace Titanium.Test.EvaluateTests
 		public void AssignmentIsEvaluated()
 		{
 			Common.EvaluateAndAssert("2+3→x", "5");
+		}
+
+		[TestMethod]
+		public void BasicUnassignment()
+		{
+			_evaluator.Evaluate("5→x");
+			Common.EvaluateAndAssert(_evaluator, "x", "5");
+			Common.EvaluateAndAssert(_evaluator, "DelVar x", "Done");
+			Common.EvaluateAndAssert(_evaluator, "x", "x");
+		}
+
+		[TestMethod]
+		public void UnassignUndefinedStillWorks()
+		{
+			Common.EvaluateAndAssert("DelVar xyz", "Done");
+		}
+
+		[TestMethod]
+		public void UnassignNothingError()
+		{
+			Common.AssertThrows<SyntaxErrorException>("DelVar");
+		}
+
+		[TestMethod]
+		public void UnassignSpaceError()
+		{
+			Common.AssertThrows<SyntaxErrorException>("DelVar ");
+		}
+
+		[TestMethod]
+		public void UnassignNonVariableError()
+		{
+			Common.AssertThrows<ArgumentMustBeAVariableNameException>("DelVar (5+x)");
 		}
 	}
 }
