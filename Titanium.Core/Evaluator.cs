@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 
-namespace Titanium.Core.Evaluator
+namespace Titanium.Core
 {
 	public class Evaluator
 	{

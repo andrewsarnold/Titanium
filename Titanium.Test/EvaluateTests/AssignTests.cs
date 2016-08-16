@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Titanium.Core.Evaluator;
+using Titanium.Core;
 using Titanium.Core.Exceptions;
 
 namespace Titanium.Test.EvaluateTests
