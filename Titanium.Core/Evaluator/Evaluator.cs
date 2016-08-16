@@ -52,17 +52,20 @@ namespace Titanium.Core.Evaluator
 		{
 			if (input.StartsWith("DelVar"))
 			{
-				var delVarMatch = Regex.Match(input, "DelVar(\\s+)(.+)");
+				var delVarMatch = Regex.Match(input, "DelVar(\\s+)([^,]+)(?:,([^,]))*");
 				if (delVarMatch.Groups.Count < 3)
 				{
 					throw new SyntaxErrorException();
 				}
-				var varName = delVarMatch.Groups[2].Captures[0].Value;
-				if (Regex.Matches(varName, "\\W").Count > 0)
+				for (var i = 2; i < delVarMatch.Groups.Count; i++)
 				{
-					throw new ArgumentMustBeAVariableNameException();
+					var varName = delVarMatch.Groups[i].Captures[0].Value;
+					if (Regex.Matches(varName, "\\W").Count > 0)
+					{
+						throw new ArgumentMustBeAVariableNameException();
+					}
+					_variableMap.Remove(varName);
 				}
-				_variableMap.Remove(varName);
 				output = "Done";
 				return true;
 			}

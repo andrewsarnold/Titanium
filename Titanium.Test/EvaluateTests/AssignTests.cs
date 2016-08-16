@@ -112,5 +112,17 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.AssertThrows<ArgumentMustBeAVariableNameException>("DelVar (5+x)");
 		}
+
+		[TestMethod]
+		public void UnassignMultiple()
+		{
+			_evaluator.Evaluate("3→x");
+			_evaluator.Evaluate("4→y");
+			Common.EvaluateAndAssert(_evaluator, "x", "3");
+			Common.EvaluateAndAssert(_evaluator, "y", "4");
+			Common.EvaluateAndAssert(_evaluator, "DelVar x,y", "Done");
+			Common.EvaluateAndAssert(_evaluator, "x", "x");
+			Common.EvaluateAndAssert(_evaluator, "y", "y");
+		}
 	}
 }
