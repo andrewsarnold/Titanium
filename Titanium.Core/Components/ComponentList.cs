@@ -96,9 +96,10 @@ namespace Titanium.Core.Components
 			var reducedEvaluated = new List<ComponentListFactor>();
 			foreach (var componentListFactor in evaluated)
 			{
-				if (Componentizer.ToComponent(componentListFactor.Factor) is ComponentList)
+				var asComponent = Componentizer.ToComponent(componentListFactor.Factor);
+				if (asComponent is ComponentList)
 				{
-					var list = (ComponentList)Componentizer.ToComponent(componentListFactor);
+					var list = (ComponentList)asComponent;
 					foreach (var listFactor in list.Factors)
 					{
 						listFactor.IsInNumerator = componentListFactor.IsInNumerator == listFactor.IsInNumerator;

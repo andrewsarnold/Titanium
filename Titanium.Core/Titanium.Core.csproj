@@ -53,6 +53,7 @@
     <Compile Include="Functions\Implementations\Exponent.cs" />
     <Compile Include="Functions\Implementations\NaturalLog.cs" />
     <Compile Include="Functions\Implementations\Negate.cs" />
+    <Compile Include="Functions\Implementations\OtherRoot.cs" />
     <Compile Include="Functions\Implementations\SquareRoot.cs" />
     <Compile Include="Evaluatable.cs" />
     <Compile Include="Functions\Implementations\Factorial.cs" />

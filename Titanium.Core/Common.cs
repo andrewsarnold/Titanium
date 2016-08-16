@@ -108,6 +108,30 @@ namespace Titanium.Core
 				}
 			}
 
+			if (component is ComponentList)
+			{
+				var cl = (ComponentList)component;
+				if (cl.Factors.Count == 1)
+				{
+					var factor = cl.Factors[0];
+					if (factor.Factor is NumericFactor)
+					{
+						if (factor.IsInNumerator)
+						{
+							number = ((NumericFactor)factor.Factor).Number;
+							return true;
+						}
+
+						var denom = ((NumericFactor)factor.Factor).Number;
+						if (denom is Float)
+						{
+							number = new Float(1 / ((Float)denom).ValueAsFloat());
+							return true;
+						}
+					}
+				}
+			}
+
 			number = null;
 			return false;
 		}
