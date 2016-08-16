@@ -6,6 +6,10 @@ namespace Titanium.WinConsole
 {
 	public static class Program
 	{
+		private const int WindowWidth = 24;
+
+		private static Evaluator _evaluator;
+
 		private static readonly Dictionary<string, Action> SpecialActions = new Dictionary<string, Action>
 		{
 			{ string.Empty, () => { } },
@@ -15,6 +19,10 @@ namespace Titanium.WinConsole
 
 		public static void Main()
 		{
+			Console.SetWindowSize(WindowWidth, Console.WindowHeight);
+			Console.SetBufferSize(WindowWidth, Console.BufferHeight);
+			_evaluator = new Evaluator();
+
 			while (true)
 			{
 				Console.Write("> ");
@@ -28,11 +36,11 @@ namespace Titanium.WinConsole
 
 				try
 				{
-					Console.WriteLine(CleanOutput(Evaluator.Evaluate(input)).PadLeft(24, ' '));
+					Console.WriteLine(CleanOutput(_evaluator.Evaluate(input)).PadLeft(WindowWidth, ' '));
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message.PadLeft(24, ' '));
+					Console.WriteLine(ex.Message.PadLeft(WindowWidth, ' '));
 				}
 			}
 		}

@@ -21,7 +21,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void LogTenOfIntegerReducesByLn()
 		{
-			Common.EvaluateAndAssert("log(3)", "ln(3)/(ln(10))");
+			Common.EvaluateAndAssert("log(3)", "ln(3)/ln(10)");
 		}
 
 		[TestMethod]
@@ -33,7 +33,7 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void LogTenOfIntegerFractionExpands()
 		{
-			Common.EvaluateAndAssert("log(2/5)", "⁻ln(5/2)/(ln(10))");
+			Common.EvaluateAndAssert("log(2/5)", "ln(2/5)/ln(10)");
 		}
 
 		[TestMethod]
@@ -45,13 +45,13 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void NaturalLogOverLogTen()
 		{
-			Common.EvaluateAndAssert("ln(6)/log(4)", "ln(10)*ln(6)/(2*ln(2))");
+			Common.EvaluateAndAssert("ln(6)/log(4)", "ln(6)*ln(10)/(2*ln(2))");
 		}
 
 		[TestMethod]
 		public void NaturalLogMinusLogTen()
 		{
-			Common.EvaluateAndAssert("ln(6)-log(4)", "ln(6)-2*ln(2)/(ln(10))");
+			Common.EvaluateAndAssert("ln(6)-log(4)", "ln(6)-2*ln(2)/ln(10)");
 		}
 	}
 }

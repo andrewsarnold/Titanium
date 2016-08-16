@@ -253,6 +253,28 @@ namespace Titanium.Core.Components
 				: Expressionizer.ToExpression(this);
 		}
 
+		public override int CompareTo(object obj)
+		{
+			var other = obj as IntegerFraction;
+			if (other != null)
+			{
+
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var frac = other as IntegerFraction;
+			if (frac != null)
+			{
+
+			}
+
+			return false;
+		}
+
 		internal IntegerFraction Inverse
 		{
 			get { return new IntegerFraction(Denominator, Numerator); }

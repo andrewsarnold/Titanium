@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
 using Titanium.Core.Reducer;
 
@@ -17,7 +19,7 @@ namespace Titanium.Core.Components
 			Factors = GetComponents(component);
 		}
 
-		private ComponentList(List<ComponentListFactor> factors)
+		internal ComponentList(List<ComponentListFactor> factors)
 		{
 			Factors = factors;
 		}
@@ -36,6 +38,16 @@ namespace Titanium.Core.Components
 				return leftList.Union(rightList).ToList();
 			}
 
+			if (component is IntegerFraction)
+			{
+				var frac = (IntegerFraction)component;
+				return new List<ComponentListFactor>
+				{
+					new ComponentListFactor(new NumericFactor(new Integer(frac.Numerator))),
+					new ComponentListFactor(new NumericFactor(new Integer(frac.Denominator)), false)
+				};
+			}
+
 			return new List<ComponentListFactor> { new ComponentListFactor(Factorizer.ToFactor(component), isMultiply) };
 		}
 
@@ -44,11 +56,61 @@ namespace Titanium.Core.Components
 			return Reduce(Factors);
 		}
 
+		public override int CompareTo(object obj)
+		{
+			var other = obj as ComponentList;
+			if (other != null)
+			{
+				if (Factors.Count < other.Factors.Count) return -1;
+				if (Factors.Count > other.Factors.Count) return 1;
+				return Factors.Select((t, x) => t.CompareTo(other.Factors[x])).FirstOrDefault(compResult => compResult != 0);
+			}
+
+			var sfc = obj as SingleFactorComponent;
+			if (sfc != null)
+			{
+				return -1;
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var componentList = other as ComponentList;
+			if (componentList != null)
+			{
+				if (Factors.Count < componentList.Factors.Count || Factors.Count > componentList.Factors.Count) return false;
+				return !Factors.Where((t, i) => !t.Equals(componentList.Factors[i])).Any();
+			}
+
+			return false;
+		}
+
 		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
 		{
 			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
+			RemoveRedundantOnes(evaluated, true);
 
-			// TODO: If any components are a two-factor component, split it out and put the factors into the main list
+			// If any components are a two-factor component, split it out and put the factors into the main list
+			var reducedEvaluated = new List<ComponentListFactor>();
+			foreach (var componentListFactor in evaluated)
+			{
+				var asComponent = Componentizer.ToComponent(componentListFactor.Factor);
+				if (asComponent is ComponentList)
+				{
+					var list = (ComponentList)asComponent;
+					foreach (var listFactor in list.Factors)
+					{
+						listFactor.IsInNumerator = componentListFactor.IsInNumerator == listFactor.IsInNumerator;
+					}
+					reducedEvaluated.AddRange(list.Factors);
+				}
+				else
+				{
+					reducedEvaluated.Add(componentListFactor);
+				}
+			}
 
 			// Loop through all combinations of two factors
 			// If two factors can reduce, add to output list and remove from input list
@@ -66,17 +128,17 @@ namespace Titanium.Core.Components
 			var output = new List<ComponentListFactor>();
 			var reducedAny = false;
 
-			while (evaluated.Any())
+			while (reducedEvaluated.Any())
 			{
 				var reduced = false;
-				for (var i = 1; i < evaluated.Count; i++)
+				for (var i = 1; i < reducedEvaluated.Count; i++)
 				{
 					Expression e;
-					if (CanReduce(evaluated[0], evaluated[i], out e))
+					if (CanReduce(reducedEvaluated[0], reducedEvaluated[i], out e))
 					{
 						output.Add(new ComponentListFactor(Factorizer.ToFactor(e)));
-						evaluated.RemoveAt(i);
-						evaluated.RemoveAt(0);
+						reducedEvaluated.RemoveAt(i);
+						reducedEvaluated.RemoveAt(0);
 						i = 1;
 
 						reduced = true;
@@ -84,10 +146,10 @@ namespace Titanium.Core.Components
 					}
 				}
 
-				if (!reduced && evaluated.Any())
+				if (!reduced && reducedEvaluated.Any())
 				{
-					output.Add(evaluated[0]);
-					evaluated.RemoveAt(0);
+					output.Add(reducedEvaluated[0]);
+					reducedEvaluated.RemoveAt(0);
 				}
 			}
 
@@ -100,30 +162,38 @@ namespace Titanium.Core.Components
 					? Expressionizer.ToExpression(output[0])
 					: Expressionizer.ToExpression(new ComponentList(output));
 			}
-			
+
+			RemoveRedundantOnes(output, false);
 			return Reduce(output);
+		}
+
+		private static void RemoveRedundantOnes(List<ComponentListFactor> output, bool integerOnly)
+		{
+			// Remove redundant 1s in numerator
+			if (output.Count(o => o.IsInNumerator) > 1)
+			{
+				output.RemoveAll(o =>
+					o.IsInNumerator &&
+					o.Factor is NumericFactor &&
+					(!integerOnly || ((NumericFactor)o.Factor).Number is Integer) &&
+					((NumericFactor)o.Factor).Number.IsOne
+				);
+			}
+
+			// Remove redundant 1s in denominator
+			output.RemoveAll(o =>
+				!o.IsInNumerator &&
+				o.Factor is NumericFactor &&
+				(!integerOnly || ((NumericFactor)o.Factor).Number is Integer) &&
+				((NumericFactor)o.Factor).Number.IsOne
+			);
 		}
 
 		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
 		{
-			// If any alphabetic factors are identical, convert to exponent
-			if (leftFactor.Factor is AlphabeticFactor && rightFactor.Factor is AlphabeticFactor)
+			if (ReduceMultipliedAlphabeticFactors(leftFactor, rightFactor, out expression))
 			{
-				var leftAlpha = (AlphabeticFactor)leftFactor.Factor;
-				var rightAlpha = (AlphabeticFactor)rightFactor.Factor;
-
-				if (leftAlpha.Value.Equals(rightAlpha.Value))
-				{
-					var shouldPower = leftFactor.IsInNumerator && rightFactor.IsInNumerator;
-					if (shouldPower)
-					{
-						expression = new SingleComponentExpression(new FunctionComponent("^", new List<Expression> { Expressionizer.ToExpression(leftAlpha), NumberToExpression(new Integer(2)) }));
-						return true;
-					}
-
-					expression = NumberToExpression(new Integer(1));
-					return true;
-				}
+				return true;
 			}
 
 			var left = Expressionizer.ToExpression(leftFactor.Factor);
@@ -174,6 +244,114 @@ namespace Titanium.Core.Components
 			{
 				expression = Expressionizer.ToExpression(Evaluate(leftFraction, rightFraction, leftFactor.IsInNumerator, rightFactor.IsInNumerator));
 				return true;
+			}
+
+			if (ReduceFunctionsWithSameOperands(leftFactor, rightFactor, out expression, left, right))
+			{
+				return true;
+			}
+
+			if (ReduceExponents(out expression, left, right))
+			{
+				return true;
+			}
+
+			expression = null;
+			return false;
+		}
+
+		private static bool ReduceMultipliedAlphabeticFactors(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
+		{
+			// If any alphabetic factors are identical, convert to exponent
+			if (leftFactor.Factor is AlphabeticFactor && rightFactor.Factor is AlphabeticFactor)
+			{
+				var leftAlpha = (AlphabeticFactor) leftFactor.Factor;
+				var rightAlpha = (AlphabeticFactor) rightFactor.Factor;
+
+				if (leftAlpha.Value.Equals(rightAlpha.Value))
+				{
+					var shouldPower = leftFactor.IsInNumerator && rightFactor.IsInNumerator;
+					if (shouldPower)
+					{
+						expression = new SingleComponentExpression(new FunctionComponent("^", new List<Expression> { Expressionizer.ToExpression(leftAlpha), NumberToExpression(new Integer(2)) }));
+						return true;
+					}
+
+					expression = NumberToExpression(new Integer(1));
+					return true;
+				}
+			}
+
+			expression = null;
+			return false;
+		}
+
+		private static bool ReduceFunctionsWithSameOperands(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression, Expression left, Expression right)
+		{
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+			// If there are two functions with the same operands that should cancel out, cancel them out
+			if (Common.IsFunction(left, out leftFunction) && Common.IsFunction(right, out rightFunction))
+			{
+				if (leftFunction.Function.Name == rightFunction.Function.Name &&
+				    leftFunction.Operands.Count == rightFunction.Operands.Count)
+				{
+					for (var i = 0; i < leftFunction.Operands.Count; i++)
+					{
+						var leftOperand = leftFunction.Operands[i];
+						var rightOperand = rightFunction.Operands[i];
+
+						if (!leftOperand.ToString().Equals(rightOperand.ToString()))
+						{
+							break;
+						}
+
+						if (leftFactor.IsInNumerator != rightFactor.IsInNumerator)
+						{
+							expression = Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
+							return true;
+						}
+					}
+				}
+			}
+
+			expression = null;
+			return false;
+		}
+
+		private static bool ReduceExponents(out Expression expression, Expression left, Expression right)
+		{
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+			// If there is an exponent times another instance of that base, combine them
+			// e.g. x^2 * x = x^3
+			if (Common.IsFunction(left, out leftFunction) && leftFunction.Function is Exponent)
+			{
+				var baseExpression = leftFunction.Operands[0];
+				var power = Factorizer.ToFactor(leftFunction.Operands[1]);
+				if (power is NumericFactor && baseExpression.Equals(right))
+				{
+					expression = Expressionizer.ToExpression(new FunctionComponent(new Exponent(), new List<Expression>
+					{
+						baseExpression,
+						Expressionizer.ToExpression(new NumericFactor(((NumericFactor) power).Number + new Integer(1)))
+					}));
+					return true;
+				}
+			}
+			if (Common.IsFunction(right, out rightFunction) && rightFunction.Function is Exponent)
+			{
+				var baseExpression = rightFunction.Operands[0];
+				var power = Factorizer.ToFactor(rightFunction.Operands[1]);
+				if (power is NumericFactor && baseExpression.Equals(left))
+				{
+					expression = Expressionizer.ToExpression(new FunctionComponent(new Exponent(), new List<Expression>
+					{
+						baseExpression,
+						Expressionizer.ToExpression(new NumericFactor(((NumericFactor) power).Number + new Integer(1)))
+					}));
+					return true;
+				}
 			}
 
 			expression = null;
@@ -269,13 +447,15 @@ namespace Titanium.Core.Components
 		{
 			return result is IntegerFraction
 				? Expressionizer.ToExpression((IntegerFraction)result)
-				: Expressionizer.ToExpression(new SingleFactorComponent(new NumericFactor((Number)result)));
+				: (result is Number
+					? Expressionizer.ToExpression(Componentizer.ToComponent(new NumericFactor((Number)result)))
+					: Expressionizer.ToExpression((SingleFactorComponent)result));
 		}
 
 		public override string ToString()
 		{
-			var numerators = Factors.Where(f => f.IsInNumerator).ToList();
-			var denominators = Factors.Where(f => !f.IsInNumerator).ToList();
+			var numerators = Factors.Where(f => f.IsInNumerator).OrderBy(f => f).ToList();
+			var denominators = Factors.Where(f => !f.IsInNumerator).OrderBy(f => f).ToList();
 
 			var numString = string.Join("*", numerators.Select(f => f.Factor));
 			var denomString = string.Join("*", denominators.Select(f => f.Factor));
@@ -283,7 +463,7 @@ namespace Titanium.Core.Components
 			if (numerators.Any() && denominators.Any())
 			{
 				return string.Format("{0}/{1}",
-					numerators.Count == 1 ? numString : string.Format("({0})", numString),
+					numString,
 					denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
 			}
 
@@ -294,7 +474,7 @@ namespace Titanium.Core.Components
 
 			if (denominators.Any())
 			{
-				return string.Format("1/({0})", denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
+				return string.Format("1/{0}", denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
 			}
 
 			throw new Exception("No components");

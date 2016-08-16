@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
@@ -15,10 +16,27 @@ namespace Titanium.Core.Numbers
 
 		public override string ToString()
 		{
-			var value = ValueAsFloat().ToString(CultureInfo.InvariantCulture).Replace("-", "⁻");
+			// Should be a setting
+			const int showDigits = 6;
+			var showInScientificNotation = ValueAsFloat() >= (10 ^ showDigits);
+
+			string value;
+			if (showInScientificNotation)
+			{
+				value = ValueAsFloat().ToString(string.Format("G{0}", showDigits), CultureInfo.InvariantCulture).Replace("-", "⁻");
+				value = Regex.Replace(value, "(E\\+0*)", ".E");
+				value = Regex.Replace(value, "\\.$", "");
+			}
+			else
+			{
+				value = ValueAsFloat().ToString(CultureInfo.InvariantCulture);
+			}
+
+			value = value.Replace("-", "⁻");
+
 			return value.Contains(".")
 				? StripTrailingZeros(StripLeadingZeros(value))
-				: string.Format("{0}.",value);
+				: string.Format("{0}.", value);
 		}
 
 		internal override double ValueAsFloat()
@@ -37,6 +55,17 @@ namespace Titanium.Core.Numbers
 			get { return Math.Abs(Value) < Constants.Tolerance; }
 		}
 
+		internal override bool IsOne
+		{
+			get { return Math.Abs(Value - 1) < Constants.Tolerance; }
+		}
+
+		public override bool Equals(Number other)
+		{
+			var f = other as Float;
+			return f != null && Math.Abs(Value - f.Value) < Constants.Tolerance;
+		}
+
 		internal static bool IsWholeNumber(double f)
 		{
 			return Math.Abs(f % 1) < Constants.Tolerance ||
@@ -49,12 +78,12 @@ namespace Titanium.Core.Numbers
 			return IsWholeNumber(f.Value);
 		}
 
-		private string StripLeadingZeros(string value)
+		private static string StripLeadingZeros(string value)
 		{
 			return value.TrimStart('0');
 		}
 
-		private string StripTrailingZeros(string value)
+		private static string StripTrailingZeros(string value)
 		{
 			return value.TrimEnd('0');
 		}

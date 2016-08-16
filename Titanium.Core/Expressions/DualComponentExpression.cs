@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Titanium.Core.Components;
+using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
 using Titanium.Core.Functions.Implementations;
 using Titanium.Core.Numbers;
@@ -28,6 +29,7 @@ namespace Titanium.Core.Expressions
 		internal override Expression Evaluate()
 		{
 			// Combine natural log functions
+			// TODO: Move somewhere else
 			FunctionComponent leftFunction;
 			FunctionComponent rightFunction;
 
@@ -89,7 +91,51 @@ namespace Titanium.Core.Expressions
 				return Expressionizer.ToExpression(right);
 			}
 
+			if (left.CompareTo(right) == 1)
+			{
+				// Swap placement
+				if (!_isAdd)
+				{
+					var newRight = Componentizer.ToComponent(new FunctionComponent(new Negate(), new List<Expression> { right }));
+					return new DualComponentExpression(newRight, Componentizer.ToComponent(left), true).Evaluate();
+				}
+
+				var newLeft = Componentizer.ToComponent(left);
+				if (newLeft is FunctionComponent)
+				{
+					if (((FunctionComponent) newLeft).Function is Negate)
+					{
+						return new DualComponentExpression(Componentizer.ToComponent(right), Componentizer.ToComponent(((FunctionComponent) newLeft).Operands[0]), false);
+					}
+				}
+				return new DualComponentExpression(Componentizer.ToComponent(right), newLeft, true);
+			}
+
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
+		}
+
+		public override int CompareTo(object obj)
+		{
+			var other = obj as DualFactorComponent;
+			if (other != null)
+			{
+
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var dce = other as DualComponentExpression;
+			if (dce != null)
+			{
+				return _leftComponent.Equals(dce._leftComponent) &&
+				       _rightComponent.Equals(dce._rightComponent) &&
+				       _isAdd == dce._isAdd;
+			}
+
+			return false;
 		}
 	}
 }

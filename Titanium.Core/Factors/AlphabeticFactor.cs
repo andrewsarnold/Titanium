@@ -1,4 +1,7 @@
-﻿using Titanium.Core.Expressions;
+﻿using System;
+using System.Collections.Generic;
+using Titanium.Core.Exceptions;
+using Titanium.Core.Expressions;
 using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Factors
@@ -7,9 +10,12 @@ namespace Titanium.Core.Factors
 	{
 		internal readonly string Value;
 
-		internal AlphabeticFactor(string value)
+		private readonly Dictionary<string, Expression> _variableMap;
+
+		internal AlphabeticFactor(string value, Dictionary<string, Expression> variableMap = null)
 		{
 			Value = value;
+			_variableMap = variableMap;
 		}
 
 		public override string ToString()
@@ -19,7 +25,38 @@ namespace Titanium.Core.Factors
 
 		internal override Expression Evaluate()
 		{
-			return Expressionizer.ToExpression(this);
+			return _variableMap != null && _variableMap.ContainsKey(Value)
+				? _variableMap[Value]
+				: Expressionizer.ToExpression(this);
+		}
+
+		public override int CompareTo(object obj)
+		{
+			var alphabeticFactor = obj as AlphabeticFactor;
+			if (alphabeticFactor != null)
+			{
+				return String.Compare(Value, alphabeticFactor.Value, StringComparison.Ordinal);
+			}
+
+			var numericFactor = obj as NumericFactor;
+			if (numericFactor != null)
+			{
+				return 1;
+			}
+
+			var expressionFactor = obj as ExpressionFactor;
+			if (expressionFactor != null)
+			{
+				return 0;
+			}
+
+			throw new IncomparableTypeException(GetType(), obj.GetType());
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			var af = other as AlphabeticFactor;
+			return af != null && Value == af.Value;
 		}
 	}
 }

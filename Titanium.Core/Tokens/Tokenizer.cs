@@ -12,8 +12,9 @@ namespace Titanium.Core.Tokens
 		private static readonly Dictionary<TokenType, Regex> TokenDefinitions = new Dictionary<TokenType, Regex>
 		{
 			{ TokenType.Integer, new Regex(@"^\d+$") },
-			{ TokenType.Float, new Regex(@"^(\d*\.\d+|\d+\.\d*)$") },
+			{ TokenType.Float, new Regex(@"^((\d*\.\d+|\d+\.\d*)(E\d+|)|\d+E\d)$") },
 			{ TokenType.Letter, new Regex(@"^[a-zA-ZΑ-ώ_]+[a-zA-ZΑ-ώ_\d]*$") },
+			{ TokenType.String, new Regex(@"^""[^""]*""$") },
 			{ TokenType.Negate, new Regex(@"^⁻$") },
 			{ TokenType.OpenParenthesis, new Regex(@"^\($") },
 			{ TokenType.CloseParenthesis, new Regex(@"^\)$") },
@@ -22,11 +23,12 @@ namespace Titanium.Core.Tokens
 			{ TokenType.Period, new Regex(@"^\.$") },
 			{ TokenType.Comma, new Regex(@"^,$") },
 			{ TokenType.Plus, new Regex(@"^\+$") },
-			{ TokenType.Minus, new Regex(@"^-$") },
+			{ TokenType.Minus, new Regex(@"^\-$") },
 			{ TokenType.Multiply, new Regex(@"^\*$") },
 			{ TokenType.Divide, new Regex(@"^\/$") },
 			{ TokenType.Exponent, new Regex(@"^\^$") },
 			{ TokenType.Factorial, new Regex(@"^!$") },
+			{ TokenType.Assign, new Regex(@"^→$") },
 			{ TokenType.Root, new Regex(@"^√$") },
 			{ TokenType.Space, new Regex(@"^\s+$") },
 			{ TokenType.None, new Regex("^$") }
@@ -34,7 +36,7 @@ namespace Titanium.Core.Tokens
 
 		internal static List<Token> Tokenize(string input)
 		{
-			input = CleanNegatives(input);
+			input = ReplaceHyphenNegations(input);
 			var tokens = new List<Token>();
 			var startIndex = 0;
 
@@ -55,14 +57,18 @@ namespace Titanium.Core.Tokens
 			return ConvertFunctions(tokens).Where(t => t.Type != TokenType.Space).ToList();
 		}
 
-		private static string CleanNegatives(string input)
+		private static string ReplaceHyphenNegations(string input)
 		{
-			while (input.Contains("⁻⁻"))
+			// Starting hyphens must be negation
+			if (input.StartsWith("-"))
 			{
-				input = input.Replace("⁻⁻", "");
+				input = string.Format("⁻{0}", input.Substring(1));
 			}
 
-			return input;
+			// If it isn't immediately preceded by a word symbol (0-9, a-z, _) or a closing parenthesis, it must be a negation
+			return Regex.Replace(input, @"([^\w\s\)])\-", "$1⁻");
+
+			// Anything else is a syntax error!
 		}
 
 		private static Token FindNextToken(string input)

@@ -13,16 +13,18 @@ namespace Titanium.Core.Functions
 			{ "⁻", new Negate() },
 			{ "^", new Exponent() },
 			{ "!", new Factorial() },
-			{ "sin", new SimpleFloatCalculation("sin", Math.Sin) },
-			{ "cos", new SimpleFloatCalculation("cos", Math.Cos) },
-			{ "tan", new SimpleFloatCalculation("tan", Math.Tan) },
+			{ "sin", new Trigonometric("sin", Math.Sin) },
+			{ "cos", new Trigonometric("cos", Math.Cos) },
+			{ "tan", new Trigonometric("tan", Math.Tan) },
 			{ "√", new SquareRoot() },
-			{ "sqrt", new SimpleFloatCalculation("√", Math.Sqrt) },
+			{ "sqrt", new SquareRoot() },
+			{ "root", new OtherRoot() },
 			{ "ceiling", new SimpleFloatCalculation("ceiling", Math.Ceiling) },
 			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
 			{ "abs", new AbsoluteValue() },
 			{ "ln", new NaturalLog() },
-			{ "log", new BaseTenLogarithm() }
+			{ "log", new BaseTenLogarithm() },
+			{ "ans", new ThrowDomainExceptionFunction() }
 		};
 
 		public static IEnumerable<string> AllNames

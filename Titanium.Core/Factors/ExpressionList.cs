@@ -24,5 +24,15 @@ namespace Titanium.Core.Factors
 		{
 			return string.Format("{{{0}}}", string.Join(",", Expressions));
 		}
+
+		public override int CompareTo(object obj)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override bool Equals(Evaluatable other)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

@@ -5,7 +5,7 @@ using Titanium.Core.Factors;
 
 namespace Titanium.Core.Numbers
 {
-	internal abstract class Number
+	internal abstract class Number : IEquatable<Number>
 	{
 		public static Number operator +(Number left, Number right)
 		{
@@ -136,5 +136,7 @@ namespace Titanium.Core.Numbers
 		internal abstract double ValueAsFloat();
 		internal abstract bool IsNegative { get; }
 		internal abstract bool IsZero { get; }
+		internal abstract bool IsOne { get; }
+		public abstract bool Equals(Number other);
 	}
 }

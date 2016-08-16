@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Numbers;
 
 namespace Titanium.Core.Reducer
 {
@@ -26,7 +28,13 @@ namespace Titanium.Core.Reducer
 
 			if (thing is ComponentListFactor)
 			{
-				return ToExpression(((ComponentListFactor)thing).Factor);
+				var clf = (ComponentListFactor) thing;
+				if (clf.IsInNumerator)
+				{
+					return ToExpression(clf.Factor);
+				}
+
+				return ToExpression(new ComponentList(new List<ComponentListFactor> { clf }));
 			}
 
 			throw new UnexpectedTypeException(thing.GetType());
@@ -41,9 +49,36 @@ namespace Titanium.Core.Reducer
 
 		private static Expression ToExpression(Component component)
 		{
+			if (component is ComponentList)
+			{
+				return ToExpression((ComponentList) component);
+			}
+
 			return component is SingleFactorComponent
 				? ToExpression(((SingleFactorComponent)component).Factor)
 				: new SingleComponentExpression(component);
+		}
+
+		private static Expression ToExpression(ComponentList componentList)
+		{
+			if (componentList.Factors.Count == 1)
+			{
+				if (componentList.Factors[0].IsInNumerator)
+				{
+					return ToExpression(componentList.Factors[0].Factor);
+				}
+
+				if (componentList.Factors[0].Factor is NumericFactor && !componentList.Factors[0].IsInNumerator)
+				{
+					var nf = (NumericFactor)componentList.Factors[0].Factor;
+					if (nf.Number is Integer)
+					{
+						return new SingleComponentExpression(new IntegerFraction(new Integer(1), (Integer)nf.Number));
+					}
+				}
+			}
+
+			return new SingleComponentExpression(componentList);
 		}
 
 		private static Expression ToExpression(Factor factor)

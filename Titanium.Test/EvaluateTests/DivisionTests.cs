@@ -83,5 +83,11 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.AssertThrows<DivideByZeroException>("1.0 / 0");
 		}
+
+		[TestMethod]
+		public void RepeatedDivisionTest()
+		{
+			Common.EvaluateAndAssert("1/2/3.", ".166666666666667");
+		}
 	}
 }

@@ -7,6 +7,7 @@
 		Float,
 		Function,
 		Letter,
+		String,
 		Negate,
 		OpenParenthesis,
 		CloseParenthesis,
@@ -20,6 +21,7 @@
 		Divide,
 		Exponent,
 		Factorial,
+		Assign,
 		Root,
 		Space,
 		ExpressionList

@@ -36,6 +36,12 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void SineOfPiOverEightTest()
+		{
+			Common.EvaluateAndAssert("sin(π/8)", "√(2-√(2))/2");
+		}
+
+		[TestMethod]
 		public void SineOfAlphabeticOperantTest()
 		{
 			Common.EvaluateAndAssert("sin(a)", "sin(a)");
@@ -72,6 +78,12 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void CosineOfPiOverEightTest()
+		{
+			Common.EvaluateAndAssert("cos(π/8)", "√(√(2)+2)/2");
+		}
+
+		[TestMethod]
 		public void CosineOfAlphabeticOperantTest()
 		{
 			Common.EvaluateAndAssert("cos(a)", "cos(a)");
@@ -96,6 +108,18 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void TangentOfOneHalfTest()
+		{
+			Common.EvaluateAndAssert("tan(1/2)", "tan(1/2)");
+		}
+
+		[TestMethod]
+		public void TangentOfOneHalfFloatTest()
+		{
+			Common.EvaluateAndAssert("tan(1/2.)", ".54630248984379");
+		}
+
+		[TestMethod]
 		public void TangentOfPiTest()
 		{
 			Common.EvaluateAndAssert("tan(π)", "0");
@@ -108,11 +132,21 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void TangentOfNegativePiOverTwoTest()
+		{
+			Common.EvaluateAndAssert("tan(⁻π/2)", "undef");
+		}
+
+		[TestMethod]
 		public void TangentOfAlphabeticOperantTest()
 		{
 			Common.EvaluateAndAssert("tan(a)", "tan(a)");
 		}
 
-		// Todo: Special results like sin(pi/2) = sqrt(2)/2
+		[TestMethod]
+		public void TangentOfPiOverEightTest()
+		{
+			Common.EvaluateAndAssert("tan(π/8)", "√(2-√(2))/√(√(2)+2)");
+		}
 	}
 }

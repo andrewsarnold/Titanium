@@ -8,7 +8,12 @@ namespace Titanium.Test.EvaluateTests
 	{
 		internal static void EvaluateAndAssert(string input, string output)
 		{
-			Assert.AreEqual(output, Evaluator.Evaluate(input));
+			Assert.AreEqual(output, new Evaluator().Evaluate(input));
+		}
+
+		internal static void EvaluateAndAssert(Evaluator evaluator, string input, string output)
+		{
+			Assert.AreEqual(output, evaluator.Evaluate(input));
 		}
 
 		internal static void AssertThrows<T>(string input)
