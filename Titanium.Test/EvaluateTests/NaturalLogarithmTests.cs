@@ -61,6 +61,12 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void NaturalLogOfOneFifth()
+		{
+			Common.EvaluateAndAssert("ln(1/5)", "⁻ln(5)");
+		}
+
+		[TestMethod]
 		public void NaturalLogOfIntegerRoot()
 		{
 			Common.EvaluateAndAssert("ln(√(5))", "ln(5)/2");

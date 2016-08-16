@@ -91,6 +91,26 @@ namespace Titanium.Core.Expressions
 				return Expressionizer.ToExpression(right);
 			}
 
+			if (left.CompareTo(right) == 1)
+			{
+				// Swap placement
+				if (!_isAdd)
+				{
+					var newRight = Componentizer.ToComponent(new FunctionComponent(new Negate(), new List<Expression> { right }));
+					return new DualComponentExpression(newRight, Componentizer.ToComponent(left), true).Evaluate();
+				}
+
+				var newLeft = Componentizer.ToComponent(left);
+				if (newLeft is FunctionComponent)
+				{
+					if (((FunctionComponent) newLeft).Function is Negate)
+					{
+						return new DualComponentExpression(Componentizer.ToComponent(right), Componentizer.ToComponent(((FunctionComponent) newLeft).Operands[0]), false);
+					}
+				}
+				return new DualComponentExpression(Componentizer.ToComponent(right), newLeft, true);
+			}
+
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
 		}
 
