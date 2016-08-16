@@ -18,6 +18,7 @@ namespace Titanium.Core.Functions
 			{ "tan", new Trigonometric("tan", Math.Tan) },
 			{ "√", new SquareRoot() },
 			{ "sqrt", new SquareRoot() },
+			{ "root", new OtherRoot() },
 			{ "ceiling", new SimpleFloatCalculation("ceiling", Math.Ceiling) },
 			{ "floor", new SimpleFloatCalculation("floor", Math.Floor) },
 			{ "abs", new AbsoluteValue() },

@@ -77,5 +77,17 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("3^(1/2)", "√(3)");
 		}
+
+		[TestMethod]
+		public void CubeRoot()
+		{
+			Common.EvaluateAndAssert("root(3,8)", "2");
+		}
+
+		[TestMethod]
+		public void ComplexRoot()
+		{
+			Common.EvaluateAndAssert("root((4+5-6.),(2*2*2))", "2.");
+		}
 	}
 }

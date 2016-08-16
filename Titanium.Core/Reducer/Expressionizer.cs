@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
@@ -27,7 +28,13 @@ namespace Titanium.Core.Reducer
 
 			if (thing is ComponentListFactor)
 			{
-				return ToExpression(((ComponentListFactor)thing).Factor);
+				var clf = (ComponentListFactor) thing;
+				if (clf.IsInNumerator)
+				{
+					return ToExpression(clf.Factor);
+				}
+
+				return ToExpression(new ComponentList(new List<ComponentListFactor> { clf }));
 			}
 
 			throw new UnexpectedTypeException(thing.GetType());
