@@ -24,6 +24,7 @@ namespace Titanium.Core.Functions
 			{ "abs", new AbsoluteValue() },
 			{ "ln", new NaturalLog() },
 			{ "log", new BaseTenLogarithm() },
+			{ "factor", new PrimeFactor() },
 			{ "ans", new ThrowDomainExceptionFunction() }
 		};
 
