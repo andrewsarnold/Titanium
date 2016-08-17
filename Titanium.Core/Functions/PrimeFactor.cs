@@ -20,52 +20,51 @@ namespace Titanium.Core.Functions
 		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
 			var parameter = parameters[0].Evaluate();
-			var asFactor = Factorizer.ToFactor(parameter);
-			var numericFactor = asFactor as NumericFactor;
-			if (numericFactor != null)
+			var numericFactor = Factorizer.ToFactor(parameter) as NumericFactor;
+			if (numericFactor == null)
 			{
-				if (numericFactor.Number.IsZero)
-				{
-					return Expressionizer.ToExpression(numericFactor);
-				}
-				if (numericFactor.Number.IsOne)
-				{
-					return Expressionizer.ToExpression(numericFactor);
-				}
-
-				var number = Math.Abs(numericFactor.Number.ValueAsFloat());
-				var plt = PrimesLessThan(number);
-				var primeCounts = new Dictionary<int, int>();
-				foreach (var prime in plt)
-				{
-					while (number % prime < Constants.Tolerance)
-					{
-						if (!primeCounts.ContainsKey(prime))
-						{
-							primeCounts.Add(prime, 1);
-						}
-						else
-						{
-							primeCounts[prime]++;
-						}
-
-						number /= prime;
-					}
-				}
-
-				var unevaluatedExponentFunctions = primeCounts.Select(pc => pc.Value > 1
-					? new FunctionComponent(new Exponent(), new List<Expression>
-					{
-						Expressionizer.ToExpression(new NumericFactor(new Integer(pc.Key))),
-						Expressionizer.ToExpression(new NumericFactor(new Integer(pc.Value)))
-					})
-					: Componentizer.ToComponent(new NumericFactor(new Integer(pc.Key))));
-				var componentList = new ComponentList(unevaluatedExponentFunctions.Select(uef => new ComponentListFactor(Factorizer.ToFactor(uef))).ToList());
-
-				return Expressionizer.ToExpression(componentList);
+				return parameter;
+			}
+			if (numericFactor.Number.IsZero)
+			{
+				return Expressionizer.ToExpression(numericFactor);
+			}
+			if (numericFactor.Number.IsOne)
+			{
+				return Expressionizer.ToExpression(numericFactor);
 			}
 
-			return parameter;
+			var number = Math.Abs(numericFactor.Number.ValueAsFloat());
+			var plt = PrimesLessThan(number);
+			var primeCounts = new Dictionary<int, int>();
+			foreach (var prime in plt)
+			{
+				while (number % prime < Constants.Tolerance)
+				{
+					if (!primeCounts.ContainsKey(prime))
+					{
+						primeCounts.Add(prime, 1);
+					}
+					else
+					{
+						primeCounts[prime]++;
+					}
+
+					number /= prime;
+				}
+			}
+
+			var useFloats = numericFactor.Number is Float;
+			var unevaluatedExponentFunctions = primeCounts.Select(pc => pc.Value > 1
+				? new FunctionComponent(new Exponent(), new List<Expression>
+				{
+					Expressionizer.ToExpression(new NumericFactor(useFloats ? (Number)new Float(pc.Key) : new Integer(pc.Key))),
+					Expressionizer.ToExpression(new NumericFactor(new Integer(pc.Value)))
+				})
+				: Componentizer.ToComponent(new NumericFactor(useFloats ? (Number)new Float(pc.Key) : new Integer(pc.Key))));
+			var componentList = new ComponentList(unevaluatedExponentFunctions.Select(uef => new ComponentListFactor(Factorizer.ToFactor(uef))).ToList());
+
+			return Expressionizer.ToExpression(componentList);
 		}
 
 		internal override string ToString(List<Expression> parameters)

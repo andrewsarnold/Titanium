@@ -20,9 +20,9 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void PrimeFactorOfPrimeIsPrime()
 		{
-			//Common.EvaluateAndAssert("factor(2)", "2");
-			//Common.EvaluateAndAssert("factor(3)", "3");
-			//Common.EvaluateAndAssert("factor(5)", "5");
+			Common.EvaluateAndAssert("factor(2)", "2");
+			Common.EvaluateAndAssert("factor(3)", "3");
+			Common.EvaluateAndAssert("factor(5)", "5");
 			Common.EvaluateAndAssert("factor(23)", "23");
 		}
 
