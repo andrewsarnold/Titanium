@@ -20,9 +20,10 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void PrimeFactorOfPrimeIsPrime()
 		{
-			Common.EvaluateAndAssert("factor(2)", "2");
-			Common.EvaluateAndAssert("factor(3)", "3");
-			Common.EvaluateAndAssert("factor(5)", "5");
+			//Common.EvaluateAndAssert("factor(2)", "2");
+			//Common.EvaluateAndAssert("factor(3)", "3");
+			//Common.EvaluateAndAssert("factor(5)", "5");
+			Common.EvaluateAndAssert("factor(23)", "23");
 		}
 
 		[TestMethod]
@@ -37,7 +38,6 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("factor(12)", "2^2*3");
 			Common.EvaluateAndAssert("factor(35)", "5*7");
 			Common.EvaluateAndAssert("factor(100)", "2^2*5^2");
-			Common.EvaluateAndAssert("factor(101)", "2^2*5^2");
 		}
 
 		[TestMethod]
@@ -72,6 +72,7 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("factor(2.0)", "2.");
 			Common.EvaluateAndAssert("factor(3.0)", "3.");
 			Common.EvaluateAndAssert("factor(5.0)", "5.");
+			Common.EvaluateAndAssert("factor(23.)", "23.");
 		}
 
 		[TestMethod]
@@ -94,7 +95,7 @@ namespace Titanium.Test.EvaluateTests
 		}
 		
 		[TestMethod]
-		public void PrimeFactorOfNegativeOneIsNEgativeOne()
+		public void PrimeFactorOfNegativeOneIsNegativeOne()
 		{
 			Common.EvaluateAndAssert("factor(⁻1)", "⁻1");
 		}
@@ -125,7 +126,6 @@ namespace Titanium.Test.EvaluateTests
 			Common.EvaluateAndAssert("factor(12)", "⁻1*2^2*3");
 			Common.EvaluateAndAssert("factor(35)", "⁻1*5*7");
 			Common.EvaluateAndAssert("factor(100)", "⁻1*2^2*5^2");
-			Common.EvaluateAndAssert("factor(101)", "⁻1*2^2*5^2");
 		}
 
 		[TestMethod]

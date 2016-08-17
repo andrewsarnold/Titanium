@@ -24,6 +24,15 @@ namespace Titanium.Core.Functions
 			var numericFactor = asFactor as NumericFactor;
 			if (numericFactor != null)
 			{
+				if (numericFactor.Number.IsZero)
+				{
+					return Expressionizer.ToExpression(numericFactor);
+				}
+				if (numericFactor.Number.IsOne)
+				{
+					return Expressionizer.ToExpression(numericFactor);
+				}
+
 				var number = Math.Abs(numericFactor.Number.ValueAsFloat());
 				var plt = PrimesLessThan(number);
 				var primeCounts = new Dictionary<int, int>();
@@ -44,12 +53,16 @@ namespace Titanium.Core.Functions
 					}
 				}
 
-				var exponents = primeCounts.Select(pc => pc.Value > 1
-					? string.Format("{0}^{1}", pc.Key, pc.Value)
-					: pc.Key.ToString());
-				var expression = string.Join("*", exponents);
-				
-				return Expressionizer.ToExpression(numericFactor);
+				var unevaluatedExponentFunctions = primeCounts.Select(pc => pc.Value > 1
+					? new FunctionComponent(new Exponent(), new List<Expression>
+					{
+						Expressionizer.ToExpression(new NumericFactor(new Integer(pc.Key))),
+						Expressionizer.ToExpression(new NumericFactor(new Integer(pc.Value)))
+					})
+					: Componentizer.ToComponent(new NumericFactor(new Integer(pc.Key))));
+				var componentList = new ComponentList(unevaluatedExponentFunctions.Select(uef => new ComponentListFactor(Factorizer.ToFactor(uef))).ToList());
+
+				return Expressionizer.ToExpression(componentList);
 			}
 
 			return parameter;
@@ -62,8 +75,7 @@ namespace Titanium.Core.Functions
 
 		private static IEnumerable<int> PrimesLessThan(double value)
 		{
-			var max = (int)Math.Sqrt(value) + 1;
-			var sieve = Enumerable.Range(2, max).ToList();
+			var sieve = Enumerable.Range(2, (int)value + 1).ToList();
 
 			for (var i = 0; i < sieve.Count; i++)
 			{
