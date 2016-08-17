@@ -59,7 +59,12 @@ namespace Titanium.Core
 				}
 				for (var i = 2; i < delVarMatch.Groups.Count; i++)
 				{
-					var varName = delVarMatch.Groups[i].Captures[0].Value;
+					var group = delVarMatch.Groups[i];
+					if (group.Captures.Count == 0)
+					{
+						continue;
+					}
+					var varName = group.Captures[0].Value;
 					if (Regex.Matches(varName, "\\W").Count > 0)
 					{
 						throw new ArgumentMustBeAVariableNameException();
