@@ -72,6 +72,7 @@
     <Compile Include="EvaluateTests\NaturalLogarithmTests.cs" />
     <Compile Include="EvaluateTests\NegationTests.cs" />
     <Compile Include="EvaluateTests\NestedParenthesesTests.cs" />
+    <Compile Include="EvaluateTests\PrimeFactorTests.cs" />
     <Compile Include="EvaluateTests\RootTests.cs" />
     <Compile Include="EvaluateTests\CeilingTests.cs" />
     <Compile Include="EvaluateTests\ScientificNotationTests.cs" />
