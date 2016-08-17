@@ -464,7 +464,7 @@ namespace Titanium.Core.Components
 			{
 				return string.Format("{0}/{1}",
 					numString,
-					denomString.Contains("*") ? string.Format("({0})", denomString) : denomString);
+					denomString.Contains("*") || denomString.Contains(".") ? string.Format("({0})", denomString) : denomString);
 			}
 
 			if (numerators.Any())
