@@ -45,6 +45,11 @@ namespace Titanium.Core.Numbers
 			return Math.Abs(Value) < Constants.Tolerance ? 0 : Value;
 		}
 
+		internal override Number AbsoluteValue()
+		{
+			return new Float(Math.Abs(Value));
+		}
+
 		internal override bool IsNegative
 		{
 			get { return Value < 0; }

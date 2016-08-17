@@ -25,9 +25,7 @@ namespace Titanium.Core.Functions.Implementations
 			if (factor is NumericFactor)
 			{
 				var n = ((NumericFactor)factor).Number;
-				return Expressionizer.ToExpression(new NumericFactor(n is Integer
-					? new Integer(Math.Abs((((Integer)n).Value)))
-					: (Number)new Float(Math.Abs((((Float)n).Value)))));
+				return Expressionizer.ToExpression(new NumericFactor(n.AbsoluteValue()));
 			}
 			
 			// If parameter is an integer fraction, likewise

@@ -16,6 +16,11 @@
 				: double.PositiveInfinity;
 		}
 
+		internal override Number AbsoluteValue()
+		{
+			return new Infinity();
+		}
+
 		internal override bool IsNegative
 		{
 			get { return _isNegative; }

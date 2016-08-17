@@ -21,6 +21,11 @@ namespace Titanium.Core.Numbers
 			return Value;
 		}
 
+		internal override Number AbsoluteValue()
+		{
+			return new Integer(Math.Abs(Value));
+		}
+
 		internal override bool IsNegative
 		{
 			get { return Value < 0; }
