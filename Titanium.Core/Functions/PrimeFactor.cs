@@ -35,6 +35,14 @@ namespace Titanium.Core.Functions
 			}
 
 			var number = Math.Abs(numericFactor.Number.ValueAsFloat());
+
+			var isFractional = false;
+			if (number > 0 && number < 1)
+			{
+				number = 1 / number;
+				isFractional = true;
+			}
+
 			var plt = PrimesLessThan(number);
 			var primeCounts = new Dictionary<int, int>();
 			foreach (var prime in plt)
@@ -64,6 +72,19 @@ namespace Titanium.Core.Functions
 				: Componentizer.ToComponent(new NumericFactor(useFloats ? (Number)new Float(pc.Key) : new Integer(pc.Key))));
 			var componentList = new ComponentList(unevaluatedExponentFunctions.Select(uef => new ComponentListFactor(Factorizer.ToFactor(uef))).ToList());
 
+			if (isFractional)
+			{
+				foreach (var componentListFactor in componentList.Factors)
+				{
+					componentListFactor.IsInNumerator = false;
+				}
+
+				if (!numericFactor.Number.IsNegative)
+				{
+					componentList.Factors.Insert(0, new ComponentListFactor(new NumericFactor(new Integer(1))));
+				}
+			}
+			
 			if (numericFactor.Number.IsNegative)
 			{
 				componentList.Factors.Insert(0, new ComponentListFactor(new NumericFactor(useFloats

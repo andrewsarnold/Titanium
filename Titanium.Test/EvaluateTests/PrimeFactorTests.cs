@@ -123,9 +123,9 @@ namespace Titanium.Test.EvaluateTests
 		[TestMethod]
 		public void PrimeFactorOfNegativeDivisibleNumberIsEvaluated()
 		{
-			Common.EvaluateAndAssert("factor(12)", "⁻1*2^2*3");
-			Common.EvaluateAndAssert("factor(35)", "⁻1*5*7");
-			Common.EvaluateAndAssert("factor(100)", "⁻1*2^2*5^2");
+			Common.EvaluateAndAssert("factor(⁻12)", "⁻1*2^2*3");
+			Common.EvaluateAndAssert("factor(⁻35)", "⁻1*5*7");
+			Common.EvaluateAndAssert("factor(⁻100)", "⁻1*2^2*5^2");
 		}
 
 		[TestMethod]
