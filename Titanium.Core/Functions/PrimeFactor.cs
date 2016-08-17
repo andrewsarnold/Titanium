@@ -31,7 +31,7 @@ namespace Titanium.Core.Functions
 			}
 			if (numericFactor.Number.IsOne)
 			{
-				return Expressionizer.ToExpression(numericFactor);
+				return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
 			}
 
 			var number = Math.Abs(numericFactor.Number.ValueAsFloat());
@@ -63,6 +63,13 @@ namespace Titanium.Core.Functions
 				})
 				: Componentizer.ToComponent(new NumericFactor(useFloats ? (Number)new Float(pc.Key) : new Integer(pc.Key))));
 			var componentList = new ComponentList(unevaluatedExponentFunctions.Select(uef => new ComponentListFactor(Factorizer.ToFactor(uef))).ToList());
+
+			if (numericFactor.Number.IsNegative)
+			{
+				componentList.Factors.Insert(0, new ComponentListFactor(new NumericFactor(useFloats
+					? (Number)new Float(-1)
+					: new Integer(-1))));
+			}
 
 			return Expressionizer.ToExpression(componentList);
 		}
