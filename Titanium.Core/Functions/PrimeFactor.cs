@@ -36,6 +36,13 @@ namespace Titanium.Core.Functions
 
 			var number = Math.Abs(numericFactor.Number.ValueAsFloat());
 
+			// TODO: If number is fractional and greater than 1,
+			// convert to an integer fraction and go from there.
+			if (number > 1 && number % 1 > 0)
+			{
+				return Expressionizer.ToExpression(numericFactor);
+			}
+
 			var isFractional = false;
 			if (number > 0 && number < 1)
 			{
