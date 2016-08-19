@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Resources;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
@@ -275,10 +274,7 @@ namespace Titanium.Core.Components
 			return false;
 		}
 
-		internal IntegerFraction Inverse
-		{
-			get { return new IntegerFraction(Denominator, Numerator); }
-		}
+		internal IntegerFraction Inverse => new IntegerFraction(Denominator, Numerator);
 
 		private Float ValueAsFloat()
 		{

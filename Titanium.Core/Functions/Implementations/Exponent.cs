@@ -155,7 +155,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 			var asFactor = Factorizer.ToFactor(expression);
 			if (expression is DualComponentExpression ||
-				 (isBase && asFactor is NumericFactor && ((NumericFactor)asFactor).Number is Float))
+				 (isBase && (asFactor as NumericFactor)?.Number is Float))
 			{
 				return string.Format("({0})", expression);
 			}

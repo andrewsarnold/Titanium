@@ -102,7 +102,7 @@ namespace Titanium.Core.Functions.Implementations
 			}
 
 			var identity = Identities.FirstOrDefault(i => i.Function == function && i.Input.Equals(input));
-			return identity != null ? identity.Output : null;
+			return identity?.Output;
 		}
 	}
 }

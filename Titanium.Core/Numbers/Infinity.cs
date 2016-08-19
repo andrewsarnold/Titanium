@@ -21,20 +21,9 @@
 			return new Infinity();
 		}
 
-		internal override bool IsNegative
-		{
-			get { return _isNegative; }
-		}
-
-		internal override bool IsZero
-		{
-			get { return false; }
-		}
-
-		internal override bool IsOne
-		{
-			get { return false; }
-		}
+		internal override bool IsNegative => _isNegative;
+		internal override bool IsZero => false;
+		internal override bool IsOne => false;
 
 		public override bool Equals(Number other)
 		{

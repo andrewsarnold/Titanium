@@ -26,20 +26,9 @@ namespace Titanium.Core.Numbers
 			return new Integer(Math.Abs(Value));
 		}
 
-		internal override bool IsNegative
-		{
-			get { return Value < 0; }
-		}
-
-		internal override bool IsZero
-		{
-			get { return Value == 0; }
-		}
-
-		internal override bool IsOne
-		{
-			get { return Value == 1; }
-		}
+		internal override bool IsNegative => Value < 0;
+		internal override bool IsZero => Value == 0;
+		internal override bool IsOne => Value == 1;
 
 		public override bool Equals(Number other)
 		{
@@ -47,7 +36,7 @@ namespace Titanium.Core.Numbers
 			return integer != null && Value == integer.Value;
 		}
 
-		internal static Integer Zero { get { return new Integer(0); } }
+		internal static Integer Zero => new Integer(0);
 
 		internal static int LeastCommonMultiple(int a, int b)
 		{

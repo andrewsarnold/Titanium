@@ -50,20 +50,9 @@ namespace Titanium.Core.Numbers
 			return new Float(Math.Abs(Value));
 		}
 
-		internal override bool IsNegative
-		{
-			get { return Value < 0; }
-		}
-
-		internal override bool IsZero
-		{
-			get { return Math.Abs(Value) < Constants.Tolerance; }
-		}
-
-		internal override bool IsOne
-		{
-			get { return Math.Abs(Value - 1) < Constants.Tolerance; }
-		}
+		internal override bool IsNegative => Value < 0;
+		internal override bool IsZero => Math.Abs(Value) < Constants.Tolerance;
+		internal override bool IsOne => Math.Abs(Value - 1) < Constants.Tolerance;
 
 		public override bool Equals(Number other)
 		{

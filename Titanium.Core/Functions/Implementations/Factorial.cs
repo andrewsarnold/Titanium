@@ -64,7 +64,7 @@ namespace Titanium.Core.Functions.Implementations
 		{
 			var parameterAsFactor = Factorizer.ToFactor(parameters[0]);
 			var shouldWrap = parameterAsFactor is ExpressionFactor ||
-				(parameterAsFactor is NumericFactor && ((NumericFactor)parameterAsFactor).Number is Float);
+				((parameterAsFactor as NumericFactor)?.Number is Float);
 			return string.Format("{0}{1}{2}{3}",
 				shouldWrap ? "(" : string.Empty,
 				parameters[0],

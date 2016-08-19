@@ -11,7 +11,7 @@ namespace Titanium.Wpf
 {
 	public partial class MainWindow
 	{
-		private Evaluator _evaluator;
+		private readonly Evaluator _evaluator;
 
 		public MainWindow()
 		{
