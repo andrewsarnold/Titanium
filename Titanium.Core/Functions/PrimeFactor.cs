@@ -50,24 +50,7 @@ namespace Titanium.Core.Functions
 				isFractional = true;
 			}
 
-			var plt = PrimesLessThan(number);
-			var primeCounts = new Dictionary<int, int>();
-			foreach (var prime in plt)
-			{
-				while (number % prime < Constants.Tolerance)
-				{
-					if (!primeCounts.ContainsKey(prime))
-					{
-						primeCounts.Add(prime, 1);
-					}
-					else
-					{
-						primeCounts[prime]++;
-					}
-
-					number /= prime;
-				}
-			}
+			var primeCounts = Factorize(number);
 
 			var useFloats = numericFactor.Number is Float;
 			var unevaluatedExponentFunctions = primeCounts.Select(pc => pc.Value > 1
@@ -105,6 +88,29 @@ namespace Titanium.Core.Functions
 		internal override string ToString(List<Expression> parameters)
 		{
 			throw new NotImplementedException();
+		}
+
+		private static Dictionary<int, int> Factorize(double number)
+		{
+			var plt = PrimesLessThan(number);
+			var primeCounts = new Dictionary<int, int>();
+			foreach (var prime in plt)
+			{
+				while (number % prime < Constants.Tolerance)
+				{
+					if (!primeCounts.ContainsKey(prime))
+					{
+						primeCounts.Add(prime, 1);
+					}
+					else
+					{
+						primeCounts[prime]++;
+					}
+
+					number /= prime;
+				}
+			}
+			return primeCounts;
 		}
 
 		private static IEnumerable<int> PrimesLessThan(double value)
