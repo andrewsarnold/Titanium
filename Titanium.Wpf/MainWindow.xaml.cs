@@ -11,7 +11,7 @@ namespace Titanium.Wpf
 {
 	public partial class MainWindow
 	{
-		private Evaluator _evaluator;
+		private readonly Evaluator _evaluator;
 
 		public MainWindow()
 		{
@@ -23,8 +23,14 @@ namespace Titanium.Wpf
 
 		private void FillInsertMenu()
 		{
+			FillCommonMenu();
 			FillFunctionMenu();
 			FillSymbolMenu();
+		}
+
+		private void FillCommonMenu()
+		{
+			MenuCommon.Items.Add(SymbolMenuItem("⁻", "negative"));
 		}
 
 		private void FillFunctionMenu()
@@ -54,6 +60,7 @@ namespace Titanium.Wpf
 			var menu = new MenuItem { Header = "Symbols" };
 			menu.Items.Add(SymbolMenuItem("⁻", "negative"));
 			menu.Items.Add(SymbolMenuItem("√", "square root"));
+			menu.Items.Add(SymbolMenuItem("→", "assignment"));
 			menu.Items.Add(GreekAlphabet());
 			MenuInsert.Items.Add(menu);
 		}

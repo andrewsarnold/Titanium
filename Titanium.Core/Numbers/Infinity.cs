@@ -16,20 +16,14 @@
 				: double.PositiveInfinity;
 		}
 
-		internal override bool IsNegative
+		internal override Number AbsoluteValue()
 		{
-			get { return _isNegative; }
+			return new Infinity();
 		}
 
-		internal override bool IsZero
-		{
-			get { return false; }
-		}
-
-		internal override bool IsOne
-		{
-			get { return false; }
-		}
+		internal override bool IsNegative => _isNegative;
+		internal override bool IsZero => false;
+		internal override bool IsOne => false;
 
 		public override bool Equals(Number other)
 		{

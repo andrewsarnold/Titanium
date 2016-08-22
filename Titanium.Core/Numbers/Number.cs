@@ -134,6 +134,7 @@ namespace Titanium.Core.Numbers
 		}
 
 		internal abstract double ValueAsFloat();
+		internal abstract Number AbsoluteValue();
 		internal abstract bool IsNegative { get; }
 		internal abstract bool IsZero { get; }
 		internal abstract bool IsOne { get; }

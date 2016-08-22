@@ -12,8 +12,9 @@ namespace Titanium.Core.Tokens
 		private static readonly Dictionary<TokenType, Regex> TokenDefinitions = new Dictionary<TokenType, Regex>
 		{
 			{ TokenType.Integer, new Regex(@"^\d+$") },
-			{ TokenType.Float, new Regex(@"^(\d*\.\d+|\d+\.\d*)$") },
+			{ TokenType.Float, new Regex(@"^((\d*\.\d+|\d+\.\d*)(E\d+|)|\d+E\d)$") },
 			{ TokenType.Letter, new Regex(@"^[a-zA-ZΑ-ώ_]+[a-zA-ZΑ-ώ_\d]*$") },
+			{ TokenType.String, new Regex(@"^""[^""]*""$") },
 			{ TokenType.Negate, new Regex(@"^⁻$") },
 			{ TokenType.OpenParenthesis, new Regex(@"^\($") },
 			{ TokenType.CloseParenthesis, new Regex(@"^\)$") },
@@ -27,6 +28,7 @@ namespace Titanium.Core.Tokens
 			{ TokenType.Divide, new Regex(@"^\/$") },
 			{ TokenType.Exponent, new Regex(@"^\^$") },
 			{ TokenType.Factorial, new Regex(@"^!$") },
+			{ TokenType.Assign, new Regex(@"^→$") },
 			{ TokenType.Root, new Regex(@"^√$") },
 			{ TokenType.Space, new Regex(@"^\s+$") },
 			{ TokenType.None, new Regex("^$") }

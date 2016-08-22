@@ -11,6 +11,11 @@ namespace Titanium.Test.EvaluateTests
 			Assert.AreEqual(output, new Evaluator().Evaluate(input));
 		}
 
+		internal static void EvaluateAndAssert(Evaluator evaluator, string input, string output)
+		{
+			Assert.AreEqual(output, evaluator.Evaluate(input));
+		}
+
 		internal static void AssertThrows<T>(string input)
 		{
 			try

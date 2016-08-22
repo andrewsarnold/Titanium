@@ -3,7 +3,7 @@
 	internal class Token
 	{
 		internal TokenType Type { get; private set; }
-		internal string Value { get; private set; }
+		internal string Value { get; }
 
 		internal Token(TokenType type, string value)
 		{

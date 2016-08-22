@@ -138,12 +138,12 @@ namespace Titanium.Core.Functions.Implementations
 				var frac = (IntegerFraction)powerAsComponent;
 				if (frac.Numerator == 1 && frac.Denominator == 2)
 				{
-					var middle = ToString(parameters[0]);
+					var middle = ToString(parameters[0], false);
 					return string.Format("√{0}{1}{2}", middle.StartsWith("(") ? string.Empty : "(", middle, middle.EndsWith(")") ? string.Empty : ")");
 				}
 			}
 
-			return string.Format("{0}^{1}", ToString(parameters[0]), ToString(parameters[1]));
+			return string.Format("{0}^{1}", ToString(parameters[0], true), ToString(parameters[1], false));
 		}
 
 		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right)
@@ -151,9 +151,11 @@ namespace Titanium.Core.Functions.Implementations
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(e, Expressionizer.ToExpression(right)).Evaluate()).ToList()));
 		}
 
-		private static string ToString(Evaluatable expression)
+		private static string ToString(Evaluatable expression, bool isBase)
 		{
-			if (expression is DualComponentExpression)
+			var asFactor = Factorizer.ToFactor(expression);
+			if (expression is DualComponentExpression ||
+				 (isBase && (asFactor as NumericFactor)?.Number is Float))
 			{
 				return string.Format("({0})", expression);
 			}
