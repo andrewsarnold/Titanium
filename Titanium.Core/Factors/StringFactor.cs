@@ -29,7 +29,7 @@ namespace Titanium.Core.Factors
 			var stringFactor = obj as StringFactor;
 			if (stringFactor != null)
 			{
-				return String.Compare(_value, stringFactor._value, StringComparison.Ordinal);
+				return string.Compare(_value, stringFactor._value, StringComparison.Ordinal);
 			}
 
 			var alphabeticFactor = obj as AlphabeticFactor;
@@ -51,6 +51,21 @@ namespace Titanium.Core.Factors
 		{
 			var sf = other as StringFactor;
 			return sf != null && _value == sf._value;
+		}
+
+		internal override int CompareTo(Factor factor, bool isMultiply)
+		{
+			if (factor is NumericFactor)
+			{
+				return isMultiply ? 1 : -1;
+			}
+
+			if (factor is AlphabeticFactor)
+			{
+				return 1;
+			}
+
+			return 0;
 		}
 	}
 }

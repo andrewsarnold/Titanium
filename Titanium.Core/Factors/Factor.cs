@@ -16,5 +16,7 @@ namespace Titanium.Core.Factors
 			var stringVal = token.Value.Replace("⁻", "-");
 			return new NumericFactor(new Float(double.Parse(stringVal)));
 		}
+
+		internal abstract int CompareTo(Factor factor, bool isMultiply);
 	}
 }

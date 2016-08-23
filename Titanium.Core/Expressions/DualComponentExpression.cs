@@ -28,6 +28,20 @@ namespace Titanium.Core.Expressions
 
 		internal override Expression Evaluate()
 		{
+			if (_leftComponent.Equals(_rightComponent))
+			{
+				if (!_isAdd)
+				{
+					return Expressionizer.ToExpression(new NumericFactor(new Integer(0)));
+				}
+
+				return Expressionizer.ToExpression(new ComponentList(new List<ComponentListFactor>
+				{
+					new ComponentListFactor(new NumericFactor(new Integer(2))),
+					new ComponentListFactor(Factorizer.ToFactor(_leftComponent))
+				})).Evaluate();
+			}
+
 			// Combine natural log functions
 			// TODO: Move somewhere else
 			FunctionComponent leftFunction;

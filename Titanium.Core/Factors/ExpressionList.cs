@@ -32,6 +32,17 @@ namespace Titanium.Core.Factors
 
 		public override bool Equals(Evaluatable other)
 		{
+			var obj = other as ExpressionList;
+			if (Expressions.Count != obj?.Expressions.Count)
+			{
+				return false;
+			}
+
+			return !Expressions.Where((t, i) => !t.Equals(obj.Expressions[i])).Any();
+		}
+
+		internal override int CompareTo(Factor factor, bool isMultiply)
+		{
 			throw new System.NotImplementedException();
 		}
 	}

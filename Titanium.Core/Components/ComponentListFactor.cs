@@ -29,7 +29,7 @@ namespace Titanium.Core.Components
 
 			if (obj is ComponentListFactor)
 			{
-				return Factor.CompareTo(((ComponentListFactor)obj).Factor);
+				return Factor.CompareTo(((ComponentListFactor)obj).Factor, true);
 			}
 
 			throw new IncomparableTypeException(GetType(), obj.GetType());

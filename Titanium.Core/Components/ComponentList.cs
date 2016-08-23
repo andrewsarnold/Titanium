@@ -199,6 +199,16 @@ namespace Titanium.Core.Components
 			var left = Expressionizer.ToExpression(leftFactor.Factor);
 			var right = Expressionizer.ToExpression(rightFactor.Factor);
 
+			if (left.Equals(right) && leftFactor.IsInNumerator == rightFactor.IsInNumerator)
+			{
+				expression = new ComponentList(new List<ComponentListFactor>
+				{
+					new ComponentListFactor(new NumericFactor(new Integer(1))),
+					new ComponentListFactor(Factorizer.ToFactor(new Exponent().Evaluate(left, NumberToExpression(new Integer(2)))), leftFactor.IsInNumerator)
+				}).Evaluate();
+				return true;
+			}
+
 			Number leftNumber;
 			Number rightNumber;
 
@@ -308,7 +318,7 @@ namespace Titanium.Core.Components
 
 						if (leftFactor.IsInNumerator != rightFactor.IsInNumerator)
 						{
-							expression = Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
+							expression = NumberToExpression(new Integer(1));
 							return true;
 						}
 					}
