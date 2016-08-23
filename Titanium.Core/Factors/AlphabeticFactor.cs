@@ -41,7 +41,9 @@ namespace Titanium.Core.Factors
 			var numericFactor = obj as NumericFactor;
 			if (numericFactor != null)
 			{
-				return 1;
+				return Constants.IsNamedConstant(Value)
+					? 1
+					: -1;
 			}
 
 			var expressionFactor = obj as ExpressionFactor;

@@ -16,5 +16,14 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("a * b -3", "a*b-3");
 		}
+
+		[TestMethod]
+		public void AssertComponentsAreSorted()
+		{
+			Common.EvaluateAndAssert("x + 5", "x+5");
+			Common.EvaluateAndAssert("5 + x", "x+5");
+			Common.EvaluateAndAssert("x - 5", "x-5");
+			Common.EvaluateAndAssert("5 - x", "5-x");
+		}
 	}
 }

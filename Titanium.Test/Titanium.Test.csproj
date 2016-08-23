@@ -85,6 +85,7 @@
     <Compile Include="ExpressionTests.cs" />
     <Compile Include="PrintingTests\Common.cs" />
     <Compile Include="ListExpressionTests.cs" />
+    <Compile Include="ComparisonTests.cs" />
     <Compile Include="PrintingTests\ImpliedMultiplicationTests.cs" />
     <Compile Include="PrintingTests\ExponentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
