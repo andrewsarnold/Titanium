@@ -38,5 +38,10 @@ namespace Titanium.Core.Factors
 			var ef = other as ExpressionFactor;
 			return ef != null && Expression.Equals(ef.Expression);
 		}
+
+		internal override int CompareTo(Factor factor, bool isMultiply)
+		{
+			return 0;
+		}
 	}
 }

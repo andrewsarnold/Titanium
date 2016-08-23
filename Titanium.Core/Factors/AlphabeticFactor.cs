@@ -32,24 +32,9 @@ namespace Titanium.Core.Factors
 
 		public override int CompareTo(object obj)
 		{
-			var alphabeticFactor = obj as AlphabeticFactor;
-			if (alphabeticFactor != null)
+			if (obj is Factor)
 			{
-				return String.Compare(Value, alphabeticFactor.Value, StringComparison.Ordinal);
-			}
-
-			var numericFactor = obj as NumericFactor;
-			if (numericFactor != null)
-			{
-				return Constants.IsNamedConstant(Value)
-					? 1
-					: -1;
-			}
-
-			var expressionFactor = obj as ExpressionFactor;
-			if (expressionFactor != null)
-			{
-				return 0;
+				return CompareTo((Factor)obj, false);
 			}
 
 			throw new IncomparableTypeException(GetType(), obj.GetType());
@@ -59,6 +44,29 @@ namespace Titanium.Core.Factors
 		{
 			var af = other as AlphabeticFactor;
 			return af != null && Value == af.Value;
+		}
+
+		internal override int CompareTo(Factor factor, bool isMultiply)
+		{
+			var alphabeticFactor = factor as AlphabeticFactor;
+			if (alphabeticFactor != null)
+			{
+				return string.Compare(Value, alphabeticFactor.Value, StringComparison.Ordinal);
+			}
+
+			var numericFactor = factor as NumericFactor;
+			if (numericFactor != null)
+			{
+				return isMultiply ? 1 : -1;
+			}
+
+			var expressionFactor = factor as ExpressionFactor;
+			if (expressionFactor != null)
+			{
+				return 0;
+			}
+
+			throw new IncomparableTypeException(GetType(), factor.GetType());
 		}
 	}
 }

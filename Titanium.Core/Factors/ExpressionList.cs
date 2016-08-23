@@ -40,5 +40,10 @@ namespace Titanium.Core.Factors
 
 			return !Expressions.Where((t, i) => !t.Equals(obj.Expressions[i])).Any();
 		}
+
+		internal override int CompareTo(Factor factor, bool isMultiply)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }
