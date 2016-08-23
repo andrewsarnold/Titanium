@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Factors;
@@ -28,7 +29,10 @@ namespace Titanium.Core.Expressions
 
 		internal override Expression Evaluate()
 		{
-			if (_leftComponent.Equals(_rightComponent))
+			var left = _leftComponent.Evaluate();
+			var right = _rightComponent.Evaluate();
+
+			if (left.Equals(right))
 			{
 				if (!_isAdd)
 				{
@@ -41,23 +45,14 @@ namespace Titanium.Core.Expressions
 					new ComponentListFactor(Factorizer.ToFactor(_leftComponent))
 				})).Evaluate();
 			}
-
-			// Combine natural log functions
-			// TODO: Move somewhere else
-			FunctionComponent leftFunction;
-			FunctionComponent rightFunction;
-
-			if (Common.IsFunction(_leftComponent, out leftFunction) && Common.IsFunction(_rightComponent, out rightFunction))
+			
+			Expression returnValue;
+			if (CombineComponentsSharingAFactor(left, right, out returnValue) ||
+				CombineNaturalLogs(left, right, _isAdd, out returnValue) ||
+				CombineNaturalLogs(_leftComponent, _rightComponent, _isAdd, out returnValue))
 			{
-				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
-				{
-					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), _isAdd));
-					return new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
-				}
+				return returnValue;
 			}
-
-			var left = _leftComponent.Evaluate();
-			var right = _rightComponent.Evaluate();
 
 			Number leftNumber;
 			Number rightNumber;
@@ -126,6 +121,63 @@ namespace Titanium.Core.Expressions
 			}
 
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
+		}
+
+		private static bool CombineComponentsSharingAFactor(Evaluatable leftExpression, Evaluatable rightExpression, out Expression returnValue)
+		{
+			ComponentList left;
+			ComponentList right;
+
+			if (Common.IsComponentList(leftExpression, out left) && Common.IsComponentList(rightExpression, out right))
+			{
+				// Can reduce if all alphabetic factors match and the only other factors are numeric
+				var leftAlphas = left.Factors.Where(f => f.Factor is AlphabeticFactor).ToList();
+				var rightAlphas = right.Factors.Where(f => f.Factor is AlphabeticFactor).ToList();
+				var bothAlphas = leftAlphas.Select(a => a.Factor).Union(rightAlphas.Select(a => a.Factor)).Select(f => f.ToString()).Distinct().ToList();
+				if (bothAlphas.Count == leftAlphas.Count)
+				{
+					if (left.Factors.Where(f => !(f.Factor is AlphabeticFactor)).All(f => f.Factor is NumericFactor) &&
+					    right.Factors.Where(f => !(f.Factor is AlphabeticFactor)).All(f => f.Factor is NumericFactor))
+					{
+						var numericFactors = left.Factors.Where(f => f.Factor is NumericFactor).Union(right.Factors.Where(f => f.Factor is NumericFactor));
+						var finalValue = Expressionizer.ToExpression(new NumericFactor(new Integer(0)));
+						foreach (var numericFactor in numericFactors)
+						{
+							finalValue = new DualComponentExpression(Componentizer.ToComponent(finalValue), Componentizer.ToComponent(numericFactor.Factor), numericFactor.IsInNumerator).Evaluate();
+						}
+
+						var combined = new ComponentList(new List<ComponentListFactor>
+						{
+							new ComponentListFactor(Factorizer.ToFactor(finalValue))
+						}.Union(leftAlphas).ToList());
+						returnValue = combined.Evaluate();
+						return true;
+					}
+				}
+			}
+
+			returnValue = null;
+			return false;
+		}
+
+		private static bool CombineNaturalLogs(Evaluatable leftExpression, Evaluatable rightExpression, bool isAdd, out Expression singleComponentExpression)
+		{
+			FunctionComponent leftFunction;
+			FunctionComponent rightFunction;
+
+			if (Common.IsFunction(leftExpression, out leftFunction) && Common.IsFunction(rightExpression, out rightFunction))
+			{
+				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
+				{
+					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), isAdd));
+					{
+						singleComponentExpression = new SingleComponentExpression(new FunctionComponent("ln", new List<Expression> { operand.Evaluate() }));
+						return true;
+					}
+				}
+			}
+			singleComponentExpression = null;
+			return false;
 		}
 
 		public override int CompareTo(object obj)

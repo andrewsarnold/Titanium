@@ -85,6 +85,19 @@ namespace Titanium.Core
 			return false;
 		}
 
+		internal static bool IsComponentList(Evaluatable input, out ComponentList output)
+		{
+			var component = Componentizer.ToComponent(input);
+			if (component is ComponentList)
+			{
+				output = (ComponentList)component;
+				return true;
+			}
+
+			output = null;
+			return false;
+		}
+
 		private static bool IsNumber(Component component, out Number number)
 		{
 			if (component is SingleFactorComponent)

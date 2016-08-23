@@ -33,6 +33,7 @@ namespace Titanium.Test.EvaluateTests
 		public void AddedComponentsSharingAFactor()
 		{
 			Common.EvaluateAndAssert("3x + 4x", "7*x");
+			Common.EvaluateAndAssert("3*x*y + 4*y*x", "7*x*y");
 		}
 
 		[TestMethod]

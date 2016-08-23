@@ -65,18 +65,18 @@ namespace Titanium.Test
 		public void ListAsFirstFactorTest()
 		{
 			var expression = Expression.ParseExpression("{1,2}*3");
-			var component = (DualFactorComponent)(Componentizer.ToComponent(expression));
-			Assert.IsTrue(component.LeftFactor is ExpressionList);
-			Assert.IsTrue(component.RightFactor is NumericFactor);
+			var component = (ComponentList)Componentizer.ToComponent(expression);
+			Assert.IsTrue(component.Factors[0].Factor is ExpressionList);
+			Assert.IsTrue(component.Factors[1].Factor is NumericFactor);
 		}
 
 		[TestMethod]
 		public void ListAsSecondFactorTest()
 		{
 			var expression = Expression.ParseExpression("3*{1,2}");
-			var component = (DualFactorComponent)(Componentizer.ToComponent(expression));
-			Assert.IsTrue(component.LeftFactor is NumericFactor);
-			Assert.IsTrue(component.RightFactor is ExpressionList);
+			var component = (ComponentList)Componentizer.ToComponent(expression);
+			Assert.IsTrue(component.Factors[0].Factor is NumericFactor);
+			Assert.IsTrue(component.Factors[1].Factor is ExpressionList);
 		}
 
 		private static ExpressionList GetAsExpressionList(Expression expression)

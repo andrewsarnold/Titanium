@@ -50,7 +50,9 @@ namespace Titanium.Core.Reducer
 		{
 			return component is SingleFactorComponent
 				? ToComponent(((SingleFactorComponent)component).Factor)
-				: component;
+				: component is DualFactorComponent
+					? new ComponentList(component)
+					: component;
 		}
 
 		private static Component ToComponent(Factor factor)

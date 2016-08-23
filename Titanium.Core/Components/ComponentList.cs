@@ -48,6 +48,11 @@ namespace Titanium.Core.Components
 				};
 			}
 
+			if (component is ComponentList)
+			{
+				return ((ComponentList)component).Factors.Select(f => new ComponentListFactor(f.Factor, isMultiply == f.IsInNumerator)).ToList();
+			}
+
 			return new List<ComponentListFactor> { new ComponentListFactor(Factorizer.ToFactor(component), isMultiply) };
 		}
 
