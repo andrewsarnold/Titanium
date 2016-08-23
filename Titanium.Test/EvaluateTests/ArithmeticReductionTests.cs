@@ -22,5 +22,17 @@ namespace Titanium.Test.EvaluateTests
 		{
 			Common.EvaluateAndAssert("3x + 4x", "7*x");
 		}
+
+		[TestMethod]
+		public void MultipliedFactorsSharingAComponent()
+		{
+			Common.EvaluateAndAssert("(x-5)*(x-5)", "(x-5)^2");
+		}
+
+		[TestMethod]
+		public void ExponentiatedFactorsSharingAComponent()
+		{
+			Common.EvaluateAndAssert("(x-5)^3*(x-5)", "(x-5)^4");
+		}
 	}
 }
