@@ -41,6 +41,11 @@ namespace Titanium.Core.Functions.Implementations
 			return new DualFactorComponent(numerator, denominator, false).Evaluate();
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			throw new NotImplementedException();

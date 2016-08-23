@@ -129,6 +129,37 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(left, right);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			var exponent = Factorizer.ToFactor(parameters[1]);
+			if (exponent is NumericFactor)
+			{
+				var number = ((NumericFactor)exponent).Number;
+				if (number.IsZero)
+				{
+					return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
+				}
+
+				var baseExpression = parameters[0].Evaluate();
+				var asFactor = Factorizer.ToFactor(baseExpression);
+				if (Number.IsWholeNumber(number) && !(asFactor is NumericFactor || asFactor is AlphabeticFactor || asFactor is StringFactor))
+				{
+					var power = number.ValueAsFloat();
+					var isNegative = false;
+					if (power < 0)
+					{
+						power *= -1;
+						isNegative = true;
+					}
+
+					var factors = Enumerable.Repeat(baseExpression, (int)power);
+					return Expressionizer.ToExpression(new ComponentList(factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f), !isNegative)).ToList())).Evaluate(true);
+				}
+			}
+
+			return InnerEvaluate(parameters.ToArray());
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			// Special case for square root
@@ -145,7 +176,7 @@ namespace Titanium.Core.Functions.Implementations
 
 			return string.Format("{0}^{1}", ToString(parameters[0], true), ToString(parameters[1], false));
 		}
-
+		
 		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right)
 		{
 			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(e, Expressionizer.ToExpression(right)).Evaluate()).ToList()));

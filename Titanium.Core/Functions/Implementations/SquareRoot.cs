@@ -18,6 +18,11 @@ namespace Titanium.Core.Functions.Implementations
 			return new Exponent().Evaluate(parameter, Expressionizer.ToExpression(new IntegerFraction(1, 2)));
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("√({0})", parameters[0]);

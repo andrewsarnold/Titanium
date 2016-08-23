@@ -4,7 +4,7 @@ namespace Titanium.Core.Expressions
 {
 	internal sealed class UndefinedExpression : Expression
 	{
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
 			return this;
 		}

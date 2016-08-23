@@ -19,7 +19,7 @@ namespace Titanium.Core.Factors
 			return string.Format("{0}{1}{0}", "\"", _value);
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
 			return Expressionizer.ToExpression(this);
 		}

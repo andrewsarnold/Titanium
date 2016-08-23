@@ -23,6 +23,11 @@ namespace Titanium.Core.Functions.Implementations
 			return Evaluate(parameters[0]);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
 		private Expression Evaluate(Expression parameter)
 		{
 			var operand = Factorizer.ToFactor(parameter.Evaluate());

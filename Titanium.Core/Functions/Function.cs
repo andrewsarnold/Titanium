@@ -29,12 +29,23 @@ namespace Titanium.Core.Functions
 			return InnerEvaluate(parameters);
 		}
 
+		internal Expression Expand(params Expression[] parameters)
+		{
+			if (parameters.Length != ArgumentCount)
+			{
+				throw new WrongArgumentCountException(Name, ArgumentCount, parameters.Length);
+			}
+
+			return InnerExpand(parameters);
+		}
+
 		protected Expression AsExpression(params Expression[] parameters)
 		{
 			return Expressionizer.ToExpression(new FunctionComponent(this, new List<Expression>(parameters)));
 		}
 
 		protected abstract Expression InnerEvaluate(params Expression[] parameters);
+		protected abstract Expression InnerExpand(params Expression[] parameters);
 		internal abstract string ToString(List<Expression> parameters);
 	}
 }

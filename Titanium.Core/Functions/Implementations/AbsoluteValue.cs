@@ -58,6 +58,11 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("abs({0})", parameters[0]);

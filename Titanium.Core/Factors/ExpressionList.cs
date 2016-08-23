@@ -14,9 +14,9 @@ namespace Titanium.Core.Factors
 			Expressions = expressions;
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			Expressions = Expressions.Select(e => e.Evaluate()).ToList();
+			Expressions = Expressions.Select(e => e.Evaluate(expand)).ToList();
 			return Expressionizer.ToExpression(this);
 		}
 

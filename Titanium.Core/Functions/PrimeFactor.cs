@@ -85,6 +85,11 @@ namespace Titanium.Core.Functions
 			return Expressionizer.ToExpression(componentList);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			throw new NotImplementedException();

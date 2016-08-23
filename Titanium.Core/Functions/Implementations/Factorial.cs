@@ -60,6 +60,11 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			var parameterAsFactor = Factorizer.ToFactor(parameters[0]);

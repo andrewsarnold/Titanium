@@ -17,9 +17,9 @@ namespace Titanium.Core.Expressions
 			return Component.ToString();
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			return Component.Evaluate();
+			return Component.Evaluate(expand);
 		}
 
 		public override int CompareTo(object obj)
@@ -28,6 +28,14 @@ namespace Titanium.Core.Expressions
 			if (other != null)
 			{
 				return Component.CompareTo(other.Component);
+			}
+
+			var dce = obj as DualComponentExpression;
+			if (dce != null)
+			{
+				var leftComp = Component.CompareTo(dce.LeftComponent);
+				var righttComp = Component.CompareTo(dce.RightComponent);
+				return leftComp + righttComp;
 			}
 
 			throw new IncomparableTypeException(GetType(), obj.GetType());

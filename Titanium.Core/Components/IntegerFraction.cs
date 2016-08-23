@@ -245,7 +245,7 @@ namespace Titanium.Core.Components
 			return string.Format("{0}{1}{2}", IsNegative ? "⁻" : string.Empty, Math.Abs(Numerator), Denominator == 1 ? string.Empty : string.Format("/{0}", Denominator));
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
 			return Denominator == 1
 				? Expressionizer.ToExpression(new NumericFactor(new Integer(Numerator)))

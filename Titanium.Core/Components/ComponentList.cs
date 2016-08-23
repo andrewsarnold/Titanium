@@ -56,9 +56,9 @@ namespace Titanium.Core.Components
 			return new List<ComponentListFactor> { new ComponentListFactor(Factorizer.ToFactor(component), isMultiply) };
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			return Reduce(Factors);
+			return Reduce(Factors, expand);
 		}
 
 		public override int CompareTo(object obj)
@@ -92,9 +92,9 @@ namespace Titanium.Core.Components
 			return false;
 		}
 
-		private static Expression Reduce(IEnumerable<ComponentListFactor> factors)
+		private static Expression Reduce(IEnumerable<ComponentListFactor> factors, bool expand)
 		{
-			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate()), f.IsInNumerator)).ToList();
+			var evaluated = factors.Select(f => new ComponentListFactor(Factorizer.ToFactor(f.Evaluate(expand)), f.IsInNumerator)).ToList();
 			RemoveRedundantOnes(evaluated, true);
 
 			// If any components are a two-factor component, split it out and put the factors into the main list
@@ -139,7 +139,7 @@ namespace Titanium.Core.Components
 				for (var i = 1; i < reducedEvaluated.Count; i++)
 				{
 					Expression e;
-					if (CanReduce(reducedEvaluated[0], reducedEvaluated[i], out e))
+					if (CanReduce(reducedEvaluated[0], reducedEvaluated[i], expand, out e))
 					{
 						output.Add(new ComponentListFactor(Factorizer.ToFactor(e)));
 						reducedEvaluated.RemoveAt(i);
@@ -169,7 +169,7 @@ namespace Titanium.Core.Components
 			}
 
 			RemoveRedundantOnes(output, false);
-			return Reduce(output);
+			return Reduce(output, expand);
 		}
 
 		private static void RemoveRedundantOnes(List<ComponentListFactor> output, bool integerOnly)
@@ -194,7 +194,7 @@ namespace Titanium.Core.Components
 			);
 		}
 
-		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, out Expression expression)
+		private static bool CanReduce(ComponentListFactor leftFactor, ComponentListFactor rightFactor, bool expand, out Expression expression)
 		{
 			if (ReduceMultipliedAlphabeticFactors(leftFactor, rightFactor, out expression))
 			{
@@ -204,13 +204,21 @@ namespace Titanium.Core.Components
 			var left = Expressionizer.ToExpression(leftFactor.Factor);
 			var right = Expressionizer.ToExpression(rightFactor.Factor);
 
-			if (left.Equals(right) && leftFactor.IsInNumerator == rightFactor.IsInNumerator)
+			if (!expand && left.Equals(right) && leftFactor.IsInNumerator == rightFactor.IsInNumerator)
 			{
 				expression = new ComponentList(new List<ComponentListFactor>
 				{
 					new ComponentListFactor(new NumericFactor(new Integer(1))),
 					new ComponentListFactor(Factorizer.ToFactor(new Exponent().Evaluate(left, NumberToExpression(new Integer(2)))), leftFactor.IsInNumerator)
 				}).Evaluate();
+				return true;
+			}
+
+			var dcLeft = left as DualComponentExpression;
+			var dcRight = right as DualComponentExpression;
+			if (expand && dcLeft != null && dcRight != null)
+			{
+				expression = dcLeft * dcRight;
 				return true;
 			}
 

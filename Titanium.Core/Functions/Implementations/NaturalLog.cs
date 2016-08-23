@@ -120,6 +120,11 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
 		private Expression EvaluateMultiplication(Evaluatable left, Evaluatable right)
 		{
 			// ln(a * b) = ln(a) + ln(b)

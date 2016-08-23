@@ -18,9 +18,9 @@ namespace Titanium.Core.Factors
 				: Expression.ToString();
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			return Expression.Evaluate();
+			return Expression.Evaluate(expand);
 		}
 
 		public override int CompareTo(object obj)

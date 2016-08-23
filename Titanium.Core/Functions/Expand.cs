@@ -1,19 +1,18 @@
-using System.Collections.Generic;
-using Titanium.Core.Exceptions;
+﻿using System.Collections.Generic;
 using Titanium.Core.Expressions;
 
 namespace Titanium.Core.Functions
 {
-	internal class ThrowDomainExceptionFunction : Function
+	internal class Expand : Function
 	{
-		public ThrowDomainExceptionFunction()
-			: base("ans", 1)
+		public Expand()
+			: base("expand", 1)
 		{
 		}
 
 		protected override Expression InnerEvaluate(params Expression[] parameters)
 		{
-			throw new DomainException();
+			return parameters[0].Evaluate(true);
 		}
 
 		protected override Expression InnerExpand(params Expression[] parameters)
@@ -23,7 +22,7 @@ namespace Titanium.Core.Functions
 
 		internal override string ToString(List<Expression> parameters)
 		{
-			return string.Empty;
+			return parameters[0].ToString();
 		}
 	}
 }

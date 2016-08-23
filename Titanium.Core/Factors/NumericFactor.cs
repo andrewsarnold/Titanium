@@ -19,7 +19,7 @@ namespace Titanium.Core.Factors
 			return Number.ToString();
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
 			return Expressionizer.ToExpression(new NumericFactor(Number));
 		}

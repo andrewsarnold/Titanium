@@ -24,9 +24,11 @@ namespace Titanium.Core.Components
 			Operands = operands;
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			return Function.Evaluate(Operands.ToArray());
+			return expand
+				? Function.Expand(Operands.ToArray())
+				: Function.Evaluate(Operands.ToArray());
 		}
 
 		public override int CompareTo(object obj)

@@ -59,6 +59,11 @@ namespace Titanium.Core.Functions.Implementations
 			return AsExpression(parameter);
 		}
 
+		protected override Expression InnerExpand(params Expression[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
 		internal override string ToString(List<Expression> parameters)
 		{
 			return string.Format("{0}({1})", Name, string.Join(",", parameters));

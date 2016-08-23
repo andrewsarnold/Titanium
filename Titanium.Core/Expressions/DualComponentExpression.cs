@@ -11,26 +11,26 @@ namespace Titanium.Core.Expressions
 {
 	internal class DualComponentExpression : Expression
 	{
-		private readonly Component _leftComponent;
-		private readonly Component _rightComponent;
+		internal readonly Component LeftComponent;
+		internal readonly Component RightComponent;
 		private readonly bool _isAdd;
 
 		internal DualComponentExpression(Component leftComponent, Component rightComponent, bool isAdd)
 		{
 			_isAdd = isAdd;
-			_leftComponent = leftComponent;
-			_rightComponent = rightComponent;
+			LeftComponent = leftComponent;
+			RightComponent = rightComponent;
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{0}{1}{2}", _leftComponent, _isAdd ? "+" : "-", _rightComponent);
+			return string.Format("{0}{1}{2}", LeftComponent, _isAdd ? "+" : "-", RightComponent);
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			var left = _leftComponent.Evaluate();
-			var right = _rightComponent.Evaluate();
+			var left = LeftComponent.Evaluate(expand);
+			var right = RightComponent.Evaluate(expand);
 
 			if (left.Equals(right))
 			{
@@ -42,14 +42,14 @@ namespace Titanium.Core.Expressions
 				return Expressionizer.ToExpression(new ComponentList(new List<ComponentListFactor>
 				{
 					new ComponentListFactor(new NumericFactor(new Integer(2))),
-					new ComponentListFactor(Factorizer.ToFactor(_leftComponent))
-				})).Evaluate();
+					new ComponentListFactor(Factorizer.ToFactor(LeftComponent))
+				})).Evaluate(expand);
 			}
 			
 			Expression returnValue;
 			if (CombineComponentsSharingAFactor(left, right, out returnValue) ||
 				CombineNaturalLogs(left, right, _isAdd, out returnValue) ||
-				CombineNaturalLogs(_leftComponent, _rightComponent, _isAdd, out returnValue))
+				CombineNaturalLogs(LeftComponent, RightComponent, _isAdd, out returnValue))
 			{
 				return returnValue;
 			}
@@ -106,7 +106,7 @@ namespace Titanium.Core.Expressions
 				if (!_isAdd)
 				{
 					var newRight = Componentizer.ToComponent(new FunctionComponent(new Negate(), new List<Expression> { right }));
-					return new DualComponentExpression(newRight, Componentizer.ToComponent(left), true).Evaluate();
+					return new DualComponentExpression(newRight, Componentizer.ToComponent(left), true).Evaluate(expand);
 				}
 
 				var newLeft = Componentizer.ToComponent(left);
@@ -121,6 +121,36 @@ namespace Titanium.Core.Expressions
 			}
 
 			return new DualComponentExpression(Componentizer.ToComponent(left), Componentizer.ToComponent(right), _isAdd);
+		}
+
+		public static Expression operator *(DualComponentExpression left, DualComponentExpression right)
+		{
+			// (a+b)*(c+d) == a*c + a*d + b*c + b*d
+			var first = new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(Factorizer.ToFactor(left.LeftComponent)),
+				new ComponentListFactor(Factorizer.ToFactor(right.LeftComponent))
+			});
+			var second = new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(Factorizer.ToFactor(left.LeftComponent)),
+				new ComponentListFactor(Factorizer.ToFactor(right.RightComponent))
+			});
+			var third = new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(Factorizer.ToFactor(left.RightComponent)),
+				new ComponentListFactor(Factorizer.ToFactor(right.LeftComponent))
+			});
+			var fourth = new ComponentList(new List<ComponentListFactor>
+			{
+				new ComponentListFactor(Factorizer.ToFactor(left.RightComponent)),
+				new ComponentListFactor(Factorizer.ToFactor(right.RightComponent))
+			});
+			
+			var thirdPlusFourth = new DualComponentExpression(Componentizer.ToComponent(third), Componentizer.ToComponent(fourth), true);
+			var secondPlusThirdPlusFourth = new DualComponentExpression(Componentizer.ToComponent(second), Componentizer.ToComponent(thirdPlusFourth), true);
+			var firstPlusSecondPlusThirdPlusFourth = new DualComponentExpression(Componentizer.ToComponent(first), Componentizer.ToComponent(secondPlusThirdPlusFourth), true);
+			return firstPlusSecondPlusThirdPlusFourth.Evaluate();
 		}
 
 		private static bool CombineComponentsSharingAFactor(Evaluatable leftExpression, Evaluatable rightExpression, out Expression returnValue)
@@ -196,8 +226,8 @@ namespace Titanium.Core.Expressions
 			var dce = other as DualComponentExpression;
 			if (dce != null)
 			{
-				return _leftComponent.Equals(dce._leftComponent) &&
-				       _rightComponent.Equals(dce._rightComponent) &&
+				return LeftComponent.Equals(dce.LeftComponent) &&
+				       RightComponent.Equals(dce.RightComponent) &&
 				       _isAdd == dce._isAdd;
 			}
 

@@ -24,9 +24,9 @@ namespace Titanium.Core.Components
 				RightFactor);
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
-			return new ComponentList(this).Evaluate();
+			return new ComponentList(this).Evaluate(expand);
 		}
 
 		public override int CompareTo(object obj)

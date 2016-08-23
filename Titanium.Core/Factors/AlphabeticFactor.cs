@@ -23,7 +23,7 @@ namespace Titanium.Core.Factors
 			return Value;
 		}
 
-		internal override Expression Evaluate()
+		internal override Expression Evaluate(bool expand = false)
 		{
 			return _variableMap != null && _variableMap.ContainsKey(Value)
 				? _variableMap[Value]
