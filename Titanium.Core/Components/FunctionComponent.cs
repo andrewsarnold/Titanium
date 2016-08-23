@@ -63,7 +63,7 @@ namespace Titanium.Core.Components
 			if (fc != null)
 			{
 				return Function.Name == fc.Function.Name &&
-					   !fc.Operands.Where((t, i) => !t.Equals(fc.Operands[i])).Any();
+					   !Operands.Where((t, i) => !t.Equals(fc.Operands[i])).Any();
 			}
 
 			return false;
