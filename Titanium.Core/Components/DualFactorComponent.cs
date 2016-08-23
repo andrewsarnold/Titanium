@@ -31,12 +31,6 @@ namespace Titanium.Core.Components
 
 		public override int CompareTo(object obj)
 		{
-			var other = obj as DualFactorComponent;
-			if (other != null)
-			{
-				
-			}
-
 			throw new IncomparableTypeException(GetType(), obj.GetType());
 		}
 
