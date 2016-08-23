@@ -24,6 +24,6 @@
 		Assign,
 		Root,
 		Space,
-		ExpressionList
+		ExpressionArray
 	}
 }

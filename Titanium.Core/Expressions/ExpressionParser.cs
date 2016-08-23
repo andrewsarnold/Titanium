@@ -148,12 +148,12 @@ namespace Titanium.Core.Expressions
 					if (tokenSubstring.Count > 0)
 					{
 						var operands = ParseCommaSeparatedList(tokenSubstring, variableMap).ToList();
-						var list = new ExpressionListToken(new ExpressionList(operands));
+						var list = new ExpressionArrayToken(new ExpressionArray(operands));
 						outputQueue.Add(list);
 					}
 					else
 					{	// Special case for empty lists
-						outputQueue.Add(new ExpressionListToken(new ExpressionList(new List<Expression>())));
+						outputQueue.Add(new ExpressionArrayToken(new ExpressionArray(new List<Expression>())));
 					}
 
 					index = indexOfCloseBrace;
@@ -225,9 +225,9 @@ namespace Titanium.Core.Expressions
 			{
 				if (token.Type.IsOperand())
 				{
-					if (token is ExpressionListToken)
+					if (token is ExpressionArrayToken)
 					{
-						stack.Push(((ExpressionListToken)token).List);
+						stack.Push(((ExpressionArrayToken)token).Array);
 					}
 					else
 					{
@@ -352,7 +352,7 @@ namespace Titanium.Core.Expressions
 					var indexOfMatchingBrace = IndexOfMatchingBrace(tokens, i);
 					var tokenSubList = tokens.Skip(i + 1).Take(indexOfMatchingBrace - i - 1).ToList();
 					var innerList = ParseCommaSeparatedList(tokenSubList, variableMap).ToList();
-					var list = new ExpressionListToken(new ExpressionList(innerList));
+					var list = new ExpressionArrayToken(new ExpressionArray(innerList));
 					currentElement.Add(list);
 					i = indexOfMatchingBrace;
 				}

@@ -72,12 +72,12 @@ namespace Titanium.Core
 			return false;
 		}
 
-		internal static bool IsList(Evaluatable input, out ExpressionList output)
+		internal static bool IsList(Evaluatable input, out ExpressionArray output)
 		{
 			var factor = Factorizer.ToFactor(input);
-			if (factor is ExpressionList)
+			if (factor is ExpressionArray)
 			{
-				output = (ExpressionList)factor;
+				output = (ExpressionArray)factor;
 				return true;
 			}
 

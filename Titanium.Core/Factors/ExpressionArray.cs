@@ -5,11 +5,11 @@ using Titanium.Core.Reducer;
 
 namespace Titanium.Core.Factors
 {
-	internal class ExpressionList : Factor
+	internal class ExpressionArray : Factor
 	{
 		internal List<Expression> Expressions;
 
-		internal ExpressionList(List<Expression> expressions)
+		internal ExpressionArray(List<Expression> expressions)
 		{
 			Expressions = expressions;
 		}
@@ -32,7 +32,7 @@ namespace Titanium.Core.Factors
 
 		public override bool Equals(Evaluatable other)
 		{
-			var obj = other as ExpressionList;
+			var obj = other as ExpressionArray;
 			if (Expressions.Count != obj?.Expressions.Count)
 			{
 				return false;

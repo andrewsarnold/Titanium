@@ -73,7 +73,7 @@ namespace Titanium.Core.Tokens
 				case TokenType.Integer:
 				case TokenType.Float:
 				case TokenType.Letter:
-				case TokenType.ExpressionList:
+				case TokenType.ExpressionArray:
 				case TokenType.String:
 					return true;
 			}

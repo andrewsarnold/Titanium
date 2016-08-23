@@ -44,17 +44,17 @@ namespace Titanium.Core.Functions.Implementations
 				return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
 			}
 			
-			ExpressionList leftList;
-			ExpressionList rightList;
+			ExpressionArray leftArray;
+			ExpressionArray rightArray;
 
-			if (Common.IsList(left, out leftList))
+			if (Common.IsList(left, out leftArray))
 			{
-				return Evaluate(leftList, right);
+				return Evaluate(leftArray, right);
 			}
 
-			if (Common.IsList(right, out rightList))
+			if (Common.IsList(right, out rightArray))
 			{
-				return Evaluate(rightList, left);
+				return Evaluate(rightArray, left);
 			}
 
 			IntegerFraction leftFraction;
@@ -177,9 +177,9 @@ namespace Titanium.Core.Functions.Implementations
 			return string.Format("{0}^{1}", ToString(parameters[0], true), ToString(parameters[1], false));
 		}
 		
-		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right)
+		private static Expression Evaluate(ExpressionArray leftNumber, Evaluatable right)
 		{
-			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new Exponent().Evaluate(e, Expressionizer.ToExpression(right)).Evaluate()).ToList()));
+			return Expressionizer.ToExpression(new ExpressionArray(leftNumber.Expressions.Select(e => new Exponent().Evaluate(e, Expressionizer.ToExpression(right)).Evaluate()).ToList()));
 		}
 
 		private static string ToString(Evaluatable expression, bool isBase)

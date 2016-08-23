@@ -49,7 +49,7 @@
     <Compile Include="Functions\Expand.cs" />
     <Compile Include="Functions\FixType.cs" />
     <Compile Include="Functions\Implementations\AbsoluteValue.cs" />
-    <Compile Include="Factors\ExpressionList.cs" />
+    <Compile Include="Factors\ExpressionArray.cs" />
     <Compile Include="Functions\Implementations\Assign.cs" />
     <Compile Include="Functions\Implementations\BaseTenLogarithm.cs" />
     <Compile Include="Functions\Implementations\Exponent.cs" />

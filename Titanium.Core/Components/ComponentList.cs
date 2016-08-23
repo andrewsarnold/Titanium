@@ -233,18 +233,18 @@ namespace Titanium.Core.Components
 				return true;
 			}
 
-			ExpressionList leftList;
-			ExpressionList rightList;
+			ExpressionArray leftArray;
+			ExpressionArray rightArray;
 
-			if (Common.IsList(left, out leftList))
+			if (Common.IsList(left, out leftArray))
 			{
-				expression = Evaluate(leftList, right, leftFactor.IsInNumerator == rightFactor.IsInNumerator);
+				expression = Evaluate(leftArray, right, leftFactor.IsInNumerator == rightFactor.IsInNumerator);
 				return true;
 			}
 
-			if (Common.IsList(right, out rightList))
+			if (Common.IsList(right, out rightArray))
 			{
-				expression = Evaluate(rightList, left, leftFactor.IsInNumerator == rightFactor.IsInNumerator);
+				expression = Evaluate(rightArray, left, leftFactor.IsInNumerator == rightFactor.IsInNumerator);
 				return true;
 			}
 
@@ -381,9 +381,9 @@ namespace Titanium.Core.Components
 			return false;
 		}
 
-		private static Expression Evaluate(ExpressionList leftNumber, Evaluatable right, bool isMultiply)
+		private static Expression Evaluate(ExpressionArray leftNumber, Evaluatable right, bool isMultiply)
 		{
-			return Expressionizer.ToExpression(new ExpressionList(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
+			return Expressionizer.ToExpression(new ExpressionArray(leftNumber.Expressions.Select(e => new DualFactorComponent(Factorizer.ToFactor(e), Factorizer.ToFactor(right), isMultiply).Evaluate()).ToList()));
 		}
 
 		private static Expression Evaluate(Number leftNumber, Number rightNumber, bool leftIsNumerator, bool rightIsNumerator)

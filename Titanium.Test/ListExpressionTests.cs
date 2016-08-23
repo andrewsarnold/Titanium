@@ -66,7 +66,7 @@ namespace Titanium.Test
 		{
 			var expression = Expression.ParseExpression("{1,2}*3");
 			var component = (ComponentList)Componentizer.ToComponent(expression);
-			Assert.IsTrue(component.Factors[0].Factor is ExpressionList);
+			Assert.IsTrue(component.Factors[0].Factor is ExpressionArray);
 			Assert.IsTrue(component.Factors[1].Factor is NumericFactor);
 		}
 
@@ -76,17 +76,17 @@ namespace Titanium.Test
 			var expression = Expression.ParseExpression("3*{1,2}");
 			var component = (ComponentList)Componentizer.ToComponent(expression);
 			Assert.IsTrue(component.Factors[0].Factor is NumericFactor);
-			Assert.IsTrue(component.Factors[1].Factor is ExpressionList);
+			Assert.IsTrue(component.Factors[1].Factor is ExpressionArray);
 		}
 
-		private static ExpressionList GetAsExpressionList(Expression expression)
+		private static ExpressionArray GetAsExpressionList(Expression expression)
 		{
 			Assert.IsTrue(expression is SingleComponentExpression);
 			var component = ((SingleComponentExpression)expression).Component;
 			Assert.IsTrue(component is SingleFactorComponent);
 			var factor = ((SingleFactorComponent)component).Factor;
-			Assert.IsTrue(factor is ExpressionList);
-			return (ExpressionList)factor;
+			Assert.IsTrue(factor is ExpressionArray);
+			return (ExpressionArray)factor;
 		}
 	}
 }
