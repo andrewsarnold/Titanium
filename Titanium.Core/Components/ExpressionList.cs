@@ -267,6 +267,16 @@ namespace Titanium.Core.Components
 			FunctionComponent leftFunction;
 			FunctionComponent rightFunction;
 
+			var component = rightExpression as ExpressionListComponent;
+			if (component != null)
+			{
+				if (!component.IsAdd)
+				{
+					rightExpression = component.Component;
+					isAdd = component.IsAdd != isAdd;
+				}
+			}
+
 			if (Common.IsFunction(leftExpression, out leftFunction) && Common.IsFunction(rightExpression, out rightFunction))
 			{
 				if (leftFunction.Function is BaseTenLogarithm)
@@ -280,7 +290,7 @@ namespace Titanium.Core.Components
 
 				if (rightFunction.Function is BaseTenLogarithm)
 				{
-					var eval = Componentizer.ToComponent(leftFunction.Evaluate());
+					var eval = Componentizer.ToComponent(rightFunction.Evaluate());
 					if (eval is FunctionComponent)
 					{
 						rightFunction = (FunctionComponent)eval;
