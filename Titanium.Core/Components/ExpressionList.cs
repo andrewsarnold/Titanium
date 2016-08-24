@@ -99,7 +99,7 @@ namespace Titanium.Core.Components
 					Expression e;
 					if (CanReduce(reducedEvaluated[0], reducedEvaluated[i], reducedEvaluated[i].IsAdd, expand, out e))
 					{
-						output.Add(new ExpressionListComponent(Componentizer.ToComponent(e), reducedEvaluated[0].IsAdd));
+						output.Add(new ExpressionListComponent(Componentizer.ToComponent(e)));
 						reducedEvaluated.RemoveAt(i);
 						reducedEvaluated.RemoveAt(0);
 						i = 1;
@@ -177,9 +177,9 @@ namespace Titanium.Core.Components
 
 			if (Common.IsNumber(left, out leftNumber) && Common.IsNumber(right, out rightNumber))
 			{
-				expression = Expressionizer.ToExpression(isAdd
-					? new NumericFactor(leftNumber + rightNumber)
-					: new NumericFactor(leftNumber - rightNumber));
+				leftNumber = leftComponent.IsAdd ? leftNumber : leftNumber.Negate();
+				rightNumber = rightComponent.IsAdd ? rightNumber : rightNumber.Negate();
+				expression = Expressionizer.ToExpression(new NumericFactor(leftNumber + rightNumber));
 				return true;
 			}
 
@@ -226,29 +226,6 @@ namespace Titanium.Core.Components
 
 			expression = null;
 			return false;
-
-			if (left.CompareTo(right) == 1)
-			{
-				// Swap placement
-				if (!isAdd)
-				{
-					var newRight = Componentizer.ToComponent(new FunctionComponent(new Negate(), new List<Expression> { right }));
-					expression = new DualComponentExpression(newRight, Componentizer.ToComponent(left), true).Evaluate(expand);
-					return true;
-				}
-
-				var newLeft = Componentizer.ToComponent(left);
-				if (newLeft is FunctionComponent)
-				{
-					if (((FunctionComponent)newLeft).Function is Negate)
-					{
-						expression = new DualComponentExpression(Componentizer.ToComponent(right), Componentizer.ToComponent(((FunctionComponent)newLeft).Operands[0]), false);
-						return true;
-					}
-				}
-				expression = new DualComponentExpression(Componentizer.ToComponent(right), newLeft, true);
-				return true;
-			}
 		}
 
 		private static bool CombineComponentsSharingAFactor(Evaluatable leftExpression, Evaluatable rightExpression, out Expression returnValue)

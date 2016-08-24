@@ -55,5 +55,10 @@ namespace Titanium.Core.Components
 
 			return false;
 		}
+
+		public override string ToString()
+		{
+			return Component.ToString();
+		}
 	}
 }
