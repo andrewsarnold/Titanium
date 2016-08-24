@@ -41,6 +41,12 @@ namespace Titanium.Core.Components
 			var other = obj as FunctionComponent;
 			if (other != null)
 			{
+				if (Function is Exponent && other.Function is Exponent)
+				{
+					var thisPower = Operands[1];
+					var thatPower = other.Operands[1];
+					return thisPower.CompareTo(thatPower);
+				}
 				return 0;
 			}
 

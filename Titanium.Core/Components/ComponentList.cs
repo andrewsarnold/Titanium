@@ -66,8 +66,15 @@ namespace Titanium.Core.Components
 			var other = obj as ComponentList;
 			if (other != null)
 			{
-				if (Factors.Count < other.Factors.Count) return -1;
-				if (Factors.Count > other.Factors.Count) return 1;
+				//var otherFactorsAsComponents = other.Factors.Select(Componentizer.ToComponent);
+				//var thisFactorsAsComponents = Factors.Select(Componentizer.ToComponent);
+				//if ()
+				//{
+					
+				//}
+
+				//if (Factors.Count < other.Factors.Count) return -1;
+				//if (Factors.Count > other.Factors.Count) return 1;
 				return Factors.Select((t, x) => t.CompareTo(other.Factors[x])).FirstOrDefault(compResult => compResult != 0);
 			}
 

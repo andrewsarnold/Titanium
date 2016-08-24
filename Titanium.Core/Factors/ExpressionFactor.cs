@@ -25,9 +25,14 @@ namespace Titanium.Core.Factors
 
 		public override int CompareTo(object obj)
 		{
-			if (obj is Expression)
+			if (obj is Expression || obj is NumericFactor || obj is AlphabeticFactor)
 			{
 				return -1;
+			}
+
+			if (obj is ExpressionFactor)
+			{
+				return Expression.CompareTo(((ExpressionFactor)obj).Expression);
 			}
 
 			return 0;

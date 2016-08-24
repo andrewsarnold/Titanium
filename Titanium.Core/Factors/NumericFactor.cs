@@ -54,6 +54,12 @@ namespace Titanium.Core.Factors
 
 			if (factor is ExpressionFactor)
 			{
+				var asComponent = Componentizer.ToComponent(factor);
+				if (asComponent is FunctionComponent)
+				{
+					return 1;
+				}
+
 				return -1;
 			}
 

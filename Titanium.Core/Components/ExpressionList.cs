@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
@@ -367,9 +367,10 @@ namespace Titanium.Core.Components
 				return "0";
 			}
 
-			var adds = Components.Where(c => c.IsAdd).Select(c => c.Component).OrderBy(c => c);
-			var subtracts = Components.Where(c => !c.IsAdd).Select(c => c.Component).OrderBy(c => c);
-			return "" + string.Join("+", adds) + (subtracts.Any() ? "-" : "") + string.Join("-", subtracts);
+			Components.Sort();
+			var adds = Components.Where(c => c.IsAdd).Select(c => c.Component);
+			var subtracts = Components.Where(c => !c.IsAdd).Select(c => c.Component);
+			return ("" + string.Join("+", adds) + (subtracts.Any() ? "-" : "") + string.Join("-", subtracts)).Replace("+⁻", "-");
 		}
 	}
 }
