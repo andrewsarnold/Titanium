@@ -3,6 +3,7 @@ using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Reducer
 {
@@ -33,7 +34,15 @@ namespace Titanium.Core.Reducer
 					return ToComponent(clf.Factor);
 				}
 
-				return new SingleFactorComponent(new ExpressionFactor(new SingleComponentExpression(new ComponentList(new List<ComponentListFactor> { clf }))));
+				return new ComponentList(new List<ComponentListFactor> { clf });
+			}
+
+			if (thing is ExpressionListComponent)
+			{
+				var elc = (ExpressionListComponent)thing;
+				return elc.IsAdd
+					? elc.Component
+					: ToComponent(new Negate().Evaluate(Expressionizer.ToExpression(elc.Component)));
 			}
 
 			throw new UnexpectedTypeException(thing.GetType());

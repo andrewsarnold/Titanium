@@ -26,6 +26,11 @@ namespace Titanium.Core.Numbers
 			return new Integer(Math.Abs(Value));
 		}
 
+		internal override Number Negate()
+		{
+			return new Integer(-Value);
+		}
+
 		internal override bool IsNegative => Value < 0;
 		internal override bool IsZero => Value == 0;
 		internal override bool IsOne => Value == 1;

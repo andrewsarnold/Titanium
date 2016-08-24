@@ -21,6 +21,11 @@
 			return new Infinity();
 		}
 
+		internal override Number Negate()
+		{
+			return new Infinity(true);
+		}
+
 		internal override bool IsNegative => _isNegative;
 		internal override bool IsZero => false;
 		internal override bool IsOne => false;

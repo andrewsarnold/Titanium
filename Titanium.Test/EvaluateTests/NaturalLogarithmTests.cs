@@ -97,6 +97,12 @@ namespace Titanium.Test.EvaluateTests
 		}
 
 		[TestMethod]
+		public void NaturalLogsOfSimpleFraction()
+		{
+			Common.EvaluateAndAssert("ln(3/2)", "ln(3/2)");
+		}
+
+		[TestMethod]
 		public void NaturalLogsOfIntegerMultiplied()
 		{
 			Common.EvaluateAndAssert("ln(6)*ln(4)", "2*ln(6)*ln(2)");

@@ -37,6 +37,17 @@ namespace Titanium.Core.Reducer
 				return ToExpression(new ComponentList(new List<ComponentListFactor> { clf }));
 			}
 
+			if (thing is ExpressionListComponent)
+			{
+				var elc = (ExpressionListComponent)thing;
+				if (elc.IsAdd)
+				{
+					return ToExpression(elc.Component);
+				}
+
+				return new ExpressionList(new List<ExpressionListComponent> { elc });
+			}
+
 			throw new UnexpectedTypeException(thing.GetType());
 		}
 

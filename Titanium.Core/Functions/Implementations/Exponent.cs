@@ -140,6 +140,15 @@ namespace Titanium.Core.Functions.Implementations
 					return Expressionizer.ToExpression(new NumericFactor(new Integer(1)));
 				}
 
+				if (number.IsNegative)
+				{
+					return new ComponentList(new List<ComponentListFactor>
+					{
+						new ComponentListFactor(new NumericFactor(new Integer(1))),
+						new ComponentListFactor(Factorizer.ToFactor(new Exponent().Evaluate(parameters[0], Expressionizer.ToExpression(new NumericFactor(number.AbsoluteValue())))), false)
+					}).Evaluate();
+				}
+
 				var baseExpression = parameters[0].Evaluate();
 				var asFactor = Factorizer.ToFactor(baseExpression);
 				if (Number.IsWholeNumber(number) && !(asFactor is NumericFactor || asFactor is AlphabeticFactor || asFactor is StringFactor))
@@ -185,7 +194,7 @@ namespace Titanium.Core.Functions.Implementations
 		private static string ToString(Evaluatable expression, bool isBase)
 		{
 			var asFactor = Factorizer.ToFactor(expression);
-			if (expression is DualComponentExpression ||
+			if (expression is DualComponentExpression || expression is ExpressionList ||
 				 (isBase && (asFactor as NumericFactor)?.Number is Float))
 			{
 				return string.Format("({0})", expression);

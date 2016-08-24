@@ -16,7 +16,7 @@ namespace Titanium.Core.Components
 
 		internal ComponentList(Component component)
 		{
-			Factors = GetComponents(component);
+			Factors = GetFactors(component);
 		}
 
 		internal ComponentList(List<ComponentListFactor> factors)
@@ -24,7 +24,7 @@ namespace Titanium.Core.Components
 			Factors = factors;
 		}
 
-		private static List<ComponentListFactor> GetComponents(Component component, bool isMultiply = true)
+		private static List<ComponentListFactor> GetFactors(Component component, bool isMultiply = true)
 		{
 			if (component is DualFactorComponent)
 			{
@@ -32,8 +32,8 @@ namespace Titanium.Core.Components
 				var leftComponent = Componentizer.ToComponent(dfc.LeftFactor);
 				var rightComponent = Componentizer.ToComponent(dfc.RightFactor);
 
-				var leftList = GetComponents(leftComponent, isMultiply);
-				var rightList = GetComponents(rightComponent, isMultiply == dfc.IsMultiply);
+				var leftList = GetFactors(leftComponent, isMultiply);
+				var rightList = GetFactors(rightComponent, isMultiply == dfc.IsMultiply);
 
 				return leftList.Union(rightList).ToList();
 			}
@@ -77,7 +77,9 @@ namespace Titanium.Core.Components
 				return -1;
 			}
 
-			throw new IncomparableTypeException(GetType(), obj.GetType());
+			return -1;
+
+			//throw new IncomparableTypeException(GetType(), obj.GetType());
 		}
 
 		public override bool Equals(Evaluatable other)
@@ -214,8 +216,8 @@ namespace Titanium.Core.Components
 				return true;
 			}
 
-			var dcLeft = left as DualComponentExpression;
-			var dcRight = right as DualComponentExpression;
+			var dcLeft = left as ExpressionList;
+			var dcRight = right as ExpressionList;
 			if (expand && dcLeft != null && dcRight != null)
 			{
 				expression = dcLeft * dcRight;

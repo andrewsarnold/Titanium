@@ -50,6 +50,11 @@ namespace Titanium.Core.Numbers
 			return new Float(Math.Abs(Value));
 		}
 
+		internal override Number Negate()
+		{
+			return new Float(-Value);
+		}
+
 		internal override bool IsNegative => Value < 0;
 		internal override bool IsZero => Math.Abs(Value) < Constants.Tolerance;
 		internal override bool IsOne => Math.Abs(Value - 1) < Constants.Tolerance;

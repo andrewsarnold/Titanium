@@ -91,8 +91,7 @@ namespace Titanium.Core.Functions.Implementations
 
 			if (component is IntegerFraction)
 			{
-				var frac = (IntegerFraction)component;
-				return EvaluateDivision(new NumericFactor(new Integer(frac.Numerator)), new NumericFactor(new Integer(frac.Denominator)));
+				return EvaluateIntegerFraction((IntegerFraction)component);
 			}
 
 			if (component is ComponentList)
@@ -141,6 +140,17 @@ namespace Titanium.Core.Functions.Implementations
 				Componentizer.ToComponent(new FunctionComponent(Name, new List<Expression> { left.Evaluate() }).Evaluate()),
 				Componentizer.ToComponent(new FunctionComponent(Name, new List<Expression> { right.Evaluate() }).Evaluate()),
 				false).Evaluate();
+		}
+
+		private Expression EvaluateIntegerFraction(IntegerFraction fraction)
+		{
+			if (fraction.Numerator == 1)
+			{
+				// ln(1/a) = -ln(a)
+				return new Negate().Evaluate(new NaturalLog().Evaluate(Expressionizer.ToExpression(new NumericFactor(new Integer(fraction.Denominator)))));
+			}
+
+			return AsExpression(Expressionizer.ToExpression(fraction));
 		}
 
 		private Expression EvaluateExponent(Evaluatable left, Evaluatable right)

@@ -3,6 +3,7 @@ using Titanium.Core.Components;
 using Titanium.Core.Exceptions;
 using Titanium.Core.Expressions;
 using Titanium.Core.Factors;
+using Titanium.Core.Functions.Implementations;
 
 namespace Titanium.Core.Reducer
 {
@@ -36,6 +37,25 @@ namespace Titanium.Core.Reducer
 				return new ExpressionFactor(new SingleComponentExpression(new ComponentList(new List<ComponentListFactor> { clf })));
 			}
 
+			if (thing is ExpressionListComponent)
+			{
+				var elc = (ExpressionListComponent)thing;
+
+				var asFactor = ToFactor(elc.Component);
+				if (asFactor is NumericFactor)
+				{
+					var factor = (NumericFactor)asFactor;
+					return new NumericFactor(elc.IsAdd ? factor.Number : factor.Number.Negate());
+				}
+
+				if (elc.IsAdd)
+				{
+					return ToFactor(elc.Component);
+				}
+
+				return new ExpressionFactor(new ExpressionList(new List<ExpressionListComponent> { elc }));
+			}
+
 			throw new UnexpectedTypeException(thing.GetType());
 		}
 
@@ -48,6 +68,16 @@ namespace Titanium.Core.Reducer
 
 		private static Factor ToFactor(Component component)
 		{
+			var functionComponent = component as FunctionComponent;
+			if (functionComponent?.Function is Negate)
+			{
+				var operand = ToFactor(functionComponent.Operands[0]);
+				if (operand is NumericFactor)
+				{
+					return new NumericFactor(((NumericFactor)operand).Number.Negate());
+				}
+			}
+
 			return component is SingleFactorComponent
 				? ToFactor(((SingleFactorComponent)component).Factor)
 				: new ExpressionFactor(new SingleComponentExpression(component));
