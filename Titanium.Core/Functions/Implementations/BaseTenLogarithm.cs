@@ -48,7 +48,7 @@ namespace Titanium.Core.Functions.Implementations
 
 		internal override string ToString(List<Expression> parameters)
 		{
-			throw new NotImplementedException();
+			return string.Format("log({0})", parameters[0]);
 		}
 
 		private static bool IsPowerOf(int x, int y)

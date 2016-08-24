@@ -52,12 +52,9 @@ namespace Titanium.Core.Components
 
 		private static Expression Reduce(IEnumerable<ExpressionListComponent> components, bool expand)
 		{
-			var evaluated = components.Select(c => new ExpressionListComponent(Componentizer.ToComponent(c.Evaluate(expand)), c.IsAdd)).ToList();
-			RemoveRedundantZeros(evaluated, true);
-
 			// If any expressions are a two-component expression, split it out and put the components into the main list
 			var reducedEvaluated = new List<ExpressionListComponent>();
-			foreach (var expressionListComponent in evaluated)
+			foreach (var expressionListComponent in components)
 			{
 				var asExpression = Expressionizer.ToExpression(expressionListComponent.Component);
 				if (asExpression is ExpressionList)
@@ -124,7 +121,7 @@ namespace Titanium.Core.Components
 				//output = output.OrderBy(o => o.Component).ToList();
 				return output.Count == 1
 					? Expressionizer.ToExpression(output[0])
-					: new ExpressionList(output);
+					: new ExpressionList(output.Select(o => new ExpressionListComponent(Componentizer.ToComponent(o.Evaluate()), o.IsAdd)).ToList());
 			}
 
 			RemoveRedundantZeros(output, false);
@@ -146,7 +143,7 @@ namespace Titanium.Core.Components
 		{
 			var left = leftComponent.Evaluate(expand);
 			var right = rightComponent.Evaluate(expand);
-
+			
 			if (left.Equals(right))
 			{
 				if (!isAdd)
@@ -272,7 +269,25 @@ namespace Titanium.Core.Components
 
 			if (Common.IsFunction(leftExpression, out leftFunction) && Common.IsFunction(rightExpression, out rightFunction))
 			{
-				if (leftFunction.Function.Name == "ln" && rightFunction.Function.Name == "ln")
+				if (leftFunction.Function is BaseTenLogarithm)
+				{
+					var eval = Componentizer.ToComponent(leftFunction.Evaluate());
+					if (eval is FunctionComponent)
+					{
+						leftFunction = (FunctionComponent)eval;
+					}
+				}
+
+				if (rightFunction.Function is BaseTenLogarithm)
+				{
+					var eval = Componentizer.ToComponent(leftFunction.Evaluate());
+					if (eval is FunctionComponent)
+					{
+						rightFunction = (FunctionComponent)eval;
+					}
+				}
+
+				if (leftFunction.Function is NaturalLog && rightFunction.Function is NaturalLog)
 				{
 					var operand = Expressionizer.ToExpression(new DualFactorComponent(Factorizer.ToFactor(leftFunction.Operands[0]), Factorizer.ToFactor(rightFunction.Operands[0]), isAdd));
 					{
